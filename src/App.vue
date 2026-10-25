@@ -586,6 +586,75 @@
           <p class="modal-text">
             <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) umschalten · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
           </p>
+
+          <h4>7. Struktur importfähiger TSV-Dateien (Tab-Separated Values)</h4>
+          <p class="modal-text">
+            Über die Schaltfläche <em>„📥 TSV importieren“</em> im Reiter <em>Korpora & Gliederung</em> können eigene Wortschatzlisten im TSV-Format (UTF-8, Tabstopp-getrennt) hochgeladen werden. Die erste Zeile muss die Spaltenüberschriften enthalten:
+          </p>
+          <table class="help-table">
+            <thead>
+              <tr>
+                <th>Spaltenname</th>
+                <th>Status</th>
+                <th>Beispiel</th>
+                <th>Bedeutung / Funktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>volume</code></td>
+                <td>Optional</td>
+                <td><code>hb1</code></td>
+                <td>Band-Kennung (z.B. <code>hb1</code>, <code>hb2</code>). Legt bei neuen Werten automatisch einen neuen Band an. Default: <code>hb1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>lesson</code></td>
+                <td>Optional</td>
+                <td><code>1</code></td>
+                <td>Lektionsnummer als Ganzzahl (z.B. <code>1</code>, <code>2</code>). Legt bei neuen Werten eine neue Lektion an. Default: <code>1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>native</code></td>
+                <td><strong>Pflicht</strong></td>
+                <td><code>किताब</code></td>
+                <td>Wort in Nativschrift (Devanāgarī). Dient als Primärschlüssel zur automatischen Duplikaterkennung und Bedeutungsverschmelzung.</td>
+              </tr>
+              <tr>
+                <td><code>transliteration</code></td>
+                <td>Empfohlen</td>
+                <td><code>kitāb</code></td>
+                <td>Wissenschaftliche Umschrift (IAST).</td>
+              </tr>
+              <tr>
+                <td><code>pos</code></td>
+                <td>Empfohlen</td>
+                <td><code>noun</code></td>
+                <td>Wortart (z.B. <code>noun</code> für Substantiv, <code>verb</code>, <code>adj</code>, <code>adv</code>, <code>postp</code>, <code>pron</code>).</td>
+              </tr>
+              <tr>
+                <td><code>gender</code></td>
+                <td><strong>Pflicht für Nomen</strong></td>
+                <td><code>f</code></td>
+                <td>Grammatisches Geschlecht: <code>m</code> (Maskulinum), <code>f</code> (Femininum), <code>n</code> (Neutrum), <code>m/f</code> oder <code>-</code> (nicht anwendbar).</td>
+              </tr>
+              <tr>
+                <td><code>meaning_de</code></td>
+                <td><strong>Pflicht</strong></td>
+                <td><code>Buch</code></td>
+                <td>Deutsche Bedeutung bzw. Übersetzung. (Jede Spalte, deren Name <code>meaning</code> enthält, wird akzeptiert).</td>
+              </tr>
+              <tr>
+                <td><code>tags</code></td>
+                <td>Optional</td>
+                <td><code>schule;a1</code></td>
+                <td>Semikolon-getrennte Schlagwörter (<code>tag1;tag2</code>) für Filter und thematische Gruppen.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="modal-text">
+            <strong>Musterzeile (Tab-getrennt):</strong><br>
+            <code>hb1&#9;1&#9;किताब&#9;kitāb&#9;noun&#9;f&#9;Buch&#9;schule;a1</code>
+          </p>
         </div>
       </div>
     </div>

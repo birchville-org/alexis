@@ -146,7 +146,34 @@ Alexis erlaubt das Umschalten der Abfragereihenfolge:
 
 ---
 
-## 9. Tastaturkürzel-Referenz
+## 9. Struktur & Format importfähiger TSV-Dateien
+
+Alexis akzeptiert tabulatorgetrennte Textdateien (`.tsv`, `.txt`, UTF-8). Die erste Zeile muss als Spaltenkopf formatiert sein. Folgende Spalten werden interpretiert:
+
+| Spalte | Status | Standard / Typ | Bedeutung & Funktion |
+| :--- | :--- | :--- | :--- |
+| **`volume`** | Optional | `hb1` (String) | Kennung des Bandes. Neue Bände (z.B. `hb2`, `hb3`) werden im UI automatisch registriert. |
+| **`lesson`** | Optional | `1` (Integer) | Lektionsnummer (z.B. `1`, `2`, `14`). Erzeugt bei neuen Werten automatisch neue Lektionskarten. |
+| **`native`** | **Pflicht** | Text (Devanāgarī) | Das Lemma in Originalschrift (`किताब`). Dient als Deduplizierungsschlüssel. |
+| **`transliteration`** | Empfohlen | Text (IAST) | Wissenschaftliche Umschrift (`kitāb`). |
+| **`pos`** | Empfohlen | Text | Wortart (`noun`, `subst`, `verb`, `adj`, `adv`, `postp`, `pron`, `ptk`). |
+| **`gender`** | **Pflicht bei Nomen** | `m` / `f` / `n` / `m/f` | Grammatisches Geschlecht des Lemmas (`m` = Maskulinum, `f` = Femininum, `-` = nicht zutreffend). |
+| **`meaning_de`** | **Pflicht** | Text | Deutsche Übersetzung. Jede Spalte mit Teilstring `meaning` wird automatisch erkannt. |
+| **`tags`** | Optional | Semikolon-Liste | Themen-Tags (`schule;gegenstaende;a1`) für gezielte Abfragen. |
+
+### Beispiel einer gültigen TSV-Datei (Tabstopps als `\t`):
+
+```tsv
+volume	lesson	native	transliteration	pos	gender	meaning_de	tags
+hb1	1	अच्छा	acchā	adj	-	1. gut; 2. aha!, ach so!; (nun) gut	adjektive;begruessung;a1
+hb1	1	अध्यापक	adhyāpak	noun	m	Lehrer	beruf;personen;a1
+hb1	1	अध्यापिका	adhyāpikā	noun	f	Lehrerin	beruf;personen;a1
+hb1	1	किताब	kitāb	noun	f	Buch	schule;gegenstaende;a1
+```
+
+---
+
+## 10. Tastaturkürzel-Referenz
 
 | Taste | Kontext | Aktion |
 | :--- | :--- | :--- |
