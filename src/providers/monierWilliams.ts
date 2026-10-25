@@ -1,9 +1,9 @@
-import type { DictionaryProvider, DictionaryResult } from '../types';
+import type { DictionaryProvider, DictionaryResult } from "../types";
 
 export class MonierWilliamsProvider implements DictionaryProvider {
-  id = 'monier-williams';
-  name = 'Monier-Williams Sanskrit-English Dictionary (1899)';
-  supportedLanguages = ['sa'];
+  id = "monier-williams";
+  name = "Monier-Williams Sanskrit-English Dictionary (1899)";
+  supportedLanguages = ["sa"];
 
   /**
    * Search headword in Cologne Digital Sanskrit Dictionaries
@@ -23,9 +23,9 @@ export class MonierWilliamsProvider implements DictionaryProvider {
       const raw = await response.text();
       return [
         {
-          source: 'Monier-Williams (1899)',
+          source: "Monier-Williams (1899)",
           headword: query,
-          definitions: [raw.replace(/<[^>]+>/g, ' ').trim()],
+          definitions: [raw.replace(/<[^>]+>/g, " ").trim()],
           externalUrl,
         },
       ];
@@ -33,9 +33,9 @@ export class MonierWilliamsProvider implements DictionaryProvider {
       // Fallback: direct portal link
       return [
         {
-          source: 'Monier-Williams (1899)',
+          source: "Monier-Williams (1899)",
           headword: query,
-          definitions: ['Online search available at Cologne Sanskrit Lexicon'],
+          definitions: ["Online search available at Cologne Sanskrit Lexicon"],
           externalUrl,
         },
       ];

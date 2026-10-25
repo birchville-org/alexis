@@ -1,0 +1,186 @@
+{
+  "corpus": {
+    "id": "hindi-bolo",
+    "title": "Hindi bolo!",
+    "lang_code": "hi",
+    "script": "Deva",
+    "target_lang": "de",
+    "description": "Lehrgang der modernen Hindi-Umgangssprache in drei Bänden."
+  },
+  "volumes": [
+    {
+      "id": "hb1",
+      "corpus_id": "hindi-bolo",
+      "title": "Hindi bolo 1",
+      "sort_order": 1,
+      "level": "A1"
+    },
+    {
+      "id": "hb2",
+      "corpus_id": "hindi-bolo",
+      "title": "Hindi bolo 2",
+      "sort_order": 2,
+      "level": "A2"
+    },
+    {
+      "id": "hb3",
+      "corpus_id": "hindi-bolo",
+      "title": "Hindi bolo 3",
+      "sort_order": 3,
+      "level": "B1"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "hb1_l01",
+      "volume_id": "hb1",
+      "lesson_number": 1,
+      "title": "Lektion 1: Begrüßung & Kennenlernen",
+      "sort_order": 1
+    },
+    {
+      "id": "hb1_l02",
+      "volume_id": "hb1",
+      "lesson_number": 2,
+      "title": "Lektion 2: Im Haus & Familie",
+      "sort_order": 2
+    },
+    {
+      "id": "hb2_l01",
+      "volume_id": "hb2",
+      "lesson_number": 1,
+      "title": "Lektion 1: Auf dem Markt",
+      "sort_order": 1
+    },
+    {
+      "id": "hb3_l01",
+      "volume_id": "hb3",
+      "lesson_number": 1,
+      "title": "Lektion 1: Medien & Gesellschaft",
+      "sort_order": 1
+    }
+  ],
+  "entries": [
+    {
+      "id": "hb1_l01_001",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l01",
+      "lemma_native": "नमस्ते",
+      "lemma_translit": "namaste",
+      "pos": "ind",
+      "gender": null,
+      "grammar_metadata": { "pos_detail": "interjection" },
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Guten Tag, Hallo, Auf Wiedersehen",
+          "notes": "Standardgrußformel mit gefalteten Händen"
+        }
+      ],
+      "tags": ["begruessung", "grundwortschatz", "hb1"]
+    },
+    {
+      "id": "hb1_l01_002",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l01",
+      "lemma_native": "आप",
+      "lemma_translit": "āp",
+      "pos": "pron",
+      "gender": null,
+      "grammar_metadata": { "honorific": true, "person": 2 },
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Sie (höfliche Anrede)",
+          "notes": "Verlangt immer Pluralverb"
+        }
+      ],
+      "tags": ["pronomen", "hb1"]
+    },
+    {
+      "id": "hb1_l02_001",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "किताब",
+      "lemma_translit": "kitāb",
+      "pos": "noun",
+      "gender": "f",
+      "grammar_metadata": { "origin": "perso-arabic" },
+      "definitions": [
+        { "lang": "de", "meaning": "Buch", "notes": "f. Plural kitābẽ" }
+      ],
+      "tags": ["substantiv", "gegenstand", "hb1"]
+    },
+    {
+      "id": "hb2_l01_001",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb2",
+      "lesson_id": "hb2_l01",
+      "lemma_native": "बोलना",
+      "lemma_translit": "bolnā",
+      "pos": "verb",
+      "gender": null,
+      "grammar_metadata": { "stem": "bol", "aspect": "imperfective" },
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "sprechen, reden",
+          "notes": "Intransitives Verb, nimmt im Perfekt kein ne"
+        }
+      ],
+      "tags": ["verben", "kommunikation", "hb2"]
+    },
+    {
+      "id": "hb2_l01_002",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb2",
+      "lesson_id": "hb2_l01",
+      "lemma_native": "दुकान",
+      "lemma_translit": "dukān",
+      "pos": "noun",
+      "gender": "f",
+      "grammar_metadata": { "gender": "f" },
+      "definitions": [
+        { "lang": "de", "meaning": "Laden, Geschäft", "notes": "f." }
+      ],
+      "tags": ["einkaufen", "hb2"]
+    },
+    {
+      "id": "hb3_l01_001",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb3",
+      "lesson_id": "hb3_l01",
+      "lemma_native": "अनुभव",
+      "lemma_translit": "anubhav",
+      "pos": "noun",
+      "gender": "m",
+      "grammar_metadata": { "origin": "tatsama" },
+      "definitions": [
+        { "lang": "de", "meaning": "Erfahrung, Erlebnis", "notes": "m." }
+      ],
+      "tags": ["abstrakt", "hb3"]
+    },
+    {
+      "id": "hb3_l01_002",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb3",
+      "lesson_id": "hb3_l01",
+      "lemma_native": "समाचार",
+      "lemma_translit": "samācār",
+      "pos": "noun",
+      "gender": "m",
+      "grammar_metadata": { "origin": "tatsama" },
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Nachrichten, Neuigkeiten",
+          "notes": "m. Plural oft kollektiv"
+        }
+      ],
+      "tags": ["medien", "hb3"]
+    }
+  ]
+}

@@ -43,3 +43,8 @@ dist-ssr/
 .env
 .env.*
 !.env.example
+
+# Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
+.alexis/

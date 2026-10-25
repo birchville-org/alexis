@@ -1,391 +1,1026 @@
 <template>
-  <div class="alexis-shell">
-    <header class="alexis-header">
-      <div class="brand">
-        <span class="brand-crest">🏛️</span>
-        <div class="brand-titles">
-          <h1>ALEXIS</h1>
-          <p class="subtitle">Scholarly Philological Vocabulary Trainer</p>
+  <div class="alexis-app" :data-theme="currentTheme">
+    <!-- Header (Hidden in strict embed mode or minimal embed header) -->
+    <header v-if="!isEmbedded" class="app-header">
+      <div class="header-left">
+        <img src="/birchville_logo.png" alt="Birchville" class="header-logo" />
+        <div class="header-title-wrap">
+          <h1 class="header-title">Alexis</h1>
+          <span class="header-tagline">Philologischer Vokabeltrainer & Korpus-Hub</span>
         </div>
       </div>
-      <div class="corpus-badge">
-        <span>Corpus:</span>
-        <strong>Payer Sanskrit (Lektion 2)</strong>
+
+      <nav class="header-nav">
+        <button
+          :class="['nav-btn', { active: currentTab === 'trainer' }]"
+          @click="currentTab = 'trainer'"
+        >
+          Trainer
+        </button>
+        <button
+          :class="['nav-btn', { active: currentTab === 'corpora' }]"
+          @click="currentTab = 'corpora'"
+        >
+          Korpora & Gliederung
+        </button>
+        <button
+          :class="['nav-btn', { active: currentTab === 'dictionary' }]"
+          @click="currentTab = 'dictionary'"
+        >
+          Wörterbuch (MW)
+        </button>
+        <button
+          :class="['nav-btn', { active: currentTab === 'stats' }]"
+          @click="currentTab = 'stats'"
+        >
+          Statistik
+        </button>
+      </nav>
+
+      <div class="header-right">
+        <span v-if="isTauri" class="platform-badge">Rust / Desktop</span>
+        <span v-else class="platform-badge">Payer Web / Offline</span>
+        <button class="theme-toggle" @click="toggleTheme" :title="'Theme: ' + currentTheme">
+          {{ currentTheme === 'dark' ? '☀️' : '🌙' }}
+        </button>
       </div>
     </header>
 
-    <main class="study-container">
-      <div class="card-wrapper" :class="{ flipped: isFlipped }">
-        <div class="study-card">
-          <div class="card-meta">
-            <span class="meta-tag">{{ currentCard.pos }}</span>
-            <span class="meta-tag">{{ currentCard.gender ? currentCard.gender + '.' : 'ind.' }}</span>
-            <span class="lesson-tag">Lektion {{ currentCard.lesson }}</span>
-          </div>
+    <!-- Compact Breadcrumb Bar in Embedded Mode -->
+    <div v-else class="embedded-header">
+      <div class="embed-title">
+        <img src="/birchville_logo.png" alt="Birchville" class="embed-logo" />
+        <strong>Alexis Trainer</strong>
+        <span class="embed-sub">{{ activeCorpusTitle }} · {{ selectedVolumesSummary }}</span>
+      </div>
+      <div class="embed-actions">
+        <button class="embed-switch-btn" @click="currentTab = currentTab === 'trainer' ? 'corpora' : 'trainer'">
+          {{ currentTab === 'trainer' ? '⚙️ Filter / Gliederung' : '▶️ Zum Trainer' }}
+        </button>
+        <button class="theme-toggle" @click="toggleTheme">
+          {{ currentTheme === 'dark' ? '☀️' : '🌙' }}
+        </button>
+      </div>
+    </div>
 
-          <div class="card-prompt">
-            <div class="native-script">{{ currentCard.lemma.native }}</div>
-            <div class="transliteration">{{ currentCard.lemma.transliteration }}</div>
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- 1. TRAINER TAB -->
+      <section v-if="currentTab === 'trainer'" class="view-trainer">
+        <div class="trainer-header">
+          <div class="trainer-context">
+            <span class="context-corpus">{{ activeCorpusTitle }}</span>
+            <span class="context-sep">/</span>
+            <span class="context-volumes">{{ selectedVolumesSummary }}</span>
           </div>
+          <div class="trainer-counter" v-if="queue.length > 0">
+            Karte {{ currentIndex + 1 }} von {{ queue.length }}
+          </div>
+        </div>
 
-          <div v-if="isFlipped" class="card-answer">
-            <div class="divider"></div>
-            <div class="definition">{{ currentCard.definitions[0]?.meaning }}</div>
-            
-            <div v-if="currentCard.grammarMetadata?.root" class="root-hint">
-              Wurzel: <strong>{{ currentCard.grammarMetadata.root }}</strong>
+        <!-- Active Flashcard -->
+        <div v-if="currentCard" class="card-container">
+          <div class="study-card" :class="{ 'is-flipped': isFlipped }">
+            <div class="card-top">
+              <span class="box-badge">Box {{ currentCard.box_number }}</span>
+              <span class="volume-badge">{{ currentCard.volume_title }}</span>
+              <span v-if="currentCard.pos" class="pos-badge">{{ currentCard.pos }}</span>
+              <span v-if="currentCard.gender" class="gender-badge">{{ currentCard.gender }}</span>
             </div>
 
-            <div class="dict-actions">
-              <a
-                :href="mwLookupUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mw-button"
-              >
-                📖 Monier-Williams Wörterbuch öffnen ↗
-              </a>
-            </div>
-          </div>
+            <!-- Front Side -->
+            <div class="card-front">
+              <div class="native-script script-deva">
+                {{ currentCard.lemma_native }}
+              </div>
 
-          <div class="card-footer">
-            <button
-              v-if="!isFlipped"
-              class="reveal-btn"
-              @click="isFlipped = true"
-            >
-              Antwort aufdecken (Leertaste)
-            </button>
-            <div v-else class="rating-bar">
-              <button class="rate-btn rate-again" @click="nextCard">1. Nochmals</button>
-              <button class="rate-btn rate-hard" @click="nextCard">2. Schwer</button>
-              <button class="rate-btn rate-good" @click="nextCard">3. Gut</button>
-              <button class="rate-btn rate-easy" @click="nextCard">4. Leicht</button>
+              <div class="transliteration">
+                <span v-if="showTranslit">{{ currentCard.lemma_translit }}</span>
+                <button
+                  class="toggle-translit-btn"
+                  @click="showTranslit = !showTranslit"
+                >
+                  {{ showTranslit ? 'Umschrift verbergen' : 'Umschrift (IAST) anzeigen' }}
+                </button>
+              </div>
+
+              <div v-if="!isFlipped" class="card-actions-reveal">
+                <button class="btn-reveal" @click="isFlipped = true">
+                  Bedeutung aufdecken (Leertaste)
+                </button>
+              </div>
+            </div>
+
+            <!-- Back Side (Revealed) -->
+            <div v-if="isFlipped" class="card-back">
+              <div class="definitions-list">
+                <div
+                  v-for="(def, idx) in currentCard.definitions"
+                  :key="idx"
+                  class="def-item"
+                >
+                  <div class="def-meaning">{{ def.meaning }}</div>
+                  <div v-if="def.notes" class="def-notes">{{ def.notes }}</div>
+                </div>
+              </div>
+
+              <div v-if="currentCard.tags && currentCard.tags.length" class="card-tags">
+                <span v-for="tag in currentCard.tags" :key="tag" class="tag-pill">
+                  #{{ tag }}
+                </span>
+              </div>
+
+              <!-- Rating Buttons (Leitner 1..4) -->
+              <div class="rating-bar">
+                <button class="rate-btn btn-again" @click="submitRating(1)">
+                  <span class="rate-num">1</span>
+                  <span class="rate-label">Nochmal</span>
+                  <span class="rate-sub">Box 1 (1 Tag)</span>
+                </button>
+                <button class="rate-btn btn-hard" @click="submitRating(2)">
+                  <span class="rate-num">2</span>
+                  <span class="rate-label">Schwer</span>
+                  <span class="rate-sub">Gleiche Box</span>
+                </button>
+                <button class="rate-btn btn-good" @click="submitRating(3)">
+                  <span class="rate-num">3</span>
+                  <span class="rate-label">Gut</span>
+                  <span class="rate-sub">+1 Box</span>
+                </button>
+                <button class="rate-btn btn-easy" @click="submitRating(4)">
+                  <span class="rate-num">4</span>
+                  <span class="rate-label">Einfach</span>
+                  <span class="rate-sub">+1 Box (Bonus)</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="study-stats">
-        <span>Karte <strong>{{ currentIndex + 1 }}</strong> von <strong>{{ cards.length }}</strong></span>
-        <span>Modus: <strong>Spaced Repetition (SRS)</strong></span>
-      </div>
+        <!-- Empty / Finished Queue -->
+        <div v-else class="empty-queue-card">
+          <div class="empty-icon">✓</div>
+          <h2>Alle Karten dieser Auswahl gelernt!</h2>
+          <p>
+            Für die ausgewählten Glieder (<strong>{{ selectedVolumesSummary }}</strong>) sind derzeit keine weiteren Karten fällig.
+          </p>
+          <div class="empty-actions">
+            <button class="btn-primary" @click="reloadQueue(false)">
+              Alle Karten erneut durchgehen (Lernmodus)
+            </button>
+            <button class="btn-outline" @click="currentTab = 'corpora'">
+              Andere Glieder / Lektionen wählen
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. CORPORA & GLIEDERUNG TAB -->
+      <section v-if="currentTab === 'corpora'" class="view-corpora">
+        <div class="view-header">
+          <h2>Korpora & Gliederungen</h2>
+          <p class="view-desc">
+            Wähle ein Lehrwerk und bestimme, welche Glieder (z.B. Hindi bolo 1, 2 und 3) gemeinsam geübt werden sollen.
+          </p>
+        </div>
+
+        <!-- Corpus Picker -->
+        <div class="corpus-selector-grid">
+          <div
+            v-for="corp in corporaList"
+            :key="corp.id"
+            :class="['corpus-card', { selected: selectedCorpusId === corp.id }]"
+            @click="selectCorpus(corp.id)"
+          >
+            <div class="corpus-card-header">
+              <span class="corpus-lang">{{ corp.lang_code.toUpperCase() }}</span>
+              <span class="corpus-script">{{ corp.script }}</span>
+            </div>
+            <h3 class="corpus-title">{{ corp.title }}</h3>
+            <p class="corpus-desc">{{ corp.description }}</p>
+          </div>
+        </div>
+
+        <!-- Volume Multi-Selection Box -->
+        <div class="volume-selection-panel" v-if="volumesList.length > 0">
+          <div class="panel-header">
+            <h3>Gliederungen für "{{ activeCorpusTitle }}"</h3>
+            <div class="panel-header-actions">
+              <button class="btn-link" @click="selectAllVolumes">Alle auswählen</button>
+              <button class="btn-link" @click="selectedVolumeIds = []">Auswahl leeren</button>
+            </div>
+          </div>
+
+          <div class="volumes-grid">
+            <label
+              v-for="vol in volumesList"
+              :key="vol.id"
+              :class="['volume-checkbox-card', { checked: selectedVolumeIds.includes(vol.id) }]"
+            >
+              <input
+                type="checkbox"
+                :value="vol.id"
+                v-model="selectedVolumeIds"
+              />
+              <div class="vol-info">
+                <span class="vol-title">{{ vol.title }}</span>
+                <span v-if="vol.level" class="vol-level">{{ vol.level }}</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="filter-options">
+            <label class="checkbox-inline">
+              <input type="checkbox" v-model="dueOnly" />
+              <span>Nur fällige Wiederholungen (Spaced Repetition)</span>
+            </label>
+          </div>
+
+          <div class="start-session-bar">
+            <button
+              class="btn-primary start-btn"
+              :disabled="selectedVolumeIds.length === 0"
+              @click="startSessionWithSelectedVolumes"
+            >
+              Lernkarten für ausgewählte Glieder starten ({{ selectedVolumeIds.length }} gewählt)
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. DICTIONARY TAB -->
+      <section v-if="currentTab === 'dictionary'" class="view-dictionary">
+        <div class="view-header">
+          <h2>Wörterbuch-Hub (Monier-Williams)</h2>
+          <p class="view-desc">
+            Sanskrit- und philologische Lexikonsuche via Cologne Sanskrit Lexicon REST API.
+          </p>
+        </div>
+
+        <div class="dict-search-box">
+          <input
+            type="text"
+            v-model="dictQuery"
+            placeholder="Suchbegriff in IAST oder Devanāgarī (z.B. deva, agni, dharma)..."
+            @keyup.enter="performDictSearch"
+            class="dict-input"
+          />
+          <button class="btn-primary" @click="performDictSearch" :disabled="dictLoading">
+            {{ dictLoading ? 'Sucht...' : 'Nachschlagen' }}
+          </button>
+        </div>
+
+        <div v-if="dictResults.length" class="dict-results">
+          <div v-for="(res, idx) in dictResults" :key="idx" class="dict-card">
+            <div class="dict-head">
+              <h3>{{ res.headword }}</h3>
+              <span class="dict-source">{{ res.source }}</span>
+            </div>
+            <div class="dict-body">
+              <p v-for="(def, dIdx) in res.definitions" :key="dIdx" class="dict-def">
+                {{ def }}
+              </p>
+            </div>
+            <div v-if="res.externalUrl" class="dict-foot">
+              <a :href="res.externalUrl" target="_blank" rel="noopener noreferrer" class="dict-link">
+                ↗ Im Cologne Digital Sanskrit Lexicon öffnen
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. STATS TAB -->
+      <section v-if="currentTab === 'stats'" class="view-stats">
+        <div class="view-header">
+          <h2>Lernstand & Statistiken</h2>
+          <p class="view-desc">
+            Leitner-Boxen-Verteilung und fällige Wiederholungen für "{{ activeCorpusTitle }}".
+          </p>
+        </div>
+
+        <div class="stats-cards-grid" v-if="deckStats">
+          <div class="stat-card">
+            <span class="stat-val">{{ deckStats.total_entries }}</span>
+            <span class="stat-lbl">Gesamte Vokabeln</span>
+          </div>
+          <div class="stat-card highlight">
+            <span class="stat-val">{{ deckStats.due_today }}</span>
+            <span class="stat-lbl">Heute fällig</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-val">{{ deckStats.box_1 }}</span>
+            <span class="stat-lbl">Box 1 (Neu / Nochmal)</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-val">{{ deckStats.box_2 + deckStats.box_3 }}</span>
+            <span class="stat-lbl">Box 2–3 (In Bearbeitung)</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-val">{{ deckStats.box_4 + deckStats.box_5 }}</span>
+            <span class="stat-lbl">Box 4–5 (Gefestigt)</span>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { LexicalEntry } from './types';
+import { computed, onMounted, ref } from "vue";
+import { MonierWilliamsProvider } from "./providers/monierWilliams";
+import { isTauriEnvironment, storage } from "./services/storage";
+import type {
+  CorpusMeta,
+  DeckStats,
+  DictionaryResult,
+  StudyCardItem,
+  VolumeData,
+} from "./types";
 
-const isFlipped = ref(false);
-const currentIndex = ref(0);
+// Theme & Environment
+const isTauri = ref(isTauriEnvironment());
+const currentTheme = ref<"light" | "dark">("light");
+const isEmbedded = ref(false);
 
-const cards = ref<LexicalEntry[]>([
-  {
-    id: 'payer_sa_l02_deva',
-    corpusId: 'payer_sanskrit',
-    lesson: 2,
-    lemma: {
-      native: 'देव',
-      transliteration: 'deva',
-      script: 'Deva',
-    },
-    pos: 'm.',
-    gender: 'm',
-    grammarMetadata: {
-      root: '√दिव्',
-      stem: 'a-Stamm',
-    },
-    definitions: [
-      {
-        lang: 'de',
-        meaning: 'Himmlischer, Gott; Fürst, König.',
-      },
-      {
-        lang: 'en',
-        meaning: 'Heavenly one, god, deity; prince, king.',
-      },
-    ],
-  },
-  {
-    id: 'payer_sa_l02_isvara',
-    corpusId: 'payer_sanskrit',
-    lesson: 2,
-    lemma: {
-      native: 'ईश्वर',
-      transliteration: 'īśvara',
-      script: 'Deva',
-    },
-    pos: 'm.',
-    gender: 'm',
-    grammarMetadata: {
-      root: '√ईश्',
-      stem: 'a-Stamm',
-    },
-    definitions: [
-      {
-        lang: 'de',
-        meaning: 'Herr, Herrscher, Gott (monotheistisch).',
-      },
-    ],
-  },
-  {
-    id: 'payer_sa_l02_brahmana',
-    corpusId: 'payer_sanskrit',
-    lesson: 2,
-    lemma: {
-      native: 'ब्राह्मण',
-      transliteration: 'brāhmaṇa',
-      script: 'Deva',
-    },
-    pos: 'm.',
-    gender: 'm',
-    definitions: [
-      {
-        lang: 'de',
-        meaning: 'Brahmane (geistlicher Stand, Priester).',
-      },
-    ],
-  },
-]);
+// Navigation Tabs
+type Tab = "trainer" | "corpora" | "dictionary" | "stats";
+const currentTab = ref<Tab>("trainer");
 
-const currentCard = computed(() => cards.value[currentIndex.value]);
+// Corpora & Gliederung State
+const corporaList = ref<CorpusMeta[]>([]);
+const selectedCorpusId = ref<string>("hindi-bolo");
+const volumesList = ref<VolumeData[]>([]);
+const selectedVolumeIds = ref<string[]>(["hb1", "hb2"]);
+const dueOnly = ref(false);
 
-const mwLookupUrl = computed(() => {
-  const lemma = currentCard.value.lemma.transliteration;
-  return `https://www.sanskrit-lexicon.uni-koeln.de/scans/csl-apidev/servepdf.php?dict=mw&key=${encodeURIComponent(lemma)}`;
+// Study Session Queue State
+const queue = ref<StudyCardItem[]>([]);
+const currentIndex = ref<number>(0);
+const isFlipped = ref<boolean>(false);
+const showTranslit = ref<boolean>(true);
+
+// Dictionary State
+const dictProvider = new MonierWilliamsProvider();
+const dictQuery = ref("");
+const dictLoading = ref(false);
+const dictResults = ref<DictionaryResult[]>([]);
+
+// Stats State
+const deckStats = ref<DeckStats | null>(null);
+
+// Computed Helpers
+const activeCorpusTitle = computed(() => {
+  const corp = corporaList.value.find((c) => c.id === selectedCorpusId.value);
+  return corp ? corp.title : selectedCorpusId.value;
 });
 
-function nextCard() {
+const selectedVolumesSummary = computed(() => {
+  if (selectedVolumeIds.value.length === 0) return "Keine Gliederung";
+  if (
+    selectedVolumeIds.value.length === volumesList.value.length &&
+    volumesList.value.length > 0
+  ) {
+    return `Alle Glieder (1–${volumesList.value.length})`;
+  }
+  const titles = volumesList.value
+    .filter((v) => selectedVolumeIds.value.includes(v.id))
+    .map((v) => v.title);
+  return titles.join(" + ");
+});
+
+const currentCard = computed(() => {
+  if (queue.value.length === 0 || currentIndex.value >= queue.value.length) {
+    return null;
+  }
+  return queue.value[currentIndex.value];
+});
+
+// Theme Toggle
+function toggleTheme() {
+  currentTheme.value = currentTheme.value === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", currentTheme.value);
+}
+
+// Lifecycle Init
+onMounted(async () => {
+  // Check embed parameter from URL
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("embed") === "true" || window.self !== window.top) {
+    isEmbedded.value = true;
+  }
+
+  // Load available corpora
+  corporaList.value = await storage.listCorpora();
+  if (corporaList.value.length > 0) {
+    const initialCorpus = params.get("corpus") || corporaList.value[0].id;
+    await selectCorpus(initialCorpus);
+  }
+
+  // Handle lesson/volume params
+  const volParam = params.get("volume");
+  if (volParam) {
+    selectedVolumeIds.value = [volParam];
+  }
+
+  // Load queue
+  await reloadQueue(false);
+  await refreshStats();
+});
+
+// Selection Logic
+async function selectCorpus(corpusId: string) {
+  selectedCorpusId.value = corpusId;
+  volumesList.value = await storage.listVolumes(corpusId);
+  // Default: select first two volumes (e.g. Hindi bolo 1 und 2)
+  if (volumesList.value.length > 0) {
+    selectedVolumeIds.value = volumesList.value.slice(0, 2).map((v) => v.id);
+  } else {
+    selectedVolumeIds.value = [];
+  }
+}
+
+function selectAllVolumes() {
+  selectedVolumeIds.value = volumesList.value.map((v) => v.id);
+}
+
+async function startSessionWithSelectedVolumes() {
+  await reloadQueue(dueOnly.value);
+  currentTab.value = "trainer";
+}
+
+async function reloadQueue(onlyDue: boolean) {
+  currentIndex.value = 0;
   isFlipped.value = false;
-  currentIndex.value = (currentIndex.value + 1) % cards.value.length;
+  queue.value = await storage.getStudyQueue({
+    corpus_id: selectedCorpusId.value,
+    volume_ids:
+      selectedVolumeIds.value.length > 0 ? selectedVolumeIds.value : undefined,
+    due_only: onlyDue,
+    limit: 100,
+  });
+}
+
+async function submitRating(rating: number) {
+  if (!currentCard.value) return;
+
+  await storage.recordReview({
+    entry_id: currentCard.value.entry_id,
+    rating,
+    direction: "NATIVE_TO_MEANING",
+  });
+
+  isFlipped.value = false;
+  currentIndex.value += 1;
+  await refreshStats();
+}
+
+async function refreshStats() {
+  deckStats.value = await storage.getDeckStats(selectedCorpusId.value);
+}
+
+// Dictionary Action
+async function performDictSearch() {
+  if (!dictQuery.value.trim()) return;
+  dictLoading.value = true;
+  try {
+    dictResults.value = await dictProvider.lookup(dictQuery.value.trim());
+  } finally {
+    dictLoading.value = false;
+  }
 }
 </script>
 
-<style>
-:root {
-  --bg-base: #fcf9f2;
-  --bg-surface: #f1eee7;
-  --text-primary: #03192e;
-  --text-muted: #6b6257;
-  --border-line: #d8d2c6;
-  --accent: #b45309;
-  --font-serif: 'Newsreader', Iowan Old Style, Palatino, Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-base);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-}
-
-.alexis-shell {
+<style scoped>
+.alexis-app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
 }
 
-.alexis-header {
-  padding: 1.25rem 2rem;
+/* Header */
+.app-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-line);
-  background: rgba(252, 249, 242, 0.9);
-  backdrop-filter: blur(12px);
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--header-bg);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.brand {
+.header-left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.brand-crest {
-  font-size: 1.8rem;
+.header-logo {
+  height: 2.1rem;
+  border-radius: 4px;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.18));
 }
 
-.brand-titles h1 {
+.header-title {
+  font-size: 1.25rem;
   margin: 0;
-  font-family: var(--font-serif);
+  line-height: 1.2;
+}
+
+.header-tagline {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.header-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.nav-btn:hover {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.platform-badge {
+  font-size: 0.7rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.theme-toggle {
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  font-size: 0.9rem;
+}
+
+/* Embedded Compact Header */
+.embedded-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.embed-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+}
+
+.embed-logo {
+  height: 1.5rem;
+}
+
+.embed-sub {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.embed-switch-btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+}
+
+/* Main Content */
+.app-main {
+  flex: 1;
+  max-width: 54rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* Trainer View */
+.trainer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+}
+
+.trainer-context {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.context-sep {
+  color: var(--text-muted);
+}
+
+.context-volumes {
+  color: var(--accent-gold);
+}
+
+.trainer-counter {
+  color: var(--text-muted);
+}
+
+/* Card */
+.study-card {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  min-height: 22rem;
+  justify-content: space-between;
+}
+
+.card-top {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+.box-badge, .volume-badge, .pos-badge, .gender-badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.box-badge {
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+}
+
+.native-script {
+  font-size: 3.2rem;
+  margin: 1rem 0;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.transliteration {
+  font-size: 1.25rem;
+  color: var(--accent-gold);
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toggle-translit-btn {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+.card-actions-reveal {
+  margin-top: 1.5rem;
+}
+
+.btn-reveal {
+  background-color: var(--text-primary);
+  color: var(--bg-base);
+  padding: 0.75rem 1.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+
+.btn-reveal:hover {
+  opacity: 0.9;
+}
+
+/* Back Side */
+.card-back {
+  width: 100%;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+}
+
+.def-meaning {
   font-size: 1.4rem;
-  letter-spacing: 0.08em;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.def-notes {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.card-tags {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.tag-pill {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Rating Bar */
+.rating-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  width: 100%;
+}
+
+.rate-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  transition: transform 0.1s ease;
+}
+
+.rate-btn:hover {
+  transform: translateY(-2px);
+}
+
+.rate-num {
+  font-size: 0.75rem;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.rate-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0.2rem 0;
+}
+
+.rate-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.btn-again .rate-label { color: var(--btn-again); }
+.btn-hard .rate-label { color: var(--btn-hard); }
+.btn-good .rate-label { color: var(--btn-good); }
+.btn-easy .rate-label { color: var(--btn-easy); }
+
+/* Empty Queue */
+.empty-queue-card {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: var(--accent-gold);
+  margin-bottom: 1rem;
+}
+
+.empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Corpora View */
+.view-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.corpus-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.corpus-card {
+  background-color: var(--bg-surface-elevated);
+  border: 2px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.corpus-card.selected {
+  border-color: var(--accent-gold);
+}
+
+.corpus-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.volume-selection-panel {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.volumes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.volume-checkbox-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.volume-checkbox-card.checked {
+  border-color: var(--accent-gold);
+}
+
+.vol-title {
+  font-weight: 500;
+  display: block;
+}
+
+.vol-level {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.start-session-bar {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Dictionary */
+.dict-search-box {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.dict-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.dict-card {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.dict-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.dict-source {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dict-link {
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+/* Stats */
+.stats-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.stat-card.highlight {
+  border-color: var(--accent-gold);
+}
+
+.stat-val {
+  display: block;
+  font-size: 2.2rem;
+  font-family: var(--font-serif);
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.brand-titles .subtitle {
-  margin: 0;
-  font-size: 0.75rem;
+.stat-lbl {
+  font-size: 0.8rem;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-.corpus-badge {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-line);
-  padding: 0.35rem 0.75rem;
+/* Common Buttons */
+.btn-primary {
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  padding: 0.65rem 1.25rem;
   border-radius: 6px;
-  font-size: 0.85rem;
-  display: flex;
-  gap: 0.35rem;
-}
-
-.study-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-}
-
-.card-wrapper {
-  width: 100%;
-  max-width: 540px;
-}
-
-.study-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-line);
-  border-radius: 12px;
-  padding: 2.5rem 2rem;
-  box-shadow: 0 4px 16px rgba(3, 25, 46, 0.04);
-  text-align: center;
-}
-
-.card-meta {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.meta-tag, .lesson-tag {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  background: #e6e2d8;
-  color: var(--text-muted);
   font-weight: 500;
+  transition: background-color 0.15s ease;
 }
 
-.lesson-tag {
-  background: #fde8d0;
-  color: var(--accent);
+.btn-primary:hover {
+  background-color: var(--accent-gold-hover);
 }
 
-.card-prompt {
-  margin: 1.5rem 0;
-}
-
-.native-script {
-  font-family: 'Noto Serif Devanagari', 'Gentium Plus', serif;
-  font-size: 3.2rem;
-  line-height: 1.2;
+.btn-outline {
+  border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.transliteration {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-style: italic;
-  color: var(--accent);
-}
-
-.divider {
-  height: 1px;
-  background: var(--border-line);
-  margin: 1.5rem 0;
-}
-
-.card-answer .definition {
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  line-height: 1.4;
-  margin-bottom: 1rem;
-}
-
-.root-hint {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-}
-
-.dict-actions {
-  margin-top: 1rem;
-}
-
-.mw-button {
-  display: inline-block;
-  font-size: 0.85rem;
-  color: var(--accent);
-  text-decoration: none;
-  border: 1px solid #e0c8b0;
-  padding: 0.4rem 0.8rem;
+  padding: 0.65rem 1.25rem;
   border-radius: 6px;
-  background: #fffdf9;
-  transition: all 0.15s ease;
 }
 
-.mw-button:hover {
-  background: #faede0;
-}
-
-.card-footer {
-  margin-top: 2rem;
-}
-
-.reveal-btn {
-  background: var(--text-primary);
-  color: #fff;
-  border: none;
-  padding: 0.75rem 1.75rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  font-weight: 500;
-  transition: opacity 0.2s;
-}
-
-.reveal-btn:hover {
-  opacity: 0.9;
-}
-
-.rating-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-}
-
-.rate-btn {
-  border: 1px solid var(--border-line);
-  background: #fff;
-  padding: 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
+.btn-link {
+  color: var(--accent-gold);
   font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.rate-again { border-color: #fca5a5; color: #b91c1c; }
-.rate-hard { border-color: #fed7aa; color: #c2410c; }
-.rate-good { border-color: #bbf7d0; color: #15803d; }
-.rate-easy { border-color: #bae6fd; color: #0369a1; }
-
-.study-stats {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 2rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  text-decoration: underline;
 }
 </style>

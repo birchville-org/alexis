@@ -7,17 +7,22 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build:payer": "vue-tsc -b && vite build --base=/alexis/ --outDir=../Payer/docs/public/alexis --emptyOutDir",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "lint": "biome check .",
+    "format": "biome format --write ."
   },
   "keywords": [
     "philology",
     "sanskrit",
+    "hindi",
     "vocabulary-trainer",
     "spaced-repetition",
     "dictionary",
     "monier-williams",
     "corpus",
-    "pwa"
+    "tauri"
   ],
   "author": "Marco Demarmels",
   "license": "MIT",
@@ -30,9 +35,12 @@
   },
   "homepage": "https://github.com/birchville-org/alexis#readme",
   "dependencies": {
+    "@tauri-apps/api": "^2.2.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@tauri-apps/cli": "^2.2.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "typescript": "^5.7.3",
     "vite": "^6.1.0",

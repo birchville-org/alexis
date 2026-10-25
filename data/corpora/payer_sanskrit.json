@@ -1,0 +1,137 @@
+{
+  "corpus": {
+    "id": "payer-sanskrit",
+    "title": "Sanskritkurs — Alois Payer",
+    "lang_code": "sa",
+    "script": "Deva",
+    "target_lang": "de",
+    "description": "Systematischer Sanskrit-Lehrgang von Prof. Alois Payer (Lektionen 1–61)."
+  },
+  "volumes": [
+    {
+      "id": "payer_vol1",
+      "corpus_id": "payer-sanskrit",
+      "title": "Grundkurs (Lektionen 1–20)",
+      "sort_order": 1,
+      "level": "Grundstufe"
+    },
+    {
+      "id": "payer_vol2",
+      "corpus_id": "payer-sanskrit",
+      "title": "Aufbaukurs (Lektionen 21–40)",
+      "sort_order": 2,
+      "level": "Mittelstufe"
+    },
+    {
+      "id": "payer_vol3",
+      "corpus_id": "payer-sanskrit",
+      "title": "Vertiefung (Lektionen 41–61)",
+      "sort_order": 3,
+      "level": "Oberstufe"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "payer_l02",
+      "volume_id": "payer_vol1",
+      "lesson_number": 2,
+      "title": "Lektion 2: Der Nominalsatz & Maskulina auf -a",
+      "sort_order": 2
+    },
+    {
+      "id": "payer_l05",
+      "volume_id": "payer_vol1",
+      "lesson_number": 5,
+      "title": "Lektion 5: Das Verbum (Präsens 1. Klasse)",
+      "sort_order": 5
+    },
+    {
+      "id": "payer_l15",
+      "volume_id": "payer_vol1",
+      "lesson_number": 15,
+      "title": "Lektion 15: Das Pronomen & Sandhi",
+      "sort_order": 15
+    },
+    {
+      "id": "payer_l24",
+      "volume_id": "payer_vol2",
+      "lesson_number": 24,
+      "title": "Lektion 24: Das Passiv & Partizipia",
+      "sort_order": 24
+    }
+  ],
+  "entries": [
+    {
+      "id": "payer_sa_l02_deva",
+      "corpus_id": "payer-sanskrit",
+      "volume_id": "payer_vol1",
+      "lesson_id": "payer_l02",
+      "lemma_native": "देव",
+      "lemma_translit": "deva",
+      "pos": "noun",
+      "gender": "m",
+      "grammar_metadata": { "stem": "deva-", "class": "a-Stamm" },
+      "definitions": [{ "lang": "de", "meaning": "Gott, himmlisches Wesen" }],
+      "tags": ["substantiv", "maskulinum", "a-stamm", "payer_l02"]
+    },
+    {
+      "id": "payer_sa_l02_agni",
+      "corpus_id": "payer-sanskrit",
+      "volume_id": "payer_vol1",
+      "lesson_id": "payer_l02",
+      "lemma_native": "अग्नि",
+      "lemma_translit": "agni",
+      "pos": "noun",
+      "gender": "m",
+      "grammar_metadata": { "stem": "agni-", "class": "i-Stamm" },
+      "definitions": [{ "lang": "de", "meaning": "Feuer, Gott Agni" }],
+      "tags": ["substantiv", "maskulinum", "i-stamm", "payer_l02"]
+    },
+    {
+      "id": "payer_sa_l02_guru",
+      "corpus_id": "payer-sanskrit",
+      "volume_id": "payer_vol1",
+      "lesson_id": "payer_l02",
+      "lemma_native": "गुरु",
+      "lemma_translit": "guru",
+      "pos": "noun",
+      "gender": "m",
+      "grammar_metadata": { "stem": "guru-", "class": "u-Stamm" },
+      "definitions": [
+        { "lang": "de", "meaning": "Lehrer, Meister; gewichtig, schwer" }
+      ],
+      "tags": ["substantiv", "maskulinum", "u-stamm", "payer_l02"]
+    },
+    {
+      "id": "payer_sa_l05_bhu",
+      "corpus_id": "payer-sanskrit",
+      "volume_id": "payer_vol1",
+      "lesson_id": "payer_l05",
+      "lemma_native": "भू",
+      "lemma_translit": "bhū",
+      "pos": "verb",
+      "gender": null,
+      "grammar_metadata": {
+        "root": "√भू",
+        "gana": 1,
+        "pada": "P",
+        "pres_3sg": "bhavati"
+      },
+      "definitions": [{ "lang": "de", "meaning": "sein, werden, entstehen" }],
+      "tags": ["verb", "gana1", "payer_l05"]
+    },
+    {
+      "id": "payer_sa_l15_athava",
+      "corpus_id": "payer-sanskrit",
+      "volume_id": "payer_vol1",
+      "lesson_id": "payer_l15",
+      "lemma_native": "अथवा",
+      "lemma_translit": "athavā",
+      "pos": "ind",
+      "gender": null,
+      "grammar_metadata": { "pos_detail": "partikel" },
+      "definitions": [{ "lang": "de", "meaning": "oder (vorangestellt)" }],
+      "tags": ["partikel", "payer_l15"]
+    }
+  ]
+}
