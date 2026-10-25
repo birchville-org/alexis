@@ -289,6 +289,78 @@ class StorageService {
     return bundle.entries.length;
   }
 
+  async importTSV(
+    tsvContent: string,
+    targetCorpusId = "hindi-bolo",
+  ): Promise<number> {
+    const lines = tsvContent.trim().split("\n");
+    if (lines.length < 2) return 0;
+    const header = lines[0].split("\t").map((h) => h.trim().toLowerCase());
+
+    const colVol = header.indexOf("volume");
+    const colLes = header.indexOf("lesson");
+    const colNat = header.indexOf("native");
+    const colTrn = header.indexOf("transliteration");
+    const colPos = header.indexOf("pos");
+    const colGen = header.indexOf("gender");
+    const colMng = header.findIndex((h) => h.includes("meaning"));
+    const colTag = header.indexOf("tags");
+
+    const bundle = this.memoryBundles.find(
+      (b) => b.corpus.id === targetCorpusId,
+    );
+    if (!bundle) return 0;
+
+    let count = 0;
+    for (let i = 1; i < lines.length; i++) {
+      const parts = lines[i].split("\t");
+      if (parts.length < 4) continue;
+      const vol = colVol >= 0 ? parts[colVol]?.trim() : "hb1";
+      const les = colLes >= 0 ? parts[colLes]?.trim() : "1";
+      const nat = colNat >= 0 ? parts[colNat]?.trim() : "";
+      const trn = colTrn >= 0 ? parts[colTrn]?.trim() : "";
+      const pos = colPos >= 0 ? parts[colPos]?.trim() : "";
+      const gen = colGen >= 0 ? parts[colGen]?.trim() : "";
+      const mng = colMng >= 0 ? parts[colMng]?.trim() : "";
+      const tags =
+        colTag >= 0 && parts[colTag]
+          ? parts[colTag].split(";").filter(Boolean)
+          : [];
+
+      if (!nat || !mng) continue;
+      const id = `${vol}_l${les.padStart(2, "0")}_${String(i).padStart(3, "0")}`;
+
+      const existingIdx = bundle.entries.findIndex(
+        (e) => e.lemma_native === nat && e.volume_id === vol,
+      );
+      const newEntry = {
+        id,
+        corpus_id: targetCorpusId,
+        volume_id: vol,
+        lesson_id: `${vol}_l${les.padStart(2, "0")}`,
+        lemma_native: nat,
+        lemma_translit: trn,
+        pos: pos || undefined,
+        gender: gen && gen !== "-" ? gen : undefined,
+        definitions: [{ lang: "de", meaning: mng }],
+        tags,
+      };
+
+      if (existingIdx >= 0) {
+        bundle.entries[existingIdx] = newEntry;
+      } else {
+        bundle.entries.push(newEntry);
+      }
+      count++;
+    }
+
+    if (isTauriEnvironment()) {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("import_corpus_bundle", { bundle });
+    }
+    return count;
+  }
+
   async transliterate(text: string, from: string, to: string): Promise<string> {
     if (isTauriEnvironment()) {
       const { invoke } = await import("@tauri-apps/api/core");

@@ -206,9 +206,21 @@
           <div class="panel-header">
             <h3>Gliederungen für "{{ activeCorpusTitle }}"</h3>
             <div class="panel-header-actions">
+              <label class="btn-link upload-label">
+                <input
+                  type="file"
+                  accept=".tsv,.txt,.csv"
+                  @change="handleFileUpload"
+                  style="display:none"
+                />
+                📥 TSV importieren
+              </label>
               <button class="btn-link" @click="selectAllVolumes">Alle auswählen</button>
               <button class="btn-link" @click="selectedVolumeIds = []">Auswahl leeren</button>
             </div>
+          </div>
+          <div v-if="importNotice" class="import-notice-banner">
+            ✓ {{ importNotice }}
           </div>
 
           <div class="volumes-grid">
@@ -438,6 +450,22 @@ async function selectCorpus(corpusId: string) {
   } else {
     selectedVolumeIds.value = [];
   }
+}
+
+const importNotice = ref<string>("");
+
+async function handleFileUpload(e: Event) {
+  const target = e.target as HTMLInputElement;
+  if (!target.files || target.files.length === 0) return;
+  const file = target.files[0];
+  const text = await file.text();
+  const count = await storage.importTSV(text, selectedCorpusId.value);
+  importNotice.value = `${count} Vokabeln aus "${file.name}" erfolgreich importiert!`;
+  await reloadQueue(false);
+  await refreshStats();
+  setTimeout(() => {
+    importNotice.value = "";
+  }, 4000);
 }
 
 function selectAllVolumes() {
@@ -1022,5 +1050,23 @@ async function performDictSearch() {
   color: var(--accent-gold);
   font-size: 0.85rem;
   text-decoration: underline;
+  cursor: pointer;
+}
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.import-notice-banner {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 </style>
