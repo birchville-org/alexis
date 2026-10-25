@@ -824,10 +824,27 @@ const activeCorpusTitle = computed(() => {
 
 const selectedVolumesSummary = computed(() => {
   if (selectedLessonIds.value.length > 0) {
-    const titles = lessonsList.value
-      .filter((l) => selectedLessonIds.value.includes(l.id))
-      .map((l) => l.title);
-    return `${activeCorpusTitle.value} · ${titles.join(", ")}`;
+    const selectedLessons = lessonsList.value.filter((l) =>
+      selectedLessonIds.value.includes(l.id),
+    );
+    if (selectedLessons.length === 1) {
+      return selectedLessons[0].title;
+    }
+    if (selectedLessons.length <= 3) {
+      return selectedLessons
+        .map((l) => {
+          const m = l.title.match(/^(Lektion\s+\d+)/i);
+          return m ? m[1] : l.title;
+        })
+        .join(", ");
+    }
+    return `${selectedLessons.length} Lektionen (${selectedLessons
+      .map((l) => {
+        const m = l.title.match(/\d+/);
+        return m ? `L${m[0]}` : l.id;
+      })
+      .slice(0, 4)
+      .join(", ")}${selectedLessons.length > 4 ? "…" : ""})`;
   }
   if (selectedVolumeIds.value.length === 0) return "Keine Gliederung";
   if (
@@ -1285,40 +1302,56 @@ async function performDictSearch() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
   font-size: 0.88rem;
+  min-height: 2.2rem;
 }
 
 .trainer-context {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   font-weight: 500;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.context-corpus {
+  flex-shrink: 0;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .context-sep {
+  flex-shrink: 0;
   color: var(--text-muted);
 }
 
 .context-volumes {
   color: var(--accent-gold);
-}
-
-.trainer-counter {
-  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .trainer-controls {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.65rem;
+  flex-shrink: 0;
 }
 
-.direction-toggle-btn {
+.direction-toggle-btn,
+.shuffle-toggle-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.75rem;
+  height: 32px;
   border-radius: 6px;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -1326,10 +1359,13 @@ async function performDictSearch() {
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.15s ease;
+  box-sizing: border-box;
 }
 
-.direction-toggle-btn:hover {
+.direction-toggle-btn:hover,
+.shuffle-toggle-btn:hover {
   border-color: var(--accent-gold);
   color: var(--accent-gold);
 }
@@ -1343,38 +1379,25 @@ async function performDictSearch() {
   letter-spacing: 0.02em;
 }
 
-.shuffle-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 6px;
+.shuffle-toggle-btn.active {
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.shuffle-toggle-btn:hover {
   border-color: var(--accent-gold);
   color: var(--accent-gold);
-}
-
-.shuffle-toggle-btn.active {
-  background-color: var(--accent-gold);
-  color: #ffffff;
-  border-color: var(--accent-gold);
-}
-
-.shuffle-toggle-btn.active .shuffle-icon {
-  filter: brightness(2);
+  box-shadow: 0 0 0 1px var(--accent-gold) inset;
 }
 
 .shuffle-icon {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.trainer-counter {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-left: 0.35rem;
 }
 
 /* Card */
