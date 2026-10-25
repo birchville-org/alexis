@@ -1282,6 +1282,30 @@ async function performDictSearch() {
   color: var(--accent-gold);
 }
 
+.filter-options {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-inline input[type="checkbox"],
+.volume-checkbox-card input[type="checkbox"],
+.lesson-checkbox-card input[type="checkbox"] {
+  cursor: pointer;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--accent-gold);
+}
+
 .start-session-bar {
   margin-top: 1.5rem;
   display: flex;
