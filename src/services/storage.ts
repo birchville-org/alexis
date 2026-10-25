@@ -50,45 +50,64 @@ class StorageService {
           db.createObjectStore("corpus_bundles", { keyPath: "corpusId" });
         }
       };
-      request.onsuccess = () => {
+      request.onsuccess = async () => {
         const db = request.result;
+        const loadPromises: Promise<void>[] = [];
+
         // load initial study state into memory cache
         if (db.objectStoreNames.contains("study_state")) {
-          const tx = db.transaction("study_state", "readonly");
-          const store = tx.objectStore("study_state");
-          const getAll = store.getAll();
-          getAll.onsuccess = () => {
-            for (const item of getAll.result) {
-              this.localStudyState.set(item.entryId, item);
-            }
-          };
+          loadPromises.push(
+            new Promise<void>((resState) => {
+              const tx = db.transaction("study_state", "readonly");
+              const store = tx.objectStore("study_state");
+              const getAll = store.getAll();
+              getAll.onsuccess = () => {
+                for (const item of getAll.result) {
+                  this.localStudyState.set(item.entryId, item);
+                }
+                resState();
+              };
+              getAll.onerror = () => resState();
+            }),
+          );
         }
 
         // load persisted custom/imported corpus bundles
         if (db.objectStoreNames.contains("corpus_bundles")) {
-          const txBundles = db.transaction("corpus_bundles", "readonly");
-          const storeBundles = txBundles.objectStore("corpus_bundles");
-          const getAllBundles = storeBundles.getAll();
-          getAllBundles.onsuccess = () => {
-            for (const item of getAllBundles.result) {
-              const idx = this.memoryBundles.findIndex(
-                (b) => b.corpus.id === item.corpusId,
-              );
-              if (idx >= 0) {
-                this.memoryBundles[idx] = item.bundle;
-              } else {
-                this.memoryBundles.push(item.bundle);
-              }
-            }
-            resolve(db);
-          };
-          getAllBundles.onerror = () => resolve(db);
-        } else {
-          resolve(db);
+          loadPromises.push(
+            new Promise<void>((resBundles) => {
+              const txBundles = db.transaction("corpus_bundles", "readonly");
+              const storeBundles = txBundles.objectStore("corpus_bundles");
+              const getAllBundles = storeBundles.getAll();
+              getAllBundles.onsuccess = () => {
+                for (const item of getAllBundles.result) {
+                  const idx = this.memoryBundles.findIndex(
+                    (b) => b.corpus.id === item.corpusId,
+                  );
+                  if (idx >= 0) {
+                    this.memoryBundles[idx] = item.bundle;
+                  } else {
+                    this.memoryBundles.push(item.bundle);
+                  }
+                }
+                resBundles();
+              };
+              getAllBundles.onerror = () => resBundles();
+            }),
+          );
         }
+
+        await Promise.all(loadPromises);
+        resolve(db);
       };
       request.onerror = () => reject(request.error);
     });
+  }
+
+  private async ensureInitialized(): Promise<void> {
+    if (this.dbPromise) {
+      await this.dbPromise;
+    }
   }
 
   private async persistStudyState(
@@ -138,6 +157,7 @@ class StorageService {
       const { invoke } = await import("@tauri-apps/api/core");
       return invoke<CorpusMeta[]>("list_corpora");
     }
+    await this.ensureInitialized();
     return this.memoryBundles.map((b) => b.corpus);
   }
 
@@ -146,6 +166,7 @@ class StorageService {
       const { invoke } = await import("@tauri-apps/api/core");
       return invoke<VolumeData[]>("list_volumes", { corpusId });
     }
+    await this.ensureInitialized();
     const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
     if (!bundle) return [];
     return bundle.volumes.map((v) => {
@@ -167,6 +188,7 @@ class StorageService {
         volumeId: volumeId || null,
       });
     }
+    await this.ensureInitialized();
     const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
     if (!bundle) return [];
     let lessons = bundle.lessons;
@@ -186,6 +208,7 @@ class StorageService {
       const { invoke } = await import("@tauri-apps/api/core");
       return invoke<StudyCardItem[]>("get_study_queue", { query });
     }
+    await this.ensureInitialized();
 
     // Web / Browser fallback logic:
     const bundle = this.memoryBundles.find(
@@ -232,8 +255,8 @@ class StorageService {
         pos: e.pos,
         gender: e.gender,
         grammar_metadata: e.grammar_metadata,
-        definitions: e.definitions,
-        tags: e.tags || [],
+        definitions: e.definitions.map((d) => ({ ...d })),
+        tags: [...(e.tags || [])],
         box_number: state.box,
         interval_days: state.interval,
         consecutive_successes: state.successes,
@@ -307,6 +330,7 @@ class StorageService {
       });
       return { box: res[0], interval: res[1], nextDue: res[2] };
     }
+    await this.ensureInitialized();
 
     // Web fallback: Leitner calculation
     const current = this.localStudyState.get(review.entry_id) || {
@@ -363,6 +387,7 @@ class StorageService {
         corpusId: corpusId || null,
       });
     }
+    await this.ensureInitialized();
 
     let entries = this.memoryBundles.flatMap((b) => b.entries);
     if (corpusId) {
@@ -407,6 +432,7 @@ class StorageService {
       const { invoke } = await import("@tauri-apps/api/core");
       return invoke<number>("import_corpus_bundle", { bundle });
     }
+    await this.ensureInitialized();
     const idx = this.memoryBundles.findIndex(
       (b) => b.corpus.id === bundle.corpus.id,
     );
@@ -423,6 +449,7 @@ class StorageService {
     tsvContent: string,
     targetCorpusId = "hindi-bolo",
   ): Promise<number> {
+    await this.ensureInitialized();
     const lines = tsvContent.trim().split("\n");
     if (lines.length < 2) return 0;
     const header = lines[0].split("\t").map((h) => h.trim().toLowerCase());
@@ -452,10 +479,6 @@ class StorageService {
       const pos = colPos >= 0 ? parts[colPos]?.trim() : "";
       const gen = colGen >= 0 ? parts[colGen]?.trim() : "";
       const mng = colMng >= 0 ? parts[colMng]?.trim() : "";
-      const tags =
-        colTag >= 0 && parts[colTag]
-          ? parts[colTag].split(";").filter(Boolean)
-          : [];
 
       if (!nat || !mng) continue;
       const cleanNat = nat.replace(/\r/g, "").trim();
