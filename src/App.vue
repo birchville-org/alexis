@@ -6,7 +6,7 @@
         <img src="/birchville_logo.png" alt="Birchville" class="header-logo" />
         <div class="header-title-wrap">
           <h1 class="header-title">Alexis</h1>
-          <span class="header-tagline">Philologischer Vokabeltrainer & Korpus-Hub</span>
+          <span class="header-tagline">Vokabeltrainer</span>
         </div>
       </div>
 
