@@ -1,0 +1,41 @@
+{
+  "name": "@birchville/alexis",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Universal philological vocabulary trainer, corpus reader, and dictionary hub",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "philology",
+    "sanskrit",
+    "vocabulary-trainer",
+    "spaced-repetition",
+    "dictionary",
+    "monier-williams",
+    "corpus",
+    "pwa"
+  ],
+  "author": "Marco Demarmels",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/birchville-org/alexis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/birchville-org/alexis/issues"
+  },
+  "homepage": "https://github.com/birchville-org/alexis#readme",
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vue-tsc": "^2.2.0"
+  }
+}
