@@ -1,224 +1,297 @@
 volume	lesson	native	transliteration	pos	gender	meaning_de	tags
-payer_vol2	23	सामान्य	sāmānya	noun	n	Gleichheit, Übereinstimmung	lektion23
-payer_vol2	23	विशेष	viśeṣa	noun	m	Besonderheit, Spezifikation, differentia specifica	lektion23
-payer_vol2	24	कृतम्	kṛtam	noun	-	⟪कृतं⟫ ⟪क्रोधेन⟫ = "Es ist getan mit dem Zorn = lass ab vom Zorn!"	lektion24
-payer_vol2	24	अलंकार	alaṃkāra	noun	m	Schmuck, Schmuckmittel (in der Dichtung)	lektion24
-payer_vol2	24	हेतु	hetu	noun	m	Antribe, Veranslassung, Ursache, Grund ; ⟪हेतुना⟫, ⟪हेतोस्⟫, ⟪हेतवे⟫ mit Genetiv oder als Hinterglied eines Kompositums = "um ... willen, wegen"	lektion24
-payer_vol2	24	प्रतिमा	pratimā	noun	f	Bildnis, Abbild	lektion24
-payer_vol2	24	वृत्ति	vṛtti	noun	f	Benehmen, Tätigkeit, Lebensweise	lektion24
-payer_vol2	24	वृत्त	vṛtta	noun	n	Benehmen	lektion24
-payer_vol2	24	अध्यक्ष	adhyakṣa	noun	m	Aufseher, Departementschef ; Augenzeuge	lektion24
-payer_vol2	24	इन्द्रिय	indriya	noun	n	Kraft, Sinnesorgan	lektion24
-payer_vol2	24	ऊह	ūha	noun	m	Überlegung, Argumentation	lektion24
-payer_vol2	24	अपोह	apoha	noun	m	Negierung (⟪अप⟫ + ⟪ऊह⟫)	lektion24
-payer_vol2	24	ऊहापोह	ūhāpoha	noun	m	Diskussion des Für und Wider	lektion24
-payer_vol2	24	औपकारिक	aupakārika	noun	-	-⟪ई⟫ : nützlich	lektion24
-payer_vol2	24	कुप्य	kupya	noun	n	Walderzeugnis, Metall (nicht Edelmetall)	lektion24
+payer_vol2	21	भक्ति	bhakti	noun	-	Liebe und Respekt zu einem persönlichen Gott. siehe dazu Basham, Wonder S. 332f.)	glossar;lektion21
+payer_vol2	21	भिक्ष्	bhikṣ	noun	-	betteln	glossar;lektion21
+payer_vol2	22	अर्ह	arha	noun	-	"Du solltest")	glossar;lektion22
+payer_vol2	22	अर्हन्त्	arhant	noun	-	ein Würdiger. Im Buddhismus und Jainismus: jemand, der die endgültige Erlösung erreicht hat	glossar;lektion22
+payer_vol2	22	ब्रह्मचर्य	brahmacarya	noun	-	sexuelle Enthaltsamkeit, zölibatärer Lebenswandel	glossar;lektion22
+payer_vol2	22	चर्	car	noun	-	ein Gelübde praktizieren, insbes. sexuelle Enthaltsamkeit)	glossar;lektion22
+payer_vol2	22	चर	cara	noun	-	das Bewegliche = Tiere (im Unterschied zu den Pflanzen)	glossar;lektion22
+payer_vol2	22	कामम्	kāmam	noun	-	nach Wunsch, nach Herzenslust	glossar;lektion22
+payer_vol2	22	व्रत	vrata	noun	-	eine Mutter verspricht, ihre Tochter als Tempelprostituierte () hinzugeben, wenn ihre Tochter wieder gesund wird. Wichti	glossar;lektion22
+payer_vol2	22	शक्ति	śakti	noun	-	göttliche Kraft, personifiziert als weibliche Begleiterin insbes. von	glossar;lektion22
+payer_vol2	23	सामान्य	sāmānya	noun	n	Gleichheit, Übereinstimmung	glossar;lektion23
+payer_vol2	24	अध्यक्ष	adhyakṣa	noun	m	Aufseher, Departementschef ; Augenzeuge	glossar;lektion24
+payer_vol2	24	अलम्	alam	adv	-	genug, hinreichend, (jemandem, etwas) gewachsen ; mit Dativ: genug für, hinreichend für, dem gewachsen ; mit Instrumenta	glossar;lektion24
+payer_vol2	24	अलंकार	alaṃkāra	noun	m	Schmuck, Schmuckmittel (in der Dichtung)	glossar;lektion24
+payer_vol2	24	अपोह	apoha	noun	m	Negierung ( + ); Negierung (⟪अप⟫ + ⟪ऊह⟫)	glossar;lektion24
+payer_vol2	24	अतस्	atas	noun	-	von da, dann, deshalb, daher (Pronominalstamm a- "dieser" + Ablativsuffix -tas)	glossar;lektion24
+payer_vol2	24	औपकारिक	aupakārika	adj	-	- : nützlich; -⟪ई⟫ : nützlich	glossar;lektion24
+payer_vol2	24	चौल	caula	noun	n	Zermonie () des Haarschneidens (im Alter von 3 Jahren); Zermonie (⟪संस्कार⟫) des Haarschneidens (im Alter von 3 Jahren)	glossar;lektion24
+payer_vol2	24	ग्रहण	grahaṇa	noun	n	Ergreifen	glossar;lektion24
+payer_vol2	24	हेतु	hetu	noun	m	Antribe, Veranslassung, Ursache, Grund ; , , mit Genetiv oder als Hinterglied eines Kompositums = "um ... willen, wegen"; Antribe, Veranslassung, Ursache, Grund ; ⟪हेतुना⟫, ⟪हेतोस्⟫, ⟪हेतवे⟫ mit Genetiv oder als Hinterglied eines Kompositums = "um ... willen, wegen"	glossar;lektion24
+payer_vol2	24	इन्द्रिय	indriya	noun	n	Kraft, Sinnesorgan	glossar;lektion24
 payer_vol2	24	ख्याति	khyā (khyāti)	verb	-	PPP ⟪ख्यात⟫ : sehen, sichtbar werden ; nennen, erklären, mitteilen	verb;klasse_2P;lektion24
-payer_vol2	24	आख्यान	ākhyāna	noun	n	Erzählung	lektion24
-payer_vol2	24	संख्या	saṃkhyā	noun	f	Zählung, Aufzählung ; ⟪सांख्य⟫ n.: eines der sechs philosophischen Systeme (kurz: Basham, Wonder S. 326f.)	lektion24
-payer_vol2	24	ग्रहण	grahaṇa	noun	n	Ergreifen	lektion24
-payer_vol2	24	चौल	caula	noun	n	Zermonie (⟪संस्कार⟫) des Haarschneidens (im Alter von 3 Jahren)	lektion24
-payer_vol2	24	तत्त्व	tattva	noun	n	wahres Wesen, Wahrheit, Realität (⟪तद्⟫ + ⟪त्व⟫ = Dies-heit)	lektion24
-payer_vol2	24	स्वस्ति	svasti	noun	f	Glück, Heil (Nominalbildung aus ⟪सु⟫ ⟪अस्ति⟫ = "es ist gut")	lektion24
-payer_vol2	24	नमस्	namas	noun	n	Verbeugung, Verehrung, Gruss (Deklination später). Begrüssungsformel: ⟪नमो⟫ ⟪नमः⟫	lektion24
-payer_vol2	24	स्वागत	svāgata	noun	n	Willkommen (aus su-ā-gata)	lektion24
-payer_vol2	24	तृण	tṛṇa	noun	n	Grashalm	lektion24
-payer_vol2	25	त्यजति	tyaj (tyajati)	verb	-	verlassen, aufgeben, im Stich lassen	verb;klasse_1P;lektion25
-payer_vol2	25	त्याग	tyāga	noun	m	Aufgeben, Verzicht, Meiden	lektion25
-payer_vol2	25	द्रव्य	dravya	noun	n	Gegenstand, Habe, materieller Besitz, Geld	lektion25
-payer_vol2	25	धान्य	dhānya	noun	n	gedroschenes Getreide	lektion25
+payer_vol2	24	कुप्य	kupya	noun	n	Walderzeugnis, Metall (nicht Edelmetall)	glossar;lektion24
+payer_vol2	24	कृ	kṛ	noun	-	sich verbeugen, verehren, begrüssen	glossar;lektion24
+payer_vol2	24	कृतम्	kṛtam	noun	-	= "Es ist getan mit dem Zorn = lass ab vom Zorn!"	glossar;lektion24
+payer_vol2	24	नमस्	namas	noun	n	Verbeugung, Verehrung, Gruss (Deklination später). Begrüssungsformel	glossar;lektion24
+payer_vol2	24	संख्या	saṃkhyā	noun	f	Zählung, Aufzählung ; n.: eines der sechs philosophischen Systeme (kurz: Basham, Wonder S. 326f.); Zählung, Aufzählung ; ⟪सांख्य⟫ n.: eines der sechs philosophischen Systeme (kurz: Basham, Wonder S. 326f.)	glossar;lektion24
+payer_vol2	24	स्वस्ति	svasti	noun	f	Glück, Heil (Nominalbildung aus = "es ist gut"); Glück, Heil (Nominalbildung aus ⟪सु⟫ ⟪अस्ति⟫ = "es ist gut")	glossar;lektion24
+payer_vol2	24	स्वागत	svāgata	noun	n	Willkommen (aus su-ā-gata)	glossar;lektion24
+payer_vol2	24	तत्त्व	tattva	noun	n	wahres Wesen, Wahrheit, Realität ( + = Dies-heit); wahres Wesen, Wahrheit, Realität (⟪तद्⟫ + ⟪त्व⟫ = Dies-heit)	glossar;lektion24
+payer_vol2	24	तृण	tṛṇa	noun	n	Grashalm	glossar;lektion24
+payer_vol2	24	वृत्	vṛt	noun	-	erfolgen, geschehen, entstehen	glossar;lektion24
+payer_vol2	24	वृत्त	vṛtta	noun	n	Benehmen	glossar;lektion24
+payer_vol2	24	वृत्ति	vṛtti	noun	f	Benehmen, Tätigkeit, Lebensweise	glossar;lektion24
+payer_vol2	24	आख्यान	ākhyāna	noun	n	Erzählung	glossar;lektion24
+payer_vol2	24	ऊह	ūha	noun	m	Überlegung, Argumentation	glossar;lektion24
+payer_vol2	24	ऊहापोह	ūhāpoha	noun	m	Diskussion des Für und Wider	glossar;lektion24
+payer_vol2	25	अन्यथा	anyathā	adv	-	anders, sonst, fälschlich, unrichtig	glossar;lektion25
+payer_vol2	25	अणु	aṇu	noun	-	dünn, fein, sehr klein ; m.: Atom	glossar;lektion25
+payer_vol2	25	धर्म	dharma	noun	m	das, was fest ist und fest hält = Dharma; ("das, was fest ist", d.h.) Recht, Gesetz, Sitte, Charakter	glossar;lektion25
+payer_vol2	25	धान्य	dhānya	noun	n	gedroschenes Getreide	glossar;lektion25
+payer_vol2	25	धृ	dhṛ	verb	-	halten, festhalten	glossar;lektion25
 payer_vol2	25	धरति	dhṛ (dharati)	verb	-	halten, festhalten	verb;klasse_1U;lektion25
-payer_vol2	25	धर्म	dharma	noun	m	das, was fest ist und fest hält = Dharma	lektion25
-payer_vol2	25	नित्यम्	nityam	adv	-	stets, beständig immer	lektion25
-payer_vol2	25	प्रज्ञा	prajñā	noun	f	Weisheit, Erkenntnis	lektion25
-payer_vol2	25	प्रदान	pradāna	noun	n	Geben, Spenden ; Gabe, Spende	lektion25
-payer_vol2	25	मद	mada	noun	m	Rausch, Sinnenrausch = Sinneslust	lektion25
-payer_vol2	25	मान	māna	noun	m	Einschätzung, Ansehen, Ruhm, Ehre, Stolz, Dünkel, Minderwertigkeitsgefühl ; (man misst sich an anderen)	lektion25
-payer_vol2	25	न्याय	nyāya	noun	m	Regel, Prinzip, Methode, Urteil (jurist.), Logik (aus ni + i +a)	lektion25
-payer_vol2	25	अन्यथा	anyathā	adv	-	anders, sonst, fälschlich, unrichtig	lektion25
+payer_vol2	25	द्रव्य	dravya	noun	n	Gegenstand, Habe, materieller Besitz, Geld	glossar;lektion25
+payer_vol2	25	दार	dāra	noun	m	Ehefrau	glossar;lektion25
 payer_vol2	25	दारिद्र्य	dāridrya	noun	n	⟪दरिद्रस्य⟫ ⟪भावः⟫	lektion25
-payer_vol2	25	प्रदान	pradāna	noun	n	⟪दान⟫	lektion25
-payer_vol2	25	शिक्षा	śikṣā	noun	f	Wissenschaft, Unterricht ; Phonetik	lektion25
-payer_vol2	25	स्तेन	stena	noun	m	Dieb	lektion25
-payer_vol2	25	स्तेय	steya	noun	n	Diebstahl	lektion25
-payer_vol2	25	किल्बिष	kilbiṣa	noun	n	Schuld, Beleidigung, Sünde	lektion25
-payer_vol2	25	मूल	mūla	noun	n	Wurzel	lektion25
+payer_vol2	25	गोदान	godāna	noun	n	Geben von Kühen / einer Kuh ; zweite Haarschnittzeremonie (ein ); Geben von Kühen / einer Kuh ; zweite Haarschnittzeremonie (ein ⟪संस्कार⟫)	glossar;lektion25
+payer_vol2	25	हर्ष	harṣa	noun	m	(Aufrichten der Körperhärchen), Freude	glossar;lektion25
+payer_vol2	25	हिरण्य	hiraṇya	noun	-	golden ; n.: Gold, Geld, Reichtum	glossar;lektion25
+payer_vol2	25	किल्बिष	kilbiṣa	noun	n	Schuld, Beleidigung, Sünde	glossar;lektion25
+payer_vol2	25	लिप्	lip	verb	-	bestreichen, beschmieren	glossar;lektion25
 payer_vol2	25	लिम्पति	lip (limpati)	verb	-	(!): bestreichen, beschmieren	verb;klasse_6U;lektion25
-payer_vol2	25	लिप्ति	lipti	noun	f	Bestreichen, Schreiben, Schrift	lektion25
+payer_vol2	25	लिप्ति	lipti	noun	f	Bestreichen, Schreiben, Schrift	glossar;lektion25
+payer_vol2	25	मद्	mad	noun	-	sich freuen, sich an etwas (Instr., Gen., Lok.) berauschen	glossar;lektion25
+payer_vol2	25	मान	māna	noun	m	Einschätzung, Ansehen, Ruhm, Ehre, Stolz, Dünkel, Minderwertigkeitsgefühl ; (man misst sich an anderen)	glossar;lektion25
+payer_vol2	25	मूल	mūla	noun	n	Wurzel	glossar;lektion25
+payer_vol2	25	नित्य	nitya	noun	-	ständig, beständig, ewig	glossar;lektion25
+payer_vol2	25	नित्यम्	nityam	adv	-	stets, beständig immer	glossar;lektion25
+payer_vol2	25	नी	nī	noun	-	wegführen, unterrichten, erziehen	glossar;lektion25
+payer_vol2	25	प्रदान	pradāna	noun	n	Geben, Spenden ; Gabe, Spende; ⟪दान⟫	glossar;lektion25
+payer_vol2	25	प्रज्ञा	prajñā	noun	f	Weisheit, Erkenntnis	glossar;lektion25
+payer_vol2	25	स्तेन	stena	noun	m	Dieb	glossar;lektion25
+payer_vol2	25	स्तेय	steya	noun	n	Diebstahl	glossar;lektion25
+payer_vol2	25	स्वभाव	svabhāva	noun	m	Wesen, Natur, Charakter	glossar;lektion25
+payer_vol2	25	सामर्थ्य	sāmarthya	noun	n	das seinem Zweck Entsprechen	glossar;lektion25
+payer_vol2	25	त्यजति	tyaj (tyajati)	verb	-	verlassen, aufgeben, im Stich lassen	verb;klasse_1P;lektion25
+payer_vol2	25	त्याग	tyāga	noun	m	Aufgeben, Verzicht, Meiden	glossar;lektion25
+payer_vol2	25	वह्	vah	verb	-	führen, fahren, wehen (Wind)	glossar;lektion25
 payer_vol2	25	वहति	vah (vahati)	verb	-	führen, fahren, wehen (Wind)	verb;klasse_1U;lektion25
-payer_vol2	25	विवाह	vivāha	noun	m	Wegführen, Heirat einer Frau (Instr., saha) (zur Heirat siehe Basham, Wonder S. 166 -171)	lektion25
-payer_vol2	25	विनय	vinaya	noun	m	Entfernen, Erziehen, Zucht, buddhist.: Ordensdisziplin, Ordensrecht	lektion25
-payer_vol2	25	विज्ञान	vijñāna	noun	n	Erkenntnis, Kenntnis	lektion25
-payer_vol2	25	विष्टि	viṣṭi	noun	f	Arbeit, Frondienst	lektion25
+payer_vol2	25	वर्ष	varṣa	noun	n	Regen, Regenzeit, Jahr	glossar;lektion25
+payer_vol2	25	विज्ञान	vijñāna	noun	n	Erkenntnis, Kenntnis	glossar;lektion25
+payer_vol2	25	विनय	vinaya	noun	m	Entfernen, Erziehen, Zucht, buddhist.: Ordensdisziplin, Ordensrecht	glossar;lektion25
+payer_vol2	25	विना	vinā	noun	-	ohne, ausser (mit Akk., Instr., Abl.)	glossar;lektion25
+payer_vol2	25	विवाह	vivāha	noun	m	Wegführen, Heirat einer Frau (Instr., saha) (zur Heirat siehe Basham, Wonder S. 166 -171)	glossar;lektion25
+payer_vol2	25	विष्टि	viṣṭi	noun	f	Arbeit, Frondienst	glossar;lektion25
+payer_vol2	25	वृद्धि	vṛddhi	noun	f	Wachsen, Wachstum, Dehnstufe (aus: vṛdh-ti)	glossar;lektion25
+payer_vol2	25	वृध्	vṛdh	noun	-	wachsen, grösser werden	glossar;lektion25
 payer_vol2	25	वर्धते	vṛdh (vardhate)	verb	-	wachsen, grösser werden	verb;klasse_1Ā;lektion25
-payer_vol2	25	वृद्धि	vṛddhi	noun	f	Wachsen, Wachstum, Dehnstufe (aus: vṛdh-ti)	lektion25
-payer_vol2	25	सामर्थ्य	sāmarthya	noun	n	das seinem Zweck Entsprechen	lektion25
-payer_vol2	25	स्वभाव	svabhāva	noun	m	Wesen, Natur, Charakter	lektion25
-payer_vol2	25	हर्ष	harṣa	noun	m	(Aufrichten der Körperhärchen), Freude	lektion25
-payer_vol2	25	गोदान	godāna	noun	n	Geben von Kühen / einer Kuh ; zweite Haarschnittzeremonie (ein ⟪संस्कार⟫)	lektion25
-payer_vol2	27	वत्स्यति	Fut.:	noun	-	br **Pass.:** ⟪उष्यते⟫:br **PPP:** ⟪उषित⟫:br **Inf.:** ⟪वस्तुम्⟫	lektion27
-payer_vol2	27	वस्तु	vastu	noun	n	Sitz, Ort; Realie, reales Ding, Wirklichkeit, Gegenstand	lektion27
-payer_vol2	27	वस्तुतस्	vastutas	noun	-	in Wirklichkeit, wirklich	lektion27
-payer_vol2	27	वसिष्यते	Fut.:	noun	-	br **PPP:** ⟪वसित⟫:br **Inf.:** ⟪वसितुम्⟫	lektion27
-payer_vol2	27	वस्त्र	vastra	noun	n	Mittel, um sich anzuziehen = Kleid, Gewand, Stoff	lektion27
-payer_vol2	27	वसु	vasu	noun	n	Reichtum, Schatz, Habe, Besitz	lektion27
-payer_vol2	27	वसन्त	vasanta	noun	m	("leuchtend" =) Frühling (März bis Mai)	lektion27
-payer_vol2	27	हरिष्यति	Fut.:	noun	-	br **Pass.:** ⟪ह्रियते⟫:br **PPP:** ⟪हृत⟫:br **Inf.:** ⟪हर्तुम्⟫	lektion27
-payer_vol2	27	हर	hara	adj	-	wegnehmend; m.: der Zerstörer = Beiname von Śiva	lektion27
-payer_vol2	27	हरि	hari	adj	-	blond, gelb, grün; m. Beiname des Viṣṇu (gehört nicht zur Wurzel ⟪हृ⟫ 1)	lektion27
-payer_vol2	27	हरिहर	harihara	noun	m	Viṣṇu und Śiva vereint als eine einzige Gottheit	lektion27
-payer_vol2	28	विन्दति	vid (vindati)	verb	-	(!): finden	verb;klasse_6U;lektion28
+payer_vol2	25	शिक्षा	śikṣā	noun	f	Wissenschaft, Unterricht ; Phonetik; rechte Aussprache	glossar;lektion25
+payer_vol2	27	वत्स्यति	Fut.:	noun	-	br Pass.: :br PPP: :br Inf; br **Pass.:** ⟪उष्यते⟫:br **PPP:** ⟪उषित⟫:br **Inf.:** ⟪वस्तुम्⟫	glossar;lektion27
+payer_vol2	27	वसिष्यते	Fut.:	noun	-	br PPP: :br Inf; br **PPP:** ⟪वसित⟫:br **Inf.:** ⟪वसितुम्⟫	glossar;lektion27
+payer_vol2	27	हरिष्यति	Fut.:	noun	-	br Pass.: :br PPP: :br Inf; br **Pass.:** ⟪ह्रियते⟫:br **PPP:** ⟪हृत⟫:br **Inf.:** ⟪हर्तुम्⟫	glossar;lektion27
+payer_vol2	27	हर	hara	adj	-	wegnehmend; m.: der Zerstörer = Beiname von Śiva	glossar;lektion27
+payer_vol2	27	हरि	hari	adj	-	blond, gelb, grün; m. Beiname des Viṣṇu (gehört nicht zur Wurzel 1); blond, gelb, grün; m. Beiname des Viṣṇu (gehört nicht zur Wurzel ⟪हृ⟫ 1)	glossar;lektion27
+payer_vol2	27	हरिहर	harihara	noun	m	Viṣṇu und Śiva vereint als eine einzige Gottheit	glossar;lektion27
+payer_vol2	27	हृ	hṛ	verb	-	halten, tragen; holen, wegnehmen, rauben	glossar;lektion27
+payer_vol2	27	वस्	vas	verb	-	verweilen, wohnen (mit Lokativ der Person, bei der man wohnt)	glossar;lektion27
+payer_vol2	27	वसन्त	vasanta	noun	m	("leuchtend" =) Frühling (März bis Mai)	glossar;lektion27
+payer_vol2	27	वस्त्र	vastra	noun	n	Mittel, um sich anzuziehen = Kleid, Gewand, Stoff	glossar;lektion27
+payer_vol2	27	वस्तु	vastu	noun	n	Sitz, Ort; Realie, reales Ding, Wirklichkeit, Gegenstand	glossar;lektion27
+payer_vol2	27	वस्तुतस्	vastutas	noun	-	in Wirklichkeit, wirklich	glossar;lektion27
+payer_vol2	27	वसु	vasu	noun	n	Reichtum, Schatz, Habe, Besitz	glossar;lektion27
+payer_vol2	28	भृत्य	bhṛtya	noun	m	Untergebener, Diener	glossar;lektion28
+payer_vol2	28	चुर्	cur	noun	-	stehlen	glossar;lektion28
+payer_vol2	28	कम्	kam	noun	-	lieben	glossar;lektion28
 payer_vol2	28	कामयते	kam (kāmayate)	verb	-	lieben	verb;klasse_10Ā;lektion28
-payer_vol2	28	भार	bhāra	noun	m	Last	lektion28
-payer_vol2	28	भृत्य	bhṛtya	noun	m	Untergebener, Diener	lektion28
-payer_vol2	29	अवज्ञान	avajñāna	noun	n	Missachtung	lektion29
-payer_vol2	29	गुप्त	gupta	adj	-	behütet, beschützt	lektion29
-payer_vol2	29	गृहस्थ	gṛhastha	adj	-	im Hause befindlich ; m. Hausvater (jemand, der sich im 2. ⟪आश्रम⟫ befindet)	lektion29
+payer_vol2	28	विद्	vid	verb	-	wissen, kennen	glossar;lektion28
+payer_vol2	28	विन्दति	vid (vindati)	verb	-	(!): finden	verb;klasse_6U;lektion28
+payer_vol2	29	अवज्ञान	avajñāna	noun	n	Missachtung	glossar;lektion29
+payer_vol2	29	ग्रस्	gras	noun	-	verzehren, fressen	glossar;lektion29
 payer_vol2	29	ग्रसते	gras (grasate)	verb	-	verzehren, fressen	verb;klasse_1Ā;lektion29
-payer_vol2	29	तीक्ष्ण	tīkṣṇa	adj	-	"wild", scharf, spitz, streng, heftig, scharfzüngig	lektion29
-payer_vol2	29	न्याय	nyāya	noun	m	Norm, Regel, rechte Art und Weise; Methode, Logik (von ⟪इ⟫ + ⟪नि⟫)	lektion29
-payer_vol2	29	परिव्राजक	parivrājaka	noun	m	Umherwanderer, Wandermönch, Pilger	lektion29
-payer_vol2	29	पालयति	pālayati	noun	-	auch bedeutungsgleich mit ⟪पाति⟫	lektion29
-payer_vol2	29	प्रजा	prajā	noun	f	Zeugung, Geburt, Nachkommenschaft	lektion29
-payer_vol2	29	मत्स्य	matsya	noun	m	Fisch	lektion29
-payer_vol2	29	मात्स्य	mātsya	adj	-	zum Fisch (zu Fischen) gehörig	lektion29
-payer_vol2	29	यथा	yathā	adv	-	wie, gleichsam	lektion29
-payer_vol2	29	रमते	ram (ramate)	verb	-	still stehen, ruhen, verweilen ; Gefallen finden, sich ergötzen	verb;klasse_1Ā;lektion29
-payer_vol2	29	वानप्रस्थ	vānaprastha	noun	m	Waldeinsiedler (jemand, der sich im 3. ⟪आश्रम⟫ befindet)	lektion29
-payer_vol2	29	शुचि	śuci	adj	-	leuchtend, glänzend, fein ; m.: Reinheit	lektion29
+payer_vol2	29	गुप्त	gupta	adj	-	behütet, beschützt	glossar;lektion29
+payer_vol2	29	गृहस्थ	gṛhastha	adj	-	im Hause befindlich ; m. Hausvater (jemand, der sich im 2. befindet); im Hause befindlich ; m. Hausvater (jemand, der sich im 2. ⟪आश्रम⟫ befindet)	glossar;lektion29
+payer_vol2	29	मत्स्य	matsya	noun	m	Fisch	glossar;lektion29
+payer_vol2	29	मात्स्य	mātsya	adj	-	zum Fisch (zu Fischen) gehörig	glossar;lektion29
+payer_vol2	29	मृदु	mṛdu	adj	-	sanft, mild, weich ; langsam, schwach	glossar;lektion29
+payer_vol2	29	न्याय	nyāya	noun	m	Norm, Regel, rechte Art und Weise; Methode, Logik (von + ); Regel, Prinzip, Methode, Urteil (jurist.), Logik (aus ni + i +a); Norm, Regel, rechte Art und Weise; Methode, Logik (von ⟪इ⟫ + ⟪नि⟫)	glossar;lektion29
+payer_vol2	29	परि	pari	noun	-	herum, um (Ort, Zeit), umher	glossar;lektion29
+payer_vol2	29	परिव्राजक	parivrājaka	noun	m	Umherwanderer, Wandermönch, Pilger	glossar;lektion29
+payer_vol2	29	प्रजा	prajā	noun	f	Zeugung, Geburt, Nachkommenschaft	glossar;lektion29
+payer_vol2	29	पालयति	pālayati	noun	-	auch bedeutungsgleich mit	glossar;lektion29
+payer_vol2	29	पूज्	pūj	verb	-	ehren, verehren	glossar;lektion29
 payer_vol2	29	पूजयति	pūj (pūjayati)	verb	-	ehren, verehren	verb;klasse_10P;lektion29
-payer_vol2	30	क्रीणाति	krī (krīṇāti)	verb	-	kaufen	verb;klasse_9U;lektion30
-payer_vol2	30	जानाति	jñā (jānāti)	verb	-	kennen, erkennen, wissen, verstehen	verb;klasse_9U;lektion30
-payer_vol2	30	ज्ञाति	jñāti	noun	m	(Bluts-)Verwandter (Verwandte sind diejenigen, die man kennt!)	lektion30
-payer_vol2	30	ज्ञान	jñāna	noun	n	Erkenntnis, Wissen, Erkennen (bes. der "höheren" Wahrheiten in Religion und Philosophie)	lektion30
-payer_vol2	30	पुनाति	pū (punāti)	verb	-	reinigen	verb;klasse_9U;lektion30
+payer_vol2	29	रम्	ram	noun	-	still stehen, ruhen, verweilen ; Gefallen finden, sich ergötzen	glossar;lektion29
+payer_vol2	29	रमते	ram (ramate)	verb	-	still stehen, ruhen, verweilen ; Gefallen finden, sich ergötzen	verb;klasse_1Ā;lektion29
+payer_vol2	29	तीक्ष्ण	tīkṣṇa	adj	-	"wild", scharf, spitz, streng, heftig, scharfzüngig	glossar;lektion29
+payer_vol2	29	उद्	ud	noun	-	auf, hinauf, empor, hinaus, aus, aus-	glossar;lektion29
+payer_vol2	29	वानप्रस्थ	vānaprastha	noun	m	Waldeinsiedler (jemand, der sich im 3. befindet); Waldeinsiedler (jemand, der sich im 3. ⟪आश्रम⟫ befindet)	glossar;lektion29
+payer_vol2	29	यथा	yathā	adv	-	wie, gleichsam	glossar;lektion29
+payer_vol2	30	अश्	aś	verb	-	essen, verzehren	glossar;lektion30
 payer_vol2	30	अश्नाति	aś (aśnāti)	verb	-	essen, verzehren	verb;klasse_9P;lektion30
-payer_vol2	30	यद्यपि	yadyapi	noun	-	wenn auch, selbst wenn, obgleich	lektion30
-payer_vol2	30	यद्येवम्	yadyevam	noun	-	wenn es so ist, unter diesen Umständen	lektion30
-payer_vol2	30	पुनर्	punar	noun	-	wieder, immer wieder, zurück, noch einmal, dagegen, aber	lektion30
-payer_vol2	30	पुनर्भव	punarbhava	noun	m	Wiedergeburt	lektion30
+payer_vol2	30	चेत्	cet	noun	-	wenn; vorausgesetzt, dass (steht nie am Anfang eines Satzes)	glossar;lektion30
+payer_vol2	30	जानाति	jñā (jānāti)	verb	-	kennen, erkennen, wissen, verstehen	verb;klasse_9U;lektion30
+payer_vol2	30	ज्ञान	jñāna	noun	n	Erkenntnis, Wissen, Erkennen (bes. der "höheren" Wahrheiten in Religion und Philosophie)	glossar;lektion30
+payer_vol2	30	ज्ञाति	jñāti	noun	m	(Bluts-)Verwandter (Verwandte sind diejenigen, die man kennt!)	glossar;lektion30
+payer_vol2	30	जीव्	jīv	verb	-	leben	glossar;lektion30
 payer_vol2	30	जीवति	jīv (jīvati)	verb	-	leben	verb;klasse_1P;lektion30
-payer_vol2	30	जीव	jīva	noun	-	Leben, individuelle Seele	lektion30
-payer_vol2	31	युनक्ति	yuj (yunakti)	verb	-	anschirren, anjochen, anspannen, befestigen ; Ā auch: sich anspannen (= sich anstrengen), sich verbinden mit, sich konzentrieren auf (Lokativ, ⟪सप्तमी⟫)	verb;klasse_7U;lektion31
-payer_vol2	31	रुणद्धि	rudh (ruṇaddhi)	verb	-	stoppen, zum Stillstand bringen, zurückhalten = einschliessen, verdecken	verb;klasse_7U;lektion31
-payer_vol2	31	छिनत्ति	chid (chinatti)	verb	-	abschneiden	verb;klasse_7U;lektion31
-payer_vol2	31	भनक्ति	bhañj (bhanakti)	verb	-	(etwas) zerbrechen	verb;klasse_7P;lektion31
+payer_vol2	30	जीव	jīva	noun	m	Leben, individuelle Seele	glossar;lektion30
+payer_vol2	30	क्री	krī	verb	-	kaufen	glossar;lektion30
+payer_vol2	30	क्रीणाति	krī (krīṇāti)	verb	-	kaufen	verb;klasse_9U;lektion30
+payer_vol2	30	प्रिय	priya	noun	-	lieb, liebend, freundlich	glossar;lektion30
+payer_vol2	30	पुनर्	punar	noun	-	wieder, immer wieder, zurück, noch einmal, dagegen, aber	glossar;lektion30
+payer_vol2	30	पुनर्भव	punarbhava	noun	m	Wiedergeburt	glossar;lektion30
+payer_vol2	30	पुनः	punaḥ	noun	-	immer wieder	glossar;lektion30
+payer_vol2	30	पू	pū	verb	-	reinigen	glossar;lektion30
+payer_vol2	30	पुनाति	pū (punāti)	verb	-	reinigen	verb;klasse_9U;lektion30
+payer_vol2	30	सनातन	sanātana	noun	-	ewig, unvergänglich, beständig	glossar;lektion30
+payer_vol2	30	यद्यपि	yadyapi	noun	-	wenn auch, selbst wenn, obgleich	glossar;lektion30
+payer_vol2	30	यद्येवम्	yadyevam	noun	-	wenn es so ist, unter diesen Umständen	glossar;lektion30
+payer_vol2	31	अञ्ज्	añj	verb	-	salben, beschmieren	glossar;lektion31
 payer_vol2	31	अनक्ति	añj (anakti)	verb	-	salben, beschmieren	verb;klasse_7P;lektion31
-payer_vol2	31	व्यङ्क्ते	⟪अञ्ज्⟫ + vi → ⟪अञ्ज्⟫ + ⟪वि⟫	noun	-	auseinanderschmieren = sich schminken, sich unterschieden machen	lektion31
-payer_vol2	31	भिनत्ति	bhid (bhinatti)	verb	-	spalten	verb;klasse_7U;lektion31
-payer_vol2	31	भुनक्ति	bhuj (bhunakti)	verb	-	geniessen (z.B. Essen ; "die Erde geniessen" = die Erde beherrschen)	verb;klasse_7U;lektion31
+payer_vol2	31	बन्ध्	bandh	verb	-	binden, anbinden	glossar;lektion31
 payer_vol2	31	बध्नाति	bandh (badhnāti)	verb	-	(!): binden, anbinden	verb;klasse_9P;lektion31
+payer_vol2	31	भञ्ज्	bhañj	verb	-	(etwas) zerbrechen	glossar;lektion31
+payer_vol2	31	भनक्ति	bhañj (bhanakti)	verb	-	(etwas) zerbrechen	verb;klasse_7P;lektion31
+payer_vol2	31	भिद्	bhid	verb	-	spalten	glossar;lektion31
+payer_vol2	31	भिनत्ति	bhid (bhinatti)	verb	-	spalten	verb;klasse_7U;lektion31
+payer_vol2	31	भुज्	bhuj	verb	-	geniessen (z.B. Essen ; "die Erde geniessen" = die Erde beherrschen)	glossar;lektion31
+payer_vol2	31	भुनक्ति	bhuj (bhunakti)	verb	-	geniessen (z.B. Essen ; "die Erde geniessen" = die Erde beherrschen)	verb;klasse_7U;lektion31
+payer_vol2	31	छिद्	chid	verb	-	abschneiden	glossar;lektion31
+payer_vol2	31	छिनत्ति	chid (chinatti)	verb	-	abschneiden	verb;klasse_7U;lektion31
+payer_vol2	31	रुध्	rudh	verb	-	stoppen, zum Stillstand bringen, zurückhalten = einschliessen, verdecken	glossar;lektion31
+payer_vol2	31	रुणद्धि	rudh (ruṇaddhi)	verb	-	stoppen, zum Stillstand bringen, zurückhalten = einschliessen, verdecken	verb;klasse_7U;lektion31
+payer_vol2	31	युज्	yuj	verb	-	anschirren, anjochen, anspannen, befestigen ; Ā auch: sich anspannen (= sich anstrengen), sich verbinden mit, sich konze	glossar;lektion31
+payer_vol2	31	युनक्ति	yuj (yunakti)	verb	-	anschirren, anjochen, anspannen, befestigen ; Ā auch: sich anspannen (= sich anstrengen), sich verbinden mit, sich konzentrieren auf (Lokativ, ⟪सप्तमी⟫)	verb;klasse_7U;lektion31
+payer_vol2	31	व्यङ्क्ते	⟪अञ्ज्⟫ + vi → ⟪अञ्ज्⟫ + ⟪वि⟫	noun	-	auseinanderschmieren = sich schminken, sich unterschieden machen	lektion31
 payer_vol2	31	प्रजानाति	⟪ज्ञा⟫ + ⟪प्र⟫	verb	-	erkennen, verstehen	lektion31
 payer_vol2	31	सम्भवति	⟪भू⟫ + ⟪सम्⟫	verb	-	entstehen, existieren	lektion31
-payer_vol2	32	श्रमिष्यते	śramiṣyate	noun	-	br	lektion32
-payer_vol2	32	श्रम्यते	śramyate	noun	-	br	lektion32
-payer_vol2	32	श्रमयति	śramayati	noun	-	br	lektion32
-payer_vol2	32	श्रान्त	śrānta	noun	-	br	lektion32
-payer_vol2	32	श्रम्य	śramya	noun	-	br	lektion32
-payer_vol2	32	रोक्ष्यति	rokṣyati	noun	-	br	lektion32
-payer_vol2	32	रुह्यते	ruhyate	noun	-	br	lektion32
-payer_vol2	32	रूढ	rūḍha	noun	-	br	lektion32
-payer_vol2	32	रुह्य	ruhya	noun	-	br	lektion32
-payer_vol2	32	गृह्यते	gṛhyate	noun	-	br	lektion32
-payer_vol2	32	ग्राहयति	grāhayati	noun	-	br	lektion32
-payer_vol2	32	गृहीत	gṛhīta	noun	-	br	lektion32
-payer_vol2	32	गृह्य	gṛhya	noun	-	br	lektion32
-payer_vol2	32	लोकयिष्यति	lokayiṣyati	noun	-	br	lektion32
-payer_vol2	32	लोक्यते	lokyate	noun	-	br	lektion32
-payer_vol2	32	लोकित	lokita	noun	-	br	lektion32
-payer_vol2	32	लोक्य	lokya	noun	-	br	lektion32
-payer_vol2	32	क्षेप्स्यति	kṣepsyati	noun	-	br	lektion32
-payer_vol2	32	क्षिप्यते	kṣipyate	noun	-	br	lektion32
-payer_vol2	32	क्षेपयति	kṣepayati	noun	-	br	lektion32
-payer_vol2	32	क्षिप्त	kṣipta	noun	-	br	lektion32
-payer_vol2	32	क्षिप्य	kṣipya	noun	-	br	lektion32
 payer_vol2	32	चेष्यति	ceṣyati	noun	-	br	lektion32
-payer_vol2	32	चीयते	cīyate	noun	-	br	lektion32
-payer_vol2	32	चाययति	cāyayati	noun	-	br	lektion32
 payer_vol2	32	चित	cita	noun	-	br	lektion32
 payer_vol2	32	चित्य	citya	noun	-	br	lektion32
-payer_vol2	33	ददाति	dā (dadāti)	verb	-	geben	verb;klasse_3U;lektion33
-payer_vol2	33	दान	dāna	noun	n	Geben, Gabe, Freigebigkeit	lektion33
-payer_vol2	33	आदाय	Absol.	noun	-	mit Akk.: in Begleitung von, mit	lektion33
-payer_vol2	33	समाधि	samādhi	noun	m	innere Sammlung, höchste Aufmerksamkeit	lektion33
-payer_vol2	33	पिपर्ति	pṝ (piparti)	verb	-	füllen, erfüllen	verb;klasse_3P;lektion33
+payer_vol2	32	चाययति	cāyayati	noun	-	br	lektion32
+payer_vol2	32	चीयते	cīyate	noun	-	br	lektion32
+payer_vol2	32	ग्राहयति	grāhayati	noun	-	br	lektion32
+payer_vol2	32	गृह्य	gṛhya	noun	-	br	lektion32
+payer_vol2	32	गृह्यते	gṛhyate	noun	-	br	lektion32
+payer_vol2	32	गृहीत	gṛhīta	noun	-	br	lektion32
+payer_vol2	32	क्षेपयति	kṣepayati	noun	-	br	lektion32
+payer_vol2	32	क्षेप्स्यति	kṣepsyati	noun	-	br	lektion32
+payer_vol2	32	क्षिप्त	kṣipta	noun	-	br	lektion32
+payer_vol2	32	क्षिप्य	kṣipya	noun	-	br	lektion32
+payer_vol2	32	क्षिप्यते	kṣipyate	noun	-	br	lektion32
+payer_vol2	32	लोकयिष्यति	lokayiṣyati	noun	-	br	lektion32
+payer_vol2	32	लोकित	lokita	noun	-	br	lektion32
+payer_vol2	32	लोक्य	lokya	noun	-	br	lektion32
+payer_vol2	32	लोक्यते	lokyate	noun	-	br	lektion32
+payer_vol2	32	मही	mahī	noun	-	die Grosse); Erde, Grund und Boden	glossar;lektion32
+payer_vol2	32	रोक्ष्यति	rokṣyati	noun	-	br	lektion32
+payer_vol2	32	रुह्य	ruhya	noun	-	br	lektion32
+payer_vol2	32	रुह्यते	ruhyate	noun	-	br	lektion32
+payer_vol2	32	रूढ	rūḍha	noun	-	br	lektion32
+payer_vol2	32	श्रमयति	śramayati	noun	-	br	lektion32
+payer_vol2	32	श्रमिष्यते	śramiṣyate	noun	-	br	lektion32
+payer_vol2	32	श्रम्य	śramya	noun	-	br	lektion32
+payer_vol2	32	श्रम्यते	śramyate	noun	-	br	lektion32
+payer_vol2	32	श्रान्त	śrānta	noun	-	br	lektion32
+payer_vol2	33	आदाय	Absol.	noun	-	mit Akk.: in Begleitung von, mit	glossar;lektion33
+payer_vol2	33	हीन	PPP	noun	-	verlassen von, ermangelnd, mangelhaft	glossar;lektion33
+payer_vol2	33	भय	bhaya	noun	n	Angst, Furcht; Gefahr (die subjektive und die objektive Seite)	glossar;lektion33
+payer_vol2	33	भार	bhāra	noun	m	Last	glossar;lektion33
+payer_vol2	33	भी	bhī	verb	-	sich fürchten vor (Abl., Gen.)	glossar;lektion33
 payer_vol2	33	बिभेति	bhī (bibheti)	verb	-	sich fürchten vor (Abl., Gen.)	verb;klasse_3P;lektion33
-payer_vol2	33	भय	bhaya	noun	n	Angst, Furcht; Gefahr (die subjektive und die objektive Seite)	lektion33
+payer_vol2	33	भृ	bhṛ	verb	-	tragen, bringen; erhalten, ernähren	glossar;lektion33
 payer_vol2	33	बिभर्ति	bhṛ (bibharti)	verb	-	tragen, bringen; erhalten, ernähren	verb;klasse_3U;lektion33
-payer_vol2	33	भार	bhāra	noun	m	Last	lektion33
-payer_vol2	33	मिमीते	mā (mimīte)	verb	-	messen	verb;klasse_3Ā;lektion33
-payer_vol2	33	उपमा	upamā	noun	f	Vergleich	lektion33
-payer_vol2	33	प्रतिमा	pratimā	noun	f	Abbild	lektion33
-payer_vol2	33	जहाति	hā (jahāti)	verb	-	verlassen	verb;klasse_3P;lektion33
-payer_vol2	33	हीनयान	hīnayāna	noun	n	das mangelhafte Fahrzeug (des Buddhismus): verächtliche Bezeichnung durch die Vertreter des "grossen Fahrzeugs", des ⟪महायान⟫; der mangelhafte Weg (⟪यान⟫ zu ⟪या⟫ 2: gehen, fahren). Der Ausdruck ⟪हीनयान⟫ sollte nicht mehr verwendet werden. Die heute noch existierende Form des alten Buddhismus heisst ⟪थेरवाद⟫	lektion33
+payer_vol2	33	धा	dhā	noun	-	die ganze Aufmerksamkeit auf etwas richten, sich sammeln	glossar;lektion33
+payer_vol2	33	दा	dā	verb	-	geben	glossar;lektion33
+payer_vol2	33	ददाति	dā (dadāti)	verb	-	geben	verb;klasse_3U;lektion33
+payer_vol2	33	दान	dāna	noun	n	Geben, Gabe, Freigebigkeit	glossar;lektion33
+payer_vol2	33	घृत	ghṛta	noun	n	Schmelzbutter, Ghee ( / گھی / ঘী); Schmelzbutter, Ghee (⟪घी⟫ / گھی / ঘী)	glossar;lektion33
+payer_vol2	33	हु	hu	verb	-	ins Feuer giessen (als Opfer, bes. Schmelzbutter)	glossar;lektion33
 payer_vol2	33	जुहोति	hu (juhoti)	verb	-	ins Feuer giessen (als Opfer, bes. Schmelzbutter)	verb;klasse_3P;lektion33
-payer_vol2	33	घृत	ghṛta	noun	n	Schmelzbutter, Ghee (⟪घी⟫ / گھی / ঘী)	lektion33
+payer_vol2	33	हा	hā	verb	-	verlassen	glossar;lektion33
+payer_vol2	33	जहाति	hā (jahāti)	verb	-	verlassen	verb;klasse_3P;lektion33
+payer_vol2	33	हीनयान	hīnayāna	noun	n	das mangelhafte Fahrzeug (des Buddhismus): verächtliche Bezeichnung durch die Vertreter des "grossen Fahrzeugs", des ; d; das mangelhafte Fahrzeug (des Buddhismus): verächtliche Bezeichnung durch die Vertreter des "grossen Fahrzeugs", des ⟪महायान⟫; der mangelhafte Weg (⟪यान⟫ zu ⟪या⟫ 2: gehen, fahren). Der Ausdruck ⟪हीनयान⟫ sollte nicht mehr verwendet werden. Die heute noch existierende Form des alten Buddhismus heisst ⟪थेरवाद⟫	glossar;lektion33
+payer_vol2	33	मा	mā	noun	-	messen	glossar;lektion33
+payer_vol2	33	मिमीते	mā (mimīte)	verb	-	messen	verb;klasse_3Ā;lektion33
+payer_vol2	33	प्रतिमा	pratimā	noun	f	Abbild	glossar;lektion33
+payer_vol2	33	पॄ	pṝ	verb	-	füllen, erfüllen	glossar;lektion33
+payer_vol2	33	पिपर्ति	pṝ (piparti)	verb	-	füllen, erfüllen	verb;klasse_3P;lektion33
+payer_vol2	33	समाधि	samādhi	noun	m	innere Sammlung, höchste Aufmerksamkeit	glossar;lektion33
+payer_vol2	33	उपमा	upamā	noun	f	Vergleich	glossar;lektion33
+payer_vol2	35	गै	gai	verb	-	singen, in singendem Ton rezitieren, in gebundener Rede verkünden	glossar;lektion35
+payer_vol2	35	गायति	gai (gāyati)	verb	-	(gai + a-ti): singen, in singendem Ton rezitieren, in gebundener Rede verkünden	verb;klasse_1P;lektion35
+payer_vol2	35	क्रम्	kram	verb	-	schreiten, gehen	glossar;lektion35
+payer_vol2	35	नश्	naś	verb	-	verloren gehen, zugrundegehen, verschwinden	glossar;lektion35
 payer_vol2	35	नश्यति	naś (naśyati)	verb	-	verloren gehen, zugrundegehen, verschwinden	verb;klasse_4P;lektion35
 payer_vol2	35	प्र	⟪नश्⟫ + ⟪प्र⟫	verb	-	sig[⟪ण⟫]⟪श्यति⟫** : verschwinden, verloren gehen, zugrundegehen	lektion35
-payer_vol2	35	क्रम्	kram	verb	-	sig[⟪क्रा⟫]⟪मति⟫, 4P :sig[⟪क्रा⟫]⟪म्यति⟫ : schreiten, gehen	lektion35
-payer_vol2	35	गायति	gai (gāyati)	verb	-	(gai + a-ti): singen, in singendem Ton rezitieren, in gebundener Rede verkünden	verb;klasse_1P;lektion35
-payer_vol2	36	ईक्षते	īkṣ (īkṣate)	verb	-	sehen, (er)blicken, betrachten	verb;klasse_1Ā;lektion36
+payer_vol2	36	अभि	abhi	noun	-	be-, nach - hin, zu - her, zu - hin, gegen, in - hinein, in Bezug auf, auf, über, an	glossar;lektion36
+payer_vol2	36	अभिगम्	abhigam	noun	-	hingehen, sich nähern	glossar;lektion36
+payer_vol2	36	अगार	agāra	noun	n	Haus, Heim	glossar;lektion36
+payer_vol2	36	अह्	ah	noun	-	sagen, sprechen	glossar;lektion36
+payer_vol2	36	अनगार्य	anagārya	noun	n	Heimlosigkeit eines buddhistischen Mönchs oder Novizen	glossar;lektion36
+payer_vol2	36	अनु	anu	noun	-	nach, entlang, über - hin, längs, gemäss, hinzu, hinter - her	glossar;lektion36
+payer_vol2	36	अनुगम्	anugam	noun	-	jemandem nachgehen, entlanggehen	glossar;lektion36
+payer_vol2	36	अनुकृ	anukṛ	noun	-	nachahmen, nachmachen	glossar;lektion36
+payer_vol2	36	अञ्जलि	añjali	noun	m	Die beiden zur Ehrerbietung hoch zusammengelegten Hände	glossar;lektion36
+payer_vol2	36	चि	ci	verb	-	aufschichten, sammeln	glossar;lektion36
 payer_vol2	36	चिनोति	ci (cinoti)	verb	-	aufschichten, sammeln	verb;klasse_5U;lektion36
-payer_vol2	36	व्रजति	vraj (vrajati)	verb	-	schreiten, gehen, weggehen	verb;klasse_1P;lektion36
-payer_vol2	36	अञ्जलि	añjali	noun	m	Die beiden zur Ehrerbietung hoch zusammengelegten Hände	lektion36
-payer_vol2	36	आदृत	ādṛta	adj	-	geachtet	lektion36
-payer_vol2	36	उपाध्याय	upādhyāya	noun	m	Lehrer	lektion36
-payer_vol2	36	पृथिवी	pṛthivī	noun	f	Erde	lektion36
-payer_vol2	36	पृष्ठ	pṛṣṭha	noun	n	Rücken, Rückseite	lektion36
-payer_vol2	36	पृष्ठम्	pṛṣṭham	noun	-	hinter	lektion36
-payer_vol2	36	प्रजापति	prajāpati	noun	m	Herr der Geschöpfe, Schöpfergott	lektion36
-payer_vol2	36	अनुकृ	anukṛ	noun	-	nachahmen, nachmachen	lektion36
-payer_vol2	36	अनुगम्	anugam	noun	-	jemandem nachgehen, entlanggehen	lektion36
-payer_vol2	36	अभि	abhi	noun	-	be-, nach - hin, zu - her, zu - hin, gegen, in - hinein, in Bezug auf, auf, über, an	lektion36
-payer_vol2	36	अभिगम्	abhigam	noun	-	hingehen, sich nähern	lektion36
+payer_vol2	36	घ्रा	ghrā	verb	-	etwas riechen	glossar;lektion36
+payer_vol2	36	ग्लै	glai	verb	-	Widerwillen empfinden, dahinschwinden	glossar;lektion36
 payer_vol2	36	ग्लायति	glai (glāyati)	verb	-	Widerwillen empfinden, dahinschwinden	verb;klasse_1P;lektion36
-payer_vol2	36	घ्रा	ghrā	verb	-	sig[⟪जिघ्रति⟫] : etwas riechen	lektion36
-payer_vol2	36	प्रीणति	prī (prīṇati)	verb	-	ergötzen, erfreuen; lieben, jemandem geneigt sein	verb;klasse_9U;lektion36
-payer_vol2	36	प्रीयते	prī (prīyate)	verb	-	sich freuen	verb;klasse_4Ā;lektion36
-payer_vol2	36	स्पृशति	spṛś (spṛśati)	verb	-	berühren	verb;klasse_6P;lektion36
+payer_vol2	36	हृष्	hṛṣ	verb	-	starr werden: sich sträuben (Haare), sich freuen über (Instr., Akk., Lok.)	glossar;lektion36
 payer_vol2	36	हृष्यति	hṛṣ (hṛṣyati)	verb	-	starr werden: sich sträuben (Haare), sich freuen über (Instr., Akk., Lok.)	verb;klasse_4P;lektion36
-payer_vol2	36	स्वक	svaka	adj	-	eigen (mein, dein ...) ; m.: Angehöriger	lektion36
-payer_vol2	37	मूर्ख	mūrkha	adj	-	stumpfsinnig, blöd, dumm m. Dummkopf	lektion37
-payer_vol2	37	मुनि	muni	noun	m	Weiser, (Schweige)asket	lektion37
-payer_vol2	37	शाक्यमुनि	śākyamuni	noun	m	Asket aus dem Geschlecht der ⟪शाक्य⟫ (Kṣatriyas aus ⟪कपिलवस्तु⟫) = Buddha Gautama	lektion37
-payer_vol2	37	दिन	dina	noun	n	Tag	lektion37
-payer_vol2	37	वृक्ष	vṛkṣa	noun	m	Baum	lektion37
-payer_vol2	37	मुख	mukha	noun	n	Mund, Gesicht, Vorderteil, Anfang	lektion37
-payer_vol2	38	सूर्य	sūrya	noun	m	Sonne, Sonnengott Sūrya	lektion38
-payer_vol2	38	उदक	udaka	noun	n	Wasser	lektion38
-payer_vol2	38	वाति	vā (vāti)	verb	-	wehen, blasen	verb;klasse_2P;lektion38
-payer_vol2	38	वात	vāta	noun	m	Wind	lektion38
-payer_vol2	38	निर्वाण	nirvāṇa	noun	n	Erlöschen, Nirvana	lektion38
-payer_vol2	38	परिनिर्वाण	parinirvāṇa	noun	n	vollkommenes Erlöschen, vollkommene Erlösung (am Lebensende eines Buddha oder Arhant)	lektion38
+payer_vol2	36	प्रजापति	prajāpati	noun	m	Herr der Geschöpfe, Schöpfergott	glossar;lektion36
+payer_vol2	36	प्री	prī	verb	-	ergötzen, erfreuen; lieben, jemandem geneigt sein	glossar;lektion36
+payer_vol2	36	प्रीयते	prī (prīyate)	verb	-	sich freuen	verb;klasse_4Ā;lektion36
+payer_vol2	36	प्रीणति	prī (prīṇati)	verb	-	ergötzen, erfreuen; lieben, jemandem geneigt sein	verb;klasse_9U;lektion36
+payer_vol2	36	पृथिवी	pṛthivī	noun	f	Erde	glossar;lektion36
+payer_vol2	36	पृष्ठ	pṛṣṭha	noun	n	Rücken, Rückseite	glossar;lektion36
+payer_vol2	36	पृष्ठम्	pṛṣṭham	noun	-	hinter	glossar;lektion36
+payer_vol2	36	स्पृश्	spṛś	verb	-	berühren	glossar;lektion36
+payer_vol2	36	स्पृशति	spṛś (spṛśati)	verb	-	berühren	verb;klasse_6P;lektion36
+payer_vol2	36	स्वक	svaka	adj	-	eigen (mein, dein ...) ; m.: Angehöriger	glossar;lektion36
+payer_vol2	36	उपाध्याय	upādhyāya	noun	m	Lehrer	glossar;lektion36
+payer_vol2	36	व्रज्	vraj	verb	-	schreiten, gehen, weggehen	glossar;lektion36
+payer_vol2	36	व्रजति	vraj (vrajati)	verb	-	schreiten, gehen, weggehen	verb;klasse_1P;lektion36
+payer_vol2	36	आदृत	ādṛta	adj	-	geachtet	glossar;lektion36
+payer_vol2	36	ईक्ष्	īkṣ	noun	-	sehen, (er)blicken, betrachten	glossar;lektion36
+payer_vol2	36	ईक्षते	īkṣ (īkṣate)	verb	-	sehen, (er)blicken, betrachten	verb;klasse_1Ā;lektion36
+payer_vol2	37	मुख	mukha	noun	n	Mund, Gesicht, Vorderteil, Anfang	glossar;lektion37
+payer_vol2	37	मुनि	muni	noun	m	Weiser, (Schweige)asket	glossar;lektion37
+payer_vol2	37	मूर्ख	mūrkha	adj	-	stumpfsinnig, blöd, dumm m. Dummkopf; ⟪मूढ⟫	glossar;lektion37
+payer_vol2	37	वृक्ष	vṛkṣa	noun	m	Baum	glossar;lektion37
+payer_vol2	37	शाक्यमुनि	śākyamuni	noun	m	Asket aus dem Geschlecht der (Kṣatriyas aus ) = Buddha Gautama; Asket aus dem Geschlecht der ⟪शाक्य⟫ (Kṣatriyas aus ⟪कपिलवस्तु⟫) = Buddha Gautama	glossar;lektion37
+payer_vol2	38	अशोक	aśoka	adj	-	frei von Gram; Ashoka-Baum = _Saraca asoca_ (Roxb.) Wilde; Name des Kaisers Aśoka ( ) (ca. 304  232 v.Chr.); frei von Gram; Ashoka-Baum = _Saraca asoca_ (Roxb.) Wilde; Name des Kaisers Aśoka (⟪देवानांप्रिय⟫ ⟪प्रियदर्शी⟫) (ca. 304  232 v.Chr.)	glossar;lektion38
+payer_vol2	38	ब्रह्मन्	brahman	noun	n	das Absolute, der Veda (laut Thieme ursprünglich: die formulierte Wahrheit, davon "Wahrheitsformulierer"); das Absolute, der Veda (laut Thieme ursprünglich: die formulierte Wahrheit, davon ⟪ब्राह्मण⟫ "Wahrheitsformulierer"); der persönlich gedachte Schöpfergott Brahmā	glossar;lektion38
+payer_vol2	38	हस्तिन्	hastin	noun	m	Elefant (_Elephas maximus_)	glossar;lektion38
+payer_vol2	38	कर्मन्	karman	noun	n	zu 8U: Handlung, Tat, Werk; heiliges Werk, Opferhandlung; Karma: das frühere Tun, das später seine Früchte bringt (z.B; zu ⟪कृ⟫ 8U: Handlung, Tat, Werk; heiliges Werk, Opferhandlung; Karma: das frühere Tun, das später seine Früchte bringt (z.B. in Wiedergeburt)	glossar;lektion38
+payer_vol2	38	कर्मविपाक	karmavipāka	noun	m	Reifen der Taten = die guten und bösen Konsequenzen von Taten in früheren Existenzen (zu -); Reifen der Taten = die guten und bösen Konsequenzen von Taten in früheren Existenzen (zu ⟪वि⟫-⟪पच्⟫)	glossar;lektion38
+payer_vol2	38	मनु	manu	noun	m	Mensch, Mann; Name des Vaters des Menschengeschlechts (zu 4Ā); Mensch, Mann; Name des Vaters des Menschengeschlechts (zu ⟪मन्⟫ 4Ā)	glossar;lektion38
+payer_vol2	38	मनुष्य	manuṣya	noun	m	Mensch	glossar;lektion38
+payer_vol2	38	मेघ	megha	noun	m	Wolke ("Seicher")	glossar;lektion38
+payer_vol2	38	मिह्	mih	verb	-	pinkeln, pissen, ejakulieren	glossar;lektion38
 payer_vol2	38	मेहति	mih (mehati)	verb	-	pinkeln, pissen, ejakulieren	verb;klasse_1P;lektion38
-payer_vol2	38	मेघ	megha	noun	m	Wolke ("Seicher")	lektion38
-payer_vol2	38	सुत	suta	noun	m	Sohn	lektion38
-payer_vol2	38	राजन्	rājan	noun	m	König (über das Königtum in Indien siehe Basham, Wonder S. 82 -94). Als Schlussglied eines Kompositums (bes. ⟪तत्पुरुष⟫) meist: -⟪राज⟫ m. (wie ⟪देव⟫)	lektion38
-payer_vol2	38	राज्ञी	rājñī	noun	f	Königin, Frau eines Königs	lektion38
-payer_vol2	38	राज्य	rājya	adj	-	königlich; n. Königreich, Königtum, Herrschaft	lektion38
-payer_vol2	38	नामन्	nāman	noun	n	Name	lektion38
-payer_vol2	38	सीमन्	sīman	noun	f	Grenze	lektion38
-payer_vol2	38	आत्मन्	ātman	noun	m	Selbst, eigene Person, innerstes Wesen. Philosophisch und in Erlösungslehren: das Absolute im Individuum, dessen sich aber das Individuum unter Umständen nicht bewusst ist (v. Stietencron)	lektion38
-payer_vol2	38	ब्रह्मन्	brahman	noun	n	das Absolute, der Veda (laut Thieme ursprünglich: die formulierte Wahrheit, davon ⟪ब्राह्मण⟫ "Wahrheitsformulierer")	lektion38
-payer_vol2	38	ब्रह्मन्	brahman	noun	m	der persönlich gedachte Schöpfergott Brahmā	lektion38
-payer_vol2	38	कर्मन्	karman	noun	n	zu ⟪कृ⟫ 8U: Handlung, Tat, Werk; heiliges Werk, Opferhandlung; Karma: das frühere Tun, das später seine Früchte bringt (z.B. in Wiedergeburt)	lektion38
-payer_vol2	38	कर्मविपाक	karmavipāka	noun	m	Reifen der Taten = die guten und bösen Konsequenzen von Taten in früheren Existenzen (zu ⟪वि⟫-⟪पच्⟫)	lektion38
-payer_vol2	38	हस्तिन्	hastin	noun	m	Elefant (_Elephas maximus_)	lektion38
-payer_vol2	38	मनु	manu	noun	m	Mensch, Mann; Name des Vaters des Menschengeschlechts (zu ⟪मन्⟫ 4Ā)	lektion38
-payer_vol2	38	मनुष्य	manuṣya	noun	m	Mensch	lektion38
-payer_vol2	38	शोचति	śuc (śocati)	verb	-	(flammen, leuchten) ; trauern, betrauern	verb;klasse_1P;lektion38
-payer_vol2	38	शुचि	śuci	adj	-	leuchtend, rein, klar	lektion38
-payer_vol2	38	शोक	śoka	noun	m	Trauer, Gram	lektion38
-payer_vol2	38	अशोक	aśoka	adj	-	frei von Gram; Ashoka-Baum = _Saraca asoca_ (Roxb.) Wilde; Name des Kaisers Aśoka (⟪देवानांप्रिय⟫ ⟪प्रियदर्शी⟫) (ca. 304  232 v.Chr.)	lektion38
-payer_vol2	40	पात्र	pātra	noun	n	Ehrwürdiger, Meister, Würdiger	lektion40
-payer_vol2	40	मेधा	medhā	noun	f	Weisheit, Verstand, Gedanke	lektion40
-payer_vol2	40	पुस्तक	pustaka	noun	m/f	Manuskript, Buch	lektion40
+payer_vol2	38	निर्वाण	nirvāṇa	noun	n	Erlöschen, Nirvana	glossar;lektion38
+payer_vol2	38	नामन्	nāman	noun	n	Name	glossar;lektion38
+payer_vol2	38	परिनिर्वाण	parinirvāṇa	noun	n	vollkommenes Erlöschen, vollkommene Erlösung (am Lebensende eines Buddha oder Arhant)	glossar;lektion38
+payer_vol2	38	राजन्	rājan	noun	m	König (über das Königtum in Indien siehe Basham, Wonder S. 82 -94). Als Schlussglied eines Kompositums (bes. ) meist: -; König (über das Königtum in Indien siehe Basham, Wonder S. 82 -94). Als Schlussglied eines Kompositums (bes. ⟪तत्पुरुष⟫) meist: -⟪राज⟫ m. (wie ⟪देव⟫)	glossar;lektion38
+payer_vol2	38	राज्य	rājya	adj	-	königlich; n. Königreich, Königtum, Herrschaft	glossar;lektion38
+payer_vol2	38	राज्ञी	rājñī	noun	f	Königin, Frau eines Königs	glossar;lektion38
+payer_vol2	38	सुत	suta	noun	m	Sohn	glossar;lektion38
+payer_vol2	38	सीमन्	sīman	noun	f	Grenze	glossar;lektion38
+payer_vol2	38	उदक	udaka	noun	n	Wasser	glossar;lektion38
+payer_vol2	38	वाति	vā (vāti)	verb	-	wehen, blasen	verb;klasse_2P;lektion38
+payer_vol2	38	आत्मन्	ātman	noun	m	Selbst, eigene Person, innerstes Wesen. Philosophisch und in Erlösungslehren: das Absolute im Individuum, dessen sich ab	glossar;lektion38
+payer_vol2	38	शोक	śoka	noun	m	Trauer, Gram	glossar;lektion38
+payer_vol2	38	शुच्	śuc	verb	-	(flammen, leuchten) ; trauern, betrauern	glossar;lektion38
+payer_vol2	38	शुचि	śuci	adj	-	leuchtend, rein, klar; leuchtend, glänzend, fein ; m.: Reinheit	glossar;lektion38
+payer_vol2	40	अव	ava	noun	-	herab, hinab, weg, ab-	glossar;lektion40
+payer_vol2	40	अवतार	avatāra	noun	m	(Herabsteiger, Herabstieg) Inkarnation eines Gottes, bes. Viṣṇus 10 Inkarnationen (s. Basham, Wonder S. 304 - 309)	glossar;lektion40
+payer_vol2	40	कल्पना	kalpanā	noun	f	Das Bilden in Gedanken, Annahme von etwas in der Wirklichkeit nicht Existierendem, Fiktion	glossar;lektion40
+payer_vol2	40	कॢप्	kḷp	noun	-	in richtiger Ordnung sein, passen zu (Lok.) ; sich gestalten, sich bilden ; sich entschliessen zu, sich bequemen zu (Dat	glossar;lektion40
 payer_vol2	40	कल्पते	kḷp (kalpate)	verb	-	in richtiger Ordnung sein, passen zu (Lok.) ; sich gestalten, sich bilden ; sich entschliessen zu, sich bequemen zu (Dativ)	verb;klasse_1Ā;lektion40
-payer_vol2	40	कल्पना	kalpanā	noun	f	Das Bilden in Gedanken, Annahme von etwas in der Wirklichkeit nicht Existierendem, Fiktion	lektion40
-payer_vol2	40	विक्ल्प	viklpa	noun	m	Alternative, Zweifel	lektion40
+payer_vol2	40	मेधा	medhā	noun	f	Weisheit, Verstand, Gedanke	glossar;lektion40
+payer_vol2	40	पुस्तक	pustaka	noun	m	Manuskript, Buch	glossar;lektion40
+payer_vol2	40	पात्र	pātra	noun	n	Ehrwürdiger, Meister, Würdiger	glossar;lektion40
+payer_vol2	40	सुप्ति	supti	noun	f	Schlaf, bes. Tiefschlaf	glossar;lektion40
+payer_vol2	40	स्वप्	svap	verb	-	schlafen, sich schlafen legen	glossar;lektion40
+payer_vol2	40	स्वप्न	svapna	noun	m	Schlaf, Traum	glossar;lektion40
+payer_vol2	40	तुद्	tud	verb	-	schlagen	glossar;lektion40
 payer_vol2	40	तुदति	tud (tudati)	verb	-	schlagen	verb;klasse_6U;lektion40
+payer_vol2	40	तीर्थ	tīrtha	noun	n	Furt, heiliger Badeplatz, Pilgerort	glossar;lektion40
+payer_vol2	40	तीर्थङ्कर	tīrthaṅkara	noun	m	Furtmacher (über das Leid hinweg) = die 24 Lehrer der Jaina	glossar;lektion40
+payer_vol2	40	तॄ	tṝ	verb	-	hinübergehen, überschreiten, sich retten vor jemandem (Akk. = jemanden überschreiten)	glossar;lektion40
 payer_vol2	40	तरति	tṝ (tarati)	verb	-	hinübergehen, überschreiten, sich retten vor jemandem (Akk. = jemanden überschreiten)	verb;klasse_1P;lektion40
-payer_vol2	40	तीर्थ	tīrtha	noun	n	Furt, heiliger Badeplatz, Pilgerort	lektion40
-payer_vol2	40	अवतार	avatāra	noun	m	(Herabsteiger, Herabstieg) Inkarnation eines Gottes, bes. Viṣṇus 10 Inkarnationen (s. Basham, Wonder S. 304 - 309)	lektion40
-payer_vol2	40	स्वप्न	svapna	noun	m	Schlaf, Traum	lektion40
+payer_vol2	40	विक्ल्प	viklpa	noun	m	Alternative, Zweifel	glossar;lektion40

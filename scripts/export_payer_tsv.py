@@ -2,20 +2,24 @@
 """
 export_payer_tsv.py
 
-Extracts vocabulary from Alois Payer's Sanskrit course (wortliste.md & lektion files)
-and exports them as clean TSV files in 3 volume groups:
-  - Volume 1: Lektionen 1–20
-  - Volume 2: Lektionen 21–40
-  - Volume 3: Lektionen 41–61 (Rest)
+Synthesizes the complete vocabulary of Alois Payer's Sanskrit course by merging:
+  1. The canonical curated Glossary (glossar.md by Simone Dünneisen / Alois Payer)
+  2. The lesson-by-lesson Wortlisten (wortliste.md & lektion files)
+
+Exports the consolidated vocabulary as clean TSV files in 3 volume groups:
+  - Band 1: Grundkurs (Lektionen 1–20)
+  - Band 2: Aufbaukurs (Lektionen 21–40)
+  - Band 3: Vertiefung (Lektionen 41–61)
 """
 
-import os
+import json
 import re
 from pathlib import Path
 
 PAYER_DOCS = Path("/Volumes/SanDisk1TB/proj/Payer/docs/lektionen")
 ALEXIS_OUT = Path("/Volumes/SanDisk1TB/proj/Alexis/data/corpora/payer")
 PAYER_OUT = Path("/Volumes/SanDisk1TB/proj/Payer/dist_exports")
+ALEXIS_JSON = Path("/Volumes/SanDisk1TB/proj/Alexis/data/corpora/payer_sanskrit.json")
 
 def deva_to_iast(text: str) -> str:
     """Accurate Sanskrit Devanagari to IAST transliteration."""
@@ -85,7 +89,7 @@ def clean_meaning(text: str) -> str:
 
 def parse_gender_pos(info_str: str) -> tuple[str, str]:
     """Resolves (pos, gender) from Payer grammar indicators."""
-    s = info_str.lower().strip().rstrip('.')
+    s = (info_str or '').lower().strip().rstrip('.')
     if s in ['m', 'mask', 'maskulinum']:
         return ('noun', 'm')
     if s in ['f', 'fem', 'femininum']:
@@ -108,39 +112,80 @@ def parse_gender_pos(info_str: str) -> tuple[str, str]:
         return ('verb', '-')
     return ('noun', '-')
 
-def extract_payer_vocabulary():
+def parse_glossar() -> dict[str, dict]:
+    """Parses the canonical glossar.md table."""
+    gl_path = PAYER_DOCS / "glossar.md"
+    if not gl_path.exists():
+        return {}
+
+    lines = gl_path.read_text(encoding="utf-8").splitlines()
+    entries = {}
+
+    for line in lines:
+        line = line.strip()
+        if not line.startswith('|') or '⟪' not in line:
+            continue
+        parts = [p.strip() for p in line.split('|')[1:-1]]
+        if len(parts) < 5:
+            continue
+
+        nat_match = re.search(r'⟪([^⟫]+)⟫', parts[0])
+        if not nat_match:
+            continue
+        nat = nat_match.group(1).strip()
+
+        trn_match = re.search(r'\[([^\]]+)\]', parts[1])
+        trn = trn_match.group(1).strip() if trn_match else parts[1].strip()
+        if not trn or trn == '—' or trn.startswith('http'):
+            trn = deva_to_iast(nat)
+
+        genus = parts[2].strip()
+        meaning = clean_meaning(parts[3])
+        if not meaning or meaning == 'br':
+            continue
+
+        les_match = re.search(r'\d+', parts[4])
+        les = int(les_match.group()) if les_match else 1
+
+        pos, gen = parse_gender_pos(genus)
+        vol = 'payer_vol1' if les <= 20 else ('payer_vol2' if les <= 40 else 'payer_vol3')
+
+        entries[nat] = {
+            'volume': vol,
+            'lesson': str(les),
+            'native': nat,
+            'transliteration': trn,
+            'pos': pos,
+            'gender': gen,
+            'meaning': meaning,
+            'tags': f"glossar;lektion{les:02d}",
+            'notes': f"Glossar-Eintrag (Genus: {genus})" if genus and genus != '—' else ''
+        }
+
+    return entries
+
+def parse_wortliste() -> list[dict]:
+    """Parses the lesson-by-lesson wortliste.md overview."""
     wl_path = PAYER_DOCS / "wortliste.md"
     if not wl_path.exists():
-        raise FileNotFoundError(f"wortliste.md not found at {wl_path}")
+        return []
 
     text = wl_path.read_text(encoding="utf-8")
     sections = re.split(r'^## Lektion (\d+)', text, flags=re.MULTILINE)
 
-    all_entries = []
+    entries = []
 
     for i in range(1, len(sections), 2):
         les_num = int(sections[i])
         body = sections[i+1]
-
-        # Determine volume group:
-        # Group 1: 1-20 (hb1 / vol1)
-        # Group 2: 21-40 (hb2 / vol2)
-        # Group 3: 41+ (hb3 / vol3)
-        if les_num <= 20:
-            vol_id = "payer_vol1"
-        elif les_num <= 40:
-            vol_id = "payer_vol2"
-        else:
-            vol_id = "payer_vol3"
+        vol_id = 'payer_vol1' if les_num <= 20 else ('payer_vol2' if les_num <= 40 else 'payer_vol3')
 
         lines = body.splitlines()
         last_entry = None
 
         for raw_line in lines:
             line = raw_line.strip()
-            if not line:
-                continue
-            if line.startswith(':::') or line.startswith('!') or line.startswith('Abb.:') or line.startswith('Beschriftung:'):
+            if not line or line.startswith(':::') or line.startswith('!') or line.startswith('Abb.:') or line.startswith('Beschriftung:'):
                 continue
             if line.startswith('(') and not line.startswith('(**'):
                 continue
@@ -149,7 +194,7 @@ def extract_payer_vocabulary():
 
             clean_line = re.sub(r'^(?:[0-9]+\.|\-)\s*', '', line).strip()
 
-            # Case A: Verb sub-forms (Fut., Pass., PPP, Inf., Kaus.)
+            # Sub-forms
             m_sub = re.match(r'^(?:\*\*)?(Fut\.|Pass\.|PPP|Inf\.|Kaus\.)(?:\*\*)?\s*⟪([^⟫]+)⟫(?:\s*\(?([^\)\n]+)\)?)?', clean_line)
             if m_sub and last_entry:
                 form_type = m_sub.group(1).rstrip('.')
@@ -158,8 +203,7 @@ def extract_payer_vocabulary():
                 last_entry['notes'] = (last_entry.get('notes', '') + f"; {form_type}: {form_nat} ({form_trn})").lstrip('; ')
                 continue
 
-            # Case B: Verbs with class & forms
-            # e.g.: **yaj** 1 U (yajati) ⟪यज्⟫ ⟪यजति⟫ : mit einem Opfer verehren, opfern
+            # Verbs with class & forms
             m_verb1 = re.search(r'\*\*([^\*]+)\*\*\s+(\d+\s*[A-ZĀU]+)\s*\(([^\)]+)\)\s*⟪([^⟫]+)⟫\s*⟪([^⟫]+)⟫\s*[:=]\s*(.+)', clean_line)
             if m_verb1:
                 r_trn, cls, p_trn, r_nat, p_nat, mng = m_verb1.groups()
@@ -174,11 +218,11 @@ def extract_payer_vocabulary():
                     'tags': f"verb;klasse_{cls.strip()};lektion{les_num:02d}",
                     'notes': f"Wurzel ⟪{r_nat.strip()}⟫ ({r_trn.strip()}), Klasse {cls.strip()}"
                 }
-                all_entries.append(entry)
+                entries.append(entry)
                 last_entry = entry
                 continue
 
-            # Case C: Later lesson verb: ⟪root⟫ class ⟪present⟫ : meaning
+            # Later lesson verb
             m_verb2 = re.search(r'^⟪([^⟫]+)⟫\s+(\d+[A-ZĀU]+)\s+⟪([^⟫]+)⟫\s*(?::\s*|\s+)(.+)', clean_line)
             if m_verb2:
                 r_nat, cls, p_nat, mng = m_verb2.groups()
@@ -195,11 +239,11 @@ def extract_payer_vocabulary():
                     'tags': f"verb;klasse_{cls.strip()};lektion{les_num:02d}",
                     'notes': f"Wurzel ⟪{r_nat.strip()}⟫ ({r_trn}), Klasse {cls.strip()}"
                 }
-                all_entries.append(entry)
+                entries.append(entry)
                 last_entry = entry
                 continue
 
-            # Case D: Dual/Split entry (e.g. **w1** m. / **w2** m. = ⟪w1⟫ / ⟪w2⟫ : meaning)
+            # Dual entry
             m_dual = re.search(r'\*\*([^\*]+)\*\*\s*([mfna3\d\.\s]+)?\s*/\s*\*\*([^\*]+)\*\*\s*([mfna3\d\.\s]+)?\s*(?:=|\(|=?\s*⟪)\s*([^⟪]*?)⟪([^⟫]+)⟫\s*(?:/\s*|oder\s*)⟪([^⟫]+)⟫(?:\)|)\s*[:=]\s*(.+)', clean_line)
             if m_dual:
                 t1, g1, t2, g2, _, n1, n2, mng = m_dual.groups()
@@ -227,11 +271,11 @@ def extract_payer_vocabulary():
                     'tags': f"lektion{les_num:02d}",
                     'notes': ''
                 }
-                all_entries.extend([e1, e2])
+                entries.extend([e1, e2])
                 last_entry = e2
                 continue
 
-            # Case E: Standard entry: **translit** info --/=/⟪native⟫ : meaning
+            # Standard entry
             m_std = re.search(r'\*\*([^\*]+)\*\*\s*([mfna3\d\.\s/ĀUPUAdv]+)?(?:\s*[\-=–]+\s*|\s*\(|\s*)⟪([^⟫]+)⟫(?:\)|)\s*[:=]\s*(.+)', clean_line)
             if m_std:
                 trn, info, nat, mng = m_std.groups()
@@ -247,11 +291,11 @@ def extract_payer_vocabulary():
                     'tags': f"lektion{les_num:02d}",
                     'notes': ''
                 }
-                all_entries.append(entry)
+                entries.append(entry)
                 last_entry = entry
                 continue
 
-            # Case F: Native first: ⟪native⟫ info : meaning
+            # Native first
             m_nat = re.search(r'^⟪([^⟫]+)⟫\s*([mfna3\d\.\s/ĀUPUAdv]+)?\s*[:=]\s*(.+)', clean_line)
             if m_nat:
                 nat, info, mng = m_nat.groups()
@@ -269,23 +313,53 @@ def extract_payer_vocabulary():
                     'tags': f"lektion{les_num:02d}",
                     'notes': ''
                 }
-                all_entries.append(entry)
+                entries.append(entry)
                 last_entry = entry
                 continue
 
-    return all_entries
+    return entries
 
 def main():
     ALEXIS_OUT.mkdir(parents=True, exist_ok=True)
     PAYER_OUT.mkdir(parents=True, exist_ok=True)
 
-    entries = extract_payer_vocabulary()
-    print(f"Total extracted vocabulary entries: {len(entries)}")
+    print("📖 Lade Glossar (glossar.md)...")
+    glossar_dict = parse_glossar()
+    print(f"   -> {len(glossar_dict)} kanonische Glossareinträge geladen.")
 
-    # Divide into groups
-    vol1_entries = [e for e in entries if e['volume'] == 'payer_vol1']
-    vol2_entries = [e for e in entries if e['volume'] == 'payer_vol2']
-    vol3_entries = [e for e in entries if e['volume'] == 'payer_vol3']
+    print("📖 Lade Lektions-Wortlisten (wortliste.md)...")
+    wortliste_entries = parse_wortliste()
+    print(f"   -> {len(wortliste_entries)} Lektionseinträge extrahiert.")
+
+    # Merge: Start with glossar, supplement with wortliste
+    consolidated = dict(glossar_dict)
+    supplements = 0
+    enriched = 0
+
+    for item in wortliste_entries:
+        nat = item['native']
+        if nat not in consolidated:
+            consolidated[nat] = item
+            supplements += 1
+        else:
+            # Enrich existing glossar entry with additional lesson definition or grammatical notes
+            existing = consolidated[nat]
+            mng = item['meaning'].strip()
+            if mng and mng not in existing['meaning'] and existing['meaning'] not in mng:
+                existing['meaning'] = f"{existing['meaning']}; {mng}"
+                enriched += 1
+            if item.get('notes') and item['notes'] not in existing.get('notes', ''):
+                existing['notes'] = (existing.get('notes', '') + f"; {item['notes']}").lstrip('; ')
+
+    total_count = len(consolidated)
+    print(f"✨ Synthese abgeschlossen: {total_count} Vokabeln gesamt ({supplements} Ergänzungen, {enriched} Bedeutungsanreicherungen).")
+
+    all_entries = sorted(consolidated.values(), key=lambda x: (int(x['lesson']), x['transliteration']))
+
+    # Divide into 3 volume groups (20er-Gruppen)
+    vol1_entries = [e for e in all_entries if e['volume'] == 'payer_vol1']
+    vol2_entries = [e for e in all_entries if e['volume'] == 'payer_vol2']
+    vol3_entries = [e for e in all_entries if e['volume'] == 'payer_vol3']
 
     groups = [
         ("payer_sanskrit_vol1.tsv", vol1_entries, "Band 1: Grundkurs (Lektionen 1–20)"),
@@ -312,11 +386,8 @@ def main():
         print(f"   - {alexis_file}")
         print(f"   - {payer_file}")
 
-    # Also build full JSON bundle for Alexis
-    import json
-    json_path = Path("/Volumes/SanDisk1TB/proj/Alexis/data/corpora/payer_sanskrit.json")
-    
-    unique_lessons = sorted(list(set(int(e['lesson']) for e in entries)))
+    # Build full JSON bundle for Alexis
+    unique_lessons = sorted(list(set(int(e['lesson']) for e in all_entries)))
     lesson_objs = []
     for num in unique_lessons:
         vol = "payer_vol1" if num <= 20 else ("payer_vol2" if num <= 40 else "payer_vol3")
@@ -329,7 +400,7 @@ def main():
         })
 
     entry_objs = []
-    for idx, e in enumerate(entries, 1):
+    for idx, e in enumerate(all_entries, 1):
         les_num = int(e['lesson'])
         defs = [{"lang": "de", "meaning": e['meaning']}]
         if e.get('notes'):
@@ -354,7 +425,7 @@ def main():
             "lang_code": "sa",
             "script": "Deva",
             "target_lang": "de",
-            "description": "Systematischer Sanskrit-Lehrgang von Prof. Alois Payer (Lektionen 1–61)."
+            "description": "Systematischer Sanskrit-Lehrgang von Prof. Alois Payer (Lektionen 1–61), konsolidiert aus Glossar und Wortlisten."
         },
         "volumes": [
             {
@@ -383,8 +454,8 @@ def main():
         "entries": entry_objs
     }
 
-    json_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"✅ Alexis Korpus-Bundle aktualisiert: {json_path} ({len(entry_objs)} Einträge, {len(lesson_objs)} Lektionen)")
+    ALEXIS_JSON.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"✅ Alexis Korpus-Bundle aktualisiert: {ALEXIS_JSON} ({len(entry_objs)} Einträge, {len(lesson_objs)} Lektionen)")
 
 if __name__ == "__main__":
     main()
