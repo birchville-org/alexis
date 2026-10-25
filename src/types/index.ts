@@ -61,6 +61,7 @@ export interface StudyQueueQuery {
   tags?: string[];
   due_only: boolean;
   limit?: number;
+  shuffle?: boolean;
 }
 
 export interface StudyCardItem {

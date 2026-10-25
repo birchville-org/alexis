@@ -66,6 +66,13 @@
           <span class="direction-swap-icon">⇄</span>
           <span>{{ directionLabel }}</span>
         </button>
+        <button
+          :class="['shuffle-toggle-btn', { active: isShuffle }]"
+          @click="toggleShuffle"
+          :title="'Reihenfolge umschalten (Taste S). Aktuell: ' + (isShuffle ? 'Zufall' : 'Alphabetisch')"
+        >
+          <span>🔀 {{ isShuffle ? 'Zufall' : 'A–Z' }}</span>
+        </button>
         <button class="header-btn" @click="showHelpModal = true" title="Hilfe">❓ Hilfe</button>
         <button class="embed-switch-btn" @click="currentTab = currentTab === 'trainer' ? 'corpora' : 'trainer'">
           {{ currentTab === 'trainer' ? '⚙️ Filter / Gliederung' : '▶️ Zum Trainer' }}
@@ -94,6 +101,14 @@
             >
               <span class="direction-swap-icon">⇄</span>
               <span class="direction-badge">{{ directionLabel }}</span>
+            </button>
+            <button
+              :class="['shuffle-toggle-btn', { active: isShuffle }]"
+              @click="toggleShuffle"
+              :title="'Reihenfolge umschalten (Taste S). Aktuell: ' + (isShuffle ? 'Zufällig' : 'Alphabetisch')"
+            >
+              <span class="shuffle-icon">🔀</span>
+              <span class="shuffle-badge">{{ isShuffle ? 'Zufall' : 'Alphabetisch' }}</span>
             </button>
             <div class="trainer-counter" v-if="queue.length > 0">
               Karte {{ currentIndex + 1 }} von {{ queue.length }}
@@ -395,6 +410,10 @@
               <input type="checkbox" v-model="dueOnly" />
               <span>Nur fällige Wiederholungen (Spaced Repetition)</span>
             </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" v-model="isShuffle" @change="toggleShuffle" />
+              <span>Zufällige Reihenfolge (Shuffle / Random)</span>
+            </label>
           </div>
 
           <div class="start-session-bar">
@@ -558,9 +577,14 @@
             Mit dem Schalter <strong>⇄ Richtung</strong> (oder Taste <code>r</code>) kann jederzeit zwischen <strong>Hindi ➔ Deutsch</strong> (Abfrage des Sinns) und <strong>Deutsch ➔ Hindi</strong> (aktive Reproduktion des Hindi-Worts und des Geschlechts) gewechselt werden.
           </p>
 
-          <h4>5. Tastaturkürzel</h4>
+          <h4>5. Sortierung: Alphabetisch oder Zufällig (Shuffle)</h4>
           <p class="modal-text">
-            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
+            Mit dem Schalter <strong>🔀 Zufall / Alphabetisch</strong> (oder Taste <code>s</code>) kann gewählt werden, ob die Vokabeln nach Lehrbuch/Alphabet oder in zufälliger Mischung vorgelegt werden.
+          </p>
+
+          <h4>6. Tastaturkürzel</h4>
+          <p class="modal-text">
+            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) umschalten · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
           </p>
         </div>
       </div>
@@ -697,6 +721,21 @@ function toggleDirection() {
   try {
     localStorage.setItem("alexis_study_direction", studyDirection.value);
   } catch {}
+}
+
+// Study Ordering: Alphabetical / Sequential vs. Random (Shuffle)
+const isShuffle = ref(
+  typeof localStorage !== "undefined"
+    ? localStorage.getItem("alexis_shuffle") === "true"
+    : false,
+);
+
+function toggleShuffle() {
+  isShuffle.value = !isShuffle.value;
+  try {
+    localStorage.setItem("alexis_shuffle", isShuffle.value ? "true" : "false");
+  } catch {}
+  reloadQueue(dueOnly.value);
 }
 
 // Dictionary State
@@ -850,6 +889,9 @@ function onKeydown(e: KeyboardEvent) {
   } else if (e.key === "r" || e.key === "R") {
     e.preventDefault();
     toggleDirection();
+  } else if (e.key === "s" || e.key === "S") {
+    e.preventDefault();
+    toggleShuffle();
   }
 }
 
@@ -1000,6 +1042,7 @@ async function reloadQueue(onlyDue: boolean) {
     lesson_ids:
       selectedLessonIds.value.length > 0 ? selectedLessonIds.value : undefined,
     due_only: onlyDue,
+    shuffle: isShuffle.value,
   });
 }
 
@@ -1229,6 +1272,40 @@ async function performDictSearch() {
 
 .direction-badge {
   letter-spacing: 0.02em;
+}
+
+.shuffle-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.shuffle-toggle-btn:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.shuffle-toggle-btn.active {
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+}
+
+.shuffle-toggle-btn.active .shuffle-icon {
+  filter: brightness(2);
+}
+
+.shuffle-icon {
+  font-size: 0.95rem;
 }
 
 /* Card */
@@ -1679,6 +1756,9 @@ async function performDictSearch() {
 }
 
 .filter-options {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }

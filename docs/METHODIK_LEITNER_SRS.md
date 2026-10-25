@@ -134,7 +134,19 @@ Alexis unterstützt zwei Lernrichtungen, die jederzeit per Klick auf den Schalte
 
 ---
 
-## 8. Tastaturkürzel-Referenz
+## 8. Abfragereihenfolge: Alphabetisch oder Zufällig (Shuffle)
+
+Alexis erlaubt das Umschalten der Abfragereihenfolge:
+
+1. **Alphabetisch / Lehrbuch-Sequenz**:
+   - Vokabeln werden in der didaktischen Reihenfolge der Lektion bzw. des Alphabets vorgelegt.
+2. **Zufall (Shuffle / Random)**:
+   - Die ausgewählte Vokabelmenge wird nach dem Fisher-Yates-Algorithmus (im SQLite-Backend via `ORDER BY RANDOM()`) gemischt.
+   - Umschaltbar über den Schalter **`🔀 Zufall`** im Trainer-Header, die Checkbox in der Gliederungsauswahl oder mit der Taste **`s`**.
+
+---
+
+## 9. Tastaturkürzel-Referenz
 
 | Taste | Kontext | Aktion |
 | :--- | :--- | :--- |
@@ -145,4 +157,5 @@ Alexis unterstützt zwei Lernrichtungen, die jederzeit per Klick auf den Schalte
 | **`3`** | Rückseite (aufgedeckt) | Bewertung: **3 (Gut)** |
 | **`4`** | Rückseite (aufgedeckt) | Bewertung: **4 (Einfach)** |
 | **`r`** | Immer | Lernrichtung umkehren (**Hindi ➔ DE** ⇄ **DE ➔ Hindi**) |
+| **`s`** | Immer | Reihenfolge umschalten (**Alphabetisch** ⇄ **Zufall / Shuffle**) |
 | **`u`** oder **`t`** | Immer | Umschrift (IAST / Transliteration) ein-/ausblenden |

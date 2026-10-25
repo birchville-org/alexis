@@ -73,6 +73,8 @@ pub struct StudyQueueQuery {
     pub tags: Option<Vec<String>>,
     pub due_only: bool,
     pub limit: Option<usize>,
+    #[serde(default)]
+    pub shuffle: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -341,7 +343,11 @@ pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<V
         sql.push_str(" AND (s.next_due IS NULL OR s.next_due <= datetime('now'))");
     }
 
-    sql.push_str(" GROUP BY e.lemma_native ORDER BY s.box_number ASC, s.next_due ASC");
+    if query.shuffle.unwrap_or(false) {
+        sql.push_str(" GROUP BY e.lemma_native ORDER BY RANDOM()");
+    } else {
+        sql.push_str(" GROUP BY e.lemma_native ORDER BY s.box_number ASC, s.next_due ASC");
+    }
 
     if let Some(limit) = query.limit {
         if limit > 0 {

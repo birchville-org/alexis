@@ -282,6 +282,13 @@ class StorageService {
       ? deduplicated.filter((item) => item.next_due <= now)
       : deduplicated;
 
+    if (query.shuffle) {
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+    }
+
     if (query.limit && query.limit > 0) {
       result = result.slice(0, query.limit);
     }
