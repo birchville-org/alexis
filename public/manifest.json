@@ -1,0 +1,21 @@
+{
+  "name": "Alexis — Philologischer Vokabeltrainer",
+  "short_name": "Alexis",
+  "description": "Offline-fähiger philologischer Vokabeltrainer, Korpus-Reader und Wörterbuch-Hub",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fcf9f2",
+  "theme_color": "#03192e",
+  "icons": [
+    {
+      "src": "/birchville_logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/birchville_logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

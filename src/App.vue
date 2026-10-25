@@ -38,8 +38,12 @@
       </nav>
 
       <div class="header-right">
-        <span v-if="isTauri" class="platform-badge">Rust / Desktop</span>
-        <span v-else class="platform-badge">Web / Offline-fähig</span>
+        <button class="header-btn" @click="showHelpModal = true" title="Hilfe & Boxen-Systematik">
+          ❓ Hilfe
+        </button>
+        <button class="header-btn highlight-btn" @click="handleOfflineOrInstall" title="Offline-Nutzung & Download">
+          {{ deferredInstallPrompt ? '📥 App installieren' : '💾 Offline / Download' }}
+        </button>
         <button class="theme-toggle" @click="toggleTheme" :title="'Theme: ' + currentTheme">
           {{ currentTheme === 'dark' ? '☀️' : '🌙' }}
         </button>
@@ -54,6 +58,7 @@
         <span class="embed-sub">{{ activeCorpusTitle }} · {{ selectedVolumesSummary }}</span>
       </div>
       <div class="embed-actions">
+        <button class="header-btn" @click="showHelpModal = true" title="Hilfe">❓ Hilfe</button>
         <button class="embed-switch-btn" @click="currentTab = currentTab === 'trainer' ? 'corpora' : 'trainer'">
           {{ currentTab === 'trainer' ? '⚙️ Filter / Gliederung' : '▶️ Zum Trainer' }}
         </button>
@@ -399,6 +404,129 @@
         </div>
       </section>
     </main>
+
+    <!-- HILFE MODAL -->
+    <div v-if="showHelpModal" class="modal-backdrop" @click.self="showHelpModal = false">
+      <div class="modal-box help-modal">
+        <div class="modal-header">
+          <h3>Methodik & Systematik des Leitner-Systems</h3>
+          <button class="modal-close-btn" @click="showHelpModal = false">✕</button>
+        </div>
+        <div class="modal-body">
+          <h4>1. Das 5-Fächer-Leitner-Prinzip (Spaced Repetition)</h4>
+          <p class="modal-text">
+            Alexis verwendet ein intelligentes Karteikasten-System mit 5 Fächern. Jede neue Vokabel startet in Box 1 und wandert bei Lernerfolg schrittweise in höhere Boxen mit zunehmenden Zeitintervallen:
+          </p>
+          <table class="help-table">
+            <thead>
+              <tr>
+                <th>Box</th>
+                <th>Status</th>
+                <th>Wiederholung</th>
+                <th>Funktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Box 1</strong></td>
+                <td>Neu / Nochmal</td>
+                <td><strong>1 Tag</strong></td>
+                <td>Täglich üben, bis der Abruf sitzt.</td>
+              </tr>
+              <tr>
+                <td><strong>Box 2</strong></td>
+                <td>Erster Lernerfolg</td>
+                <td><strong>3 Tage</strong></td>
+                <td>Mindestens einmal richtig gewusst.</td>
+              </tr>
+              <tr>
+                <td><strong>Box 3</strong></td>
+                <td>Festigung</td>
+                <td><strong>7 Tage</strong></td>
+                <td>Übergang ins mittelfristige Gedächtnis.</td>
+              </tr>
+              <tr>
+                <td><strong>Box 4</strong></td>
+                <td>Vertiefung</td>
+                <td><strong>14–21 Tage</strong></td>
+                <td>Hohe Abrufsicherheit.</td>
+              </tr>
+              <tr>
+                <td><strong>Box 5</strong></td>
+                <td>Langzeitgedächtnis</td>
+                <td><strong>30–45 Tage</strong></td>
+                <td>Dauerhaft verankert.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>2. Die 4 Bewertungstasten</h4>
+          <ul class="help-list">
+            <li><strong>Taste 1 (Nochmal):</strong> Die Karte fällt sofort auf <strong>Box 1</strong> zurück (Intervall: 1 Tag).</li>
+            <li><strong>Taste 2 (Schwer):</strong> Die Karte bleibt in der aktuellen Box (Intervall: 1 Tag).</li>
+            <li><strong>Taste 3 (Gut / 2x Leertaste):</strong> Die Karte steigt um <strong>+1 Box auf</strong> (z.B. Box 1 -> Box 2: 3 Tage).</li>
+            <li><strong>Taste 4 (Einfach):</strong> Die Karte steigt um <strong>+1 Box auf mit Bonussprung</strong> (z.B. Box 1 -> Box 2: 5 Tage).</li>
+          </ul>
+
+          <h4>3. Pflicht-Geschlechter bei Substantiven</h4>
+          <p class="modal-text">
+            Jedes Substantiv ist zwingend mit dem grammatischen Geschlecht gekennzeichnet (<strong>m.</strong> = Maskulinum, <strong>f.</strong> = Femininum, <strong>n.</strong> = Neutrum, <strong>m./f.</strong> = zweigeschlechtlich). Das Kürzel steht sowohl oben in der Statusleiste als auch direkt vor der deutschen Übersetzung auf der Rückseite.
+          </p>
+
+          <h4>4. Tastaturkürzel</h4>
+          <p class="modal-text">
+            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFLINE & DOWNLOAD MODAL -->
+    <div v-if="showInstallModal" class="modal-backdrop" @click.self="showInstallModal = false">
+      <div class="modal-box install-modal">
+        <div class="modal-header">
+          <h3>Offline-Nutzung & Datendownload</h3>
+          <button class="modal-close-btn" @click="showInstallModal = false">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="offline-status-banner">
+            <span class="status-dot green"></span>
+            <div>
+              <strong>100% Offline-fähig im Browser</strong>
+              <p>Alle Vokabeln und Lernstände werden lokal im Browser (IndexedDB / Cache) gespeichert. Es wird keine Serververbindung benötigt.</p>
+            </div>
+          </div>
+
+          <h4>1. App installieren (PWA)</h4>
+          <p class="modal-text" v-if="deferredInstallPrompt">
+            Klicke unten, um Alexis als eigenständige Desktop- oder Mobil-App zu installieren:
+          </p>
+          <p class="modal-text" v-else>
+            Alexis kann als Progressive Web App (PWA) direkt zum Desktop oder Home-Bildschirm hinzugefügt werden:
+            <br>• <strong>Chrome / Edge:</strong> Klicke rechts oben in der Adressleiste auf das Installations-Icon.
+            <br>• <strong>Safari (iOS / macOS):</strong> Im Menü auf <em>„Teilen“</em> -> <em>„Zum Home-Bildschirm hinzufügen“</em> bzw. <em>„Zum Dock hinzufügen“</em>.
+          </p>
+          <div v-if="deferredInstallPrompt" class="modal-btn-row">
+            <button class="btn-primary" @click="triggerPwaInstall">
+              📥 Jetzt als App installieren
+            </button>
+          </div>
+
+          <h4>2. Lokale Vokabeldaten herunterladen</h4>
+          <p class="modal-text">
+            Sichere die Vokabeln des aktuellen Korpus oder deinen persönlichen Lernstand als JSON-Datei:
+          </p>
+          <div class="download-actions-grid">
+            <button class="btn-outline download-btn" @click="downloadActiveCorpus">
+              💾 Vokabeldatei herunterladen ({{ selectedCorpusId }}.json)
+            </button>
+            <button class="btn-outline download-btn" @click="downloadStudyBackup">
+              📊 Lernstand & Boxen als Backup sichern (.json)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -603,9 +731,63 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
+// Modal States
+const showHelpModal = ref(false);
+const showInstallModal = ref(false);
+const deferredInstallPrompt = ref<any>(null);
+
+function onBeforeInstallPrompt(e: Event) {
+  e.preventDefault();
+  deferredInstallPrompt.value = e;
+}
+
+function handleOfflineOrInstall() {
+  showInstallModal.value = true;
+}
+
+async function triggerPwaInstall() {
+  if (deferredInstallPrompt.value) {
+    deferredInstallPrompt.value.prompt();
+    const { outcome } = await deferredInstallPrompt.value.userChoice;
+    if (outcome === "accepted") {
+      deferredInstallPrompt.value = null;
+    }
+  }
+}
+
+function downloadJSON(data: any, filename: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadActiveCorpus() {
+  const bundle = storage.getCorpusBundle(selectedCorpusId.value);
+  if (bundle) {
+    downloadJSON(bundle, `${selectedCorpusId.value}_vokabeln.json`);
+  }
+}
+
+function downloadStudyBackup() {
+  const backup = storage.exportStudyBackup();
+  downloadJSON(
+    backup,
+    `alexis_lernstand_backup_${new Date().toISOString().slice(0, 10)}.json`,
+  );
+}
+
 // Lifecycle Init
 onMounted(async () => {
   window.addEventListener("keydown", onKeydown);
+  window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
 
   // Check embed parameter from URL
   const params = new URLSearchParams(window.location.search);
@@ -637,6 +819,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   window.removeEventListener("keydown", onKeydown);
+  window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
 });
 
 // Selection Logic
@@ -1429,5 +1612,172 @@ async function performDictSearch() {
   font-size: 0.88rem;
   font-weight: 500;
   margin-bottom: 1rem;
+}
+
+/* Modals (Help & Offline/Download) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(3, 25, 46, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-box {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.modal-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-body h4 {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.help-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin: 0.5rem 0 1rem;
+  text-align: left;
+}
+
+.help-table th,
+.help-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.help-table th {
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.help-table td {
+  color: var(--text-primary);
+}
+
+.help-list {
+  margin: 0.25rem 0 0.5rem 1.25rem;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.offline-status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+}
+
+.offline-status-banner p {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 0.35rem;
+  flex-shrink: 0;
+}
+
+.status-dot.green {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.modal-btn-row {
+  margin: 0.75rem 0;
+}
+
+.download-actions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  background-color: var(--bg-surface);
+}
+
+.download-btn:hover {
+  border-color: var(--accent-gold);
 }
 </style>

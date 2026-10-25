@@ -468,6 +468,18 @@ class StorageService {
     // Simple basic fallback for web if rust isn't present
     return text;
   }
+
+  getCorpusBundle(corpusId: string): CorpusBundle | undefined {
+    return this.memoryBundles.find((b) => b.corpus.id === corpusId);
+  }
+
+  exportStudyBackup(): Record<string, any> {
+    const backup: Record<string, any> = {};
+    for (const [key, val] of this.localStudyState.entries()) {
+      backup[key] = val;
+    }
+    return backup;
+  }
 }
 
 export const storage = new StorageService();
