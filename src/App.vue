@@ -84,8 +84,13 @@
             <div class="card-top">
               <span class="box-badge">Box {{ currentCard.box_number }}</span>
               <span class="volume-badge">{{ currentCard.volume_title }}</span>
-              <span v-if="currentCard.pos" class="pos-badge">{{ currentCard.pos }}</span>
-              <span v-if="currentCard.gender" class="gender-badge">{{ currentCard.gender }}</span>
+              <span v-if="currentCard.pos" class="pos-badge">{{ formatPos(currentCard.pos) }}</span>
+              <span
+                v-if="currentCard.gender || currentCard.pos === 'noun'"
+                :class="['gender-badge', `gender-${(currentCard.gender || 'unknown').replace('/', '-')}`]"
+              >
+                {{ formatGender(currentCard.gender) }}
+              </span>
             </div>
 
             <!-- Front Side -->
@@ -119,7 +124,16 @@
                   :key="idx"
                   class="def-item"
                 >
-                  <div class="def-meaning">{{ def.meaning }}</div>
+                  <div class="def-meaning">
+                    <span
+                      v-if="currentCard.gender"
+                      :class="['def-gender-pill', `gender-${currentCard.gender.replace('/', '-')}`]"
+                      :title="formatGender(currentCard.gender)"
+                    >
+                      {{ formatGenderShort(currentCard.gender) }}
+                    </span>
+                    <span class="def-text">{{ def.meaning }}</span>
+                  </div>
                   <div v-if="def.notes" class="def-notes">{{ def.notes }}</div>
                 </div>
               </div>
@@ -465,6 +479,61 @@ const currentCard = computed(() => {
   }
   return queue.value[currentIndex.value];
 });
+
+// Linguistic format helpers
+function formatGender(gender?: string | null): string {
+  if (!gender || gender === "-") return "m./f. unbestimmt";
+  const g = gender.toLowerCase().trim();
+  if (g === "m") return "m. (Maskulinum)";
+  if (g === "f") return "f. (Femininum)";
+  if (g === "n") return "n. (Neutrum)";
+  if (g === "m/f") return "m./f. (Maskulin / Feminin)";
+  return `${gender}.`;
+}
+
+function formatGenderShort(gender?: string | null): string {
+  if (!gender || gender === "-") return "";
+  const g = gender.toLowerCase().trim();
+  if (g === "m") return "m.";
+  if (g === "f") return "f.";
+  if (g === "n") return "n.";
+  if (g === "m/f") return "m./f.";
+  return `${gender}.`;
+}
+
+function formatPos(pos?: string | null): string {
+  if (!pos) return "";
+  const p = pos.toLowerCase().trim();
+  switch (p) {
+    case "noun":
+    case "subst":
+      return "Substantiv";
+    case "verb":
+      return "Verb";
+    case "adj":
+      return "Adjektiv";
+    case "adv":
+      return "Adverb";
+    case "pron":
+      return "Pronomen";
+    case "num":
+      return "Zahlwort";
+    case "interj":
+      return "Interjektion";
+    case "konj":
+    case "conj":
+      return "Konjunktion";
+    case "ptk":
+    case "part":
+      return "Partikel";
+    case "postp":
+      return "Postposition";
+    case "ind":
+      return "Indeklinabel";
+    default:
+      return pos;
+  }
+}
 
 // Theme Toggle
 function toggleTheme() {
@@ -828,9 +897,12 @@ async function performDictSearch() {
   margin-bottom: 1rem;
 }
 
-.box-badge, .volume-badge, .pos-badge, .gender-badge {
+.box-badge,
+.volume-badge,
+.pos-badge,
+.gender-badge {
   font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 4px;
   background-color: var(--bg-surface);
   color: var(--text-muted);
@@ -840,6 +912,43 @@ async function performDictSearch() {
 .box-badge {
   background-color: var(--accent-gold);
   color: #ffffff;
+  border-color: var(--accent-gold);
+}
+
+.pos-badge {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.gender-badge {
+  font-weight: 600;
+}
+
+.gender-badge.gender-m,
+.def-gender-pill.gender-m {
+  background-color: var(--gender-m-bg);
+  color: var(--gender-m-text);
+  border-color: var(--gender-m-border);
+}
+
+.gender-badge.gender-f,
+.def-gender-pill.gender-f {
+  background-color: var(--gender-f-bg);
+  color: var(--gender-f-text);
+  border-color: var(--gender-f-border);
+}
+
+.gender-badge.gender-n,
+.def-gender-pill.gender-n {
+  background-color: var(--gender-n-bg);
+  color: var(--gender-n-text);
+  border-color: var(--gender-n-border);
+}
+
+.gender-badge.gender-m-f,
+.def-gender-pill.gender-m-f {
+  background-color: var(--bg-surface);
+  color: var(--accent-gold);
   border-color: var(--accent-gold);
 }
 
@@ -898,6 +1007,22 @@ async function performDictSearch() {
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.def-gender-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
 }
 
 .def-notes {
