@@ -340,7 +340,7 @@ pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<V
         sql.push_str(" AND (s.next_due IS NULL OR s.next_due <= datetime('now'))");
     }
 
-    sql.push_str(" ORDER BY s.box_number ASC, s.next_due ASC");
+    sql.push_str(" GROUP BY e.lemma_native ORDER BY s.box_number ASC, s.next_due ASC");
 
     if let Some(limit) = query.limit {
         if limit > 0 {

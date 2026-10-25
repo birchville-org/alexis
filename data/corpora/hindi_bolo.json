@@ -788,20 +788,7 @@
         {
           "lang": "de",
           "meaning": "Höflichkeitspartikel (z.B. nach Familiennamen: Herr/Frau)"
-        }
-      ],
-      "tags": ["hoeflichkeit", "begruessung", "a1\r"]
-    },
-    {
-      "id": "hb1_l01_044",
-      "corpus_id": "hindi-bolo",
-      "volume_id": "hb1",
-      "lesson_id": "hb1_l01",
-      "lemma_native": "जी",
-      "lemma_translit": "jī",
-      "pos": "ptk",
-      "gender": null,
-      "definitions": [
+        },
         {
           "lang": "de",
           "meaning": "ja (höflich)"

@@ -167,9 +167,47 @@ class StorageService {
       };
     });
 
+    // Deduplicate across selected volumes/lessons by lemma_native
+    const seen = new Map<string, StudyCardItem>();
+    for (const item of items) {
+      const key = item.lemma_native.trim();
+      if (!seen.has(key)) {
+        seen.set(key, item);
+      } else {
+        const existing = seen.get(key)!;
+        // Merge definitions if distinct
+        for (const def of item.definitions) {
+          if (
+            !existing.definitions.some(
+              (d) => d.meaning.trim() === def.meaning.trim(),
+            )
+          ) {
+            existing.definitions.push(def);
+          }
+        }
+        // Merge tags
+        for (const t of item.tags) {
+          if (!existing.tags.includes(t)) {
+            existing.tags.push(t);
+          }
+        }
+        // Prioritize lower/more urgent Leitner box
+        if (
+          item.box_number < existing.box_number ||
+          (item.box_number === existing.box_number &&
+            item.next_due < existing.next_due)
+        ) {
+          existing.box_number = item.box_number;
+          existing.interval_days = item.interval_days;
+          existing.next_due = item.next_due;
+        }
+      }
+    }
+    const deduplicated = Array.from(seen.values());
+
     let result = query.due_only
-      ? items.filter((item) => item.next_due <= now)
-      : items;
+      ? deduplicated.filter((item) => item.next_due <= now)
+      : deduplicated;
 
     if (query.limit && query.limit > 0) {
       result = result.slice(0, query.limit);
@@ -338,30 +376,55 @@ class StorageService {
           : [];
 
       if (!nat || !mng) continue;
-      const id = `${vol}_l${les.padStart(2, "0")}_${String(i).padStart(3, "0")}`;
+      const cleanNat = nat.replace(/\r/g, "").trim();
+      const cleanMng = mng.replace(/\r/g, "").trim();
+      const cleanTrn = trn.replace(/\r/g, "").trim();
+      const cleanTags = (
+        colTag >= 0 && parts[colTag]
+          ? parts[colTag].replace(/\r/g, "").split(";")
+          : []
+      )
+        .map((t) => t.trim())
+        .filter(Boolean);
 
-      const existingIdx = bundle.entries.findIndex(
-        (e) => e.lemma_native === nat && e.volume_id === vol,
+      const existing = bundle.entries.find(
+        (e) =>
+          e.lemma_native.trim() === cleanNat && (e.volume_id === vol || !vol),
       );
-      const newEntry = {
-        id,
-        corpus_id: targetCorpusId,
-        volume_id: vol,
-        lesson_id: `${vol}_l${les.padStart(2, "0")}`,
-        lemma_native: nat,
-        lemma_translit: trn,
-        pos: pos || undefined,
-        gender: gen && gen !== "-" ? gen : undefined,
-        definitions: [{ lang: "de", meaning: mng }],
-        tags,
-      };
 
-      if (existingIdx >= 0) {
-        bundle.entries[existingIdx] = newEntry;
+      if (existing) {
+        // Merge definition without duplicates
+        if (!existing.definitions.some((d) => d.meaning.trim() === cleanMng)) {
+          existing.definitions.push({ lang: "de", meaning: cleanMng });
+        }
+        // Merge tags
+        for (const t of cleanTags) {
+          if (!existing.tags?.includes(t)) {
+            existing.tags = existing.tags || [];
+            existing.tags.push(t);
+          }
+        }
+        if (!existing.pos && pos) existing.pos = pos.trim();
+        if (!existing.gender && gen && gen !== "-")
+          existing.gender = gen.trim();
       } else {
-        bundle.entries.push(newEntry);
+        const id = `${vol}_l${les.padStart(2, "0")}_${String(
+          bundle.entries.length + 1,
+        ).padStart(3, "0")}`;
+        bundle.entries.push({
+          id,
+          corpus_id: targetCorpusId,
+          volume_id: vol,
+          lesson_id: `${vol}_l${les.padStart(2, "0")}`,
+          lemma_native: cleanNat,
+          lemma_translit: cleanTrn,
+          pos: pos ? pos.trim() : undefined,
+          gender: gen && gen !== "-" ? gen.trim() : undefined,
+          definitions: [{ lang: "de", meaning: cleanMng }],
+          tags: cleanTags,
+        });
+        count++;
       }
-      count++;
     }
 
     if (isTauriEnvironment()) {
