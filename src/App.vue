@@ -136,6 +136,13 @@
               >
                 Geschlecht: ?
               </span>
+              <span
+                v-if="hindiVerbParadigm && (studyDirection === 'target-to-de' || isFlipped)"
+                :class="['ne-badge-top', hindiVerbParadigm.neBadgeClass]"
+                :title="hindiVerbParadigm.neExplanation"
+              >
+                {{ hindiVerbParadigm.neBadge }}
+              </span>
             </div>
 
             <!-- Front Side -->
@@ -235,6 +242,105 @@
                   <span class="target-reveal-de">
                     {{ currentCard.definitions.map(d => d.meaning).join(' · ') }}
                   </span>
+                </div>
+              </div>
+
+              <!-- Hindi Grammar Details: Noun Declension Table & Verb Paradigm -->
+              <div v-if="isHindi && (hindiNounDeclension || hindiVerbParadigm)" class="grammar-section">
+                <!-- Noun Declension Table -->
+                <div v-if="hindiNounDeclension" class="grammar-box">
+                  <div class="grammar-header" @click="toggleGrammarDrawer">
+                    <div class="grammar-title">
+                      <span class="grammar-icon">📖</span>
+                      <span class="grammar-name">{{ hindiNounDeclension.declensionType }}</span>
+                    </div>
+                    <button class="grammar-toggle-btn" type="button" :title="showGrammarDrawer ? 'Tabelle einklappen (G)' : 'Tabelle ausklappen (G)'">
+                      {{ showGrammarDrawer ? '▲ Einklappen (G)' : '▼ Deklinationstabelle (G)' }}
+                    </button>
+                  </div>
+
+                  <div v-if="showGrammarDrawer" class="grammar-content">
+                    <table class="declension-table">
+                      <thead>
+                        <tr>
+                          <th>Kasus</th>
+                          <th>Singular</th>
+                          <th>Plural</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="row in hindiNounDeclension.rows" :key="row.kasus">
+                          <td class="cell-kasus">
+                            <strong>{{ row.kasus }}</strong>
+                            <span class="kasus-sub">{{ row.kasusHelp }}</span>
+                          </td>
+                          <td class="cell-form">
+                            <span class="form-deva">{{ row.sgNative }}</span>
+                            <span class="form-translit">{{ row.sgTranslit }}</span>
+                          </td>
+                          <td class="cell-form">
+                            <span class="form-deva">{{ row.plNative }}</span>
+                            <span class="form-translit">{{ row.plTranslit }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="grammar-rule-hint">
+                      <strong>Deklinationsregel:</strong> {{ hindiNounDeclension.ruleExplanation }}<br>
+                      <span class="hint-sub">💡 {{ hindiNounDeclension.postpositionNote }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Verb Paradigm & Ergative Rules -->
+                <div v-if="hindiVerbParadigm" class="grammar-box">
+                  <div class="grammar-header" @click="toggleGrammarDrawer">
+                    <div class="grammar-title">
+                      <span class="grammar-icon">⚡</span>
+                      <span class="grammar-name">Verb-Paradigma & Ergativ-Regel</span>
+                      <span :class="['ne-badge', hindiVerbParadigm.neBadgeClass]">
+                        {{ hindiVerbParadigm.neBadge }}
+                      </span>
+                    </div>
+                    <button class="grammar-toggle-btn" type="button" :title="showGrammarDrawer ? 'Paradigma einklappen (G)' : 'Paradigma ausklappen (G)'">
+                      {{ showGrammarDrawer ? '▲ Einklappen (G)' : '▼ Formen anzeigen (G)' }}
+                    </button>
+                  </div>
+
+                  <div v-if="showGrammarDrawer" class="grammar-content">
+                    <div class="ne-explanation-box">
+                      <strong>Ergativ-Syntax:</strong> {{ hindiVerbParadigm.neExplanation }}
+                    </div>
+
+                    <div class="verb-grid">
+                      <div class="verb-cell">
+                        <span class="verb-label">Verbstamm</span>
+                        <span class="verb-deva">{{ hindiVerbParadigm.rootNative }}-</span>
+                        <span class="verb-translit">{{ hindiVerbParadigm.rootTranslit }}-</span>
+                      </div>
+                      <div class="verb-cell">
+                        <span class="verb-label">Perfektpartizip (m/f)</span>
+                        <span class="verb-deva">{{ hindiVerbParadigm.perfNative }}</span>
+                        <span class="verb-translit">{{ hindiVerbParadigm.perfTranslit }}</span>
+                      </div>
+                      <div class="verb-cell">
+                        <span class="verb-label">Habitualis / Präsens</span>
+                        <span class="verb-deva">{{ hindiVerbParadigm.habitNative }}</span>
+                        <span class="verb-translit">{{ hindiVerbParadigm.habitTranslit }}</span>
+                      </div>
+                      <div class="verb-cell">
+                        <span class="verb-label">Futur</span>
+                        <span class="verb-deva">{{ hindiVerbParadigm.futNative }}</span>
+                        <span class="verb-translit">{{ hindiVerbParadigm.futTranslit }}</span>
+                      </div>
+                      <div class="verb-cell verb-cell-wide">
+                        <span class="verb-label">Imperativ (Höflichkeitsstufen: तू / तुम / आप)</span>
+                        <span class="verb-deva">{{ hindiVerbParadigm.impNative }}</span>
+                        <span class="verb-translit">{{ hindiVerbParadigm.impTranslit }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -584,7 +690,7 @@
 
           <h4>6. Tastaturkürzel</h4>
           <p class="modal-text">
-            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) umschalten · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
+            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) · <code>g</code>: Grammatik / Deklination ein-/ausklappen · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
           </p>
 
           <h4>7. Struktur importfähiger TSV-Dateien (Tab-Separated Values)</h4>
@@ -711,6 +817,12 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
+import {
+  type HindiNounDeclension,
+  type HindiVerbParadigm,
+  getHindiNounDeclension,
+  getHindiVerbParadigm,
+} from "./services/hindiMorphology";
 import { isTauriEnvironment, storage } from "./services/storage";
 import type {
   CorpusMeta,
@@ -817,9 +929,71 @@ const dictResults = ref<DictionaryResult[]>([]);
 const deckStats = ref<DeckStats | null>(null);
 
 // Computed Helpers
+const activeCorpus = computed(() => {
+  return corporaList.value.find((c) => c.id === selectedCorpusId.value);
+});
+
 const activeCorpusTitle = computed(() => {
-  const corp = corporaList.value.find((c) => c.id === selectedCorpusId.value);
-  return corp ? corp.title : selectedCorpusId.value;
+  return activeCorpus.value ? activeCorpus.value.title : selectedCorpusId.value;
+});
+
+const isHindi = computed(() => {
+  if (!currentCard.value) return false;
+  const cId = (currentCard.value.corpus_id || "").toLowerCase();
+  return (
+    cId.includes("hindi") ||
+    activeCorpus.value?.lang_code === "hi" ||
+    activeCorpus.value?.id.includes("hindi")
+  );
+});
+
+const showGrammarDrawer = ref(
+  localStorage.getItem("alexis_show_grammar_drawer") !== "false",
+);
+
+function toggleGrammarDrawer() {
+  showGrammarDrawer.value = !showGrammarDrawer.value;
+  localStorage.setItem(
+    "alexis_show_grammar_drawer",
+    String(showGrammarDrawer.value),
+  );
+}
+
+const hindiNounDeclension = computed<HindiNounDeclension | null>(() => {
+  if (!isHindi.value || !currentCard.value) return null;
+  const p = (currentCard.value.pos || "").toLowerCase();
+  const isN =
+    p === "noun" ||
+    p === "subst" ||
+    p === "n" ||
+    (currentCard.value.gender &&
+      !currentCard.value.lemma_native.endsWith("ना"));
+
+  if (!isN) return null;
+
+  return getHindiNounDeclension(
+    currentCard.value.lemma_native,
+    currentCard.value.lemma_translit,
+    currentCard.value.gender,
+  );
+});
+
+const hindiVerbParadigm = computed<HindiVerbParadigm | null>(() => {
+  if (!isHindi.value || !currentCard.value) return null;
+  const p = (currentCard.value.pos || "").toLowerCase();
+  const isV =
+    p === "verb" ||
+    p === "v" ||
+    (currentCard.value.lemma_native.endsWith("ना") &&
+      (currentCard.value.tags?.some((t) => t.includes("verb")) ||
+        (!currentCard.value.gender && p !== "noun" && p !== "adj")));
+
+  if (!isV) return null;
+
+  return getHindiVerbParadigm(
+    currentCard.value.lemma_native,
+    currentCard.value.lemma_translit,
+  );
 });
 
 const selectedVolumesSummary = computed(() => {
@@ -978,6 +1152,15 @@ function onKeydown(e: KeyboardEvent) {
   } else if (e.key === "s" || e.key === "S") {
     e.preventDefault();
     toggleShuffle();
+  } else if (e.key === "g" || e.key === "G") {
+    if (
+      isFlipped.value &&
+      isHindi.value &&
+      (hindiNounDeclension.value || hindiVerbParadigm.value)
+    ) {
+      e.preventDefault();
+      toggleGrammarDrawer();
+    }
   }
 }
 
@@ -1607,6 +1790,262 @@ async function performDictSearch() {
 .def-notes {
   font-size: 0.88rem;
   color: var(--text-muted);
+}
+
+/* Hindi Grammar Section (Noun Declension & Verb Paradigms) */
+.grammar-section {
+  margin-top: 1.25rem;
+  width: 100%;
+  text-align: left;
+}
+
+.grammar-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.grammar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+  background: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  user-select: none;
+  gap: 0.5rem;
+}
+
+[data-theme="dark"] .grammar-header {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.grammar-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-wrap: wrap;
+}
+
+.grammar-icon {
+  font-size: 1rem;
+}
+
+.grammar-name {
+  color: var(--text-primary);
+}
+
+.grammar-toggle-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.grammar-toggle-btn:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.grammar-content {
+  padding: 0.85rem;
+}
+
+/* Noun Declension Table */
+.declension-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.declension-table th {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 2px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.declension-table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+
+.declension-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cell-kasus {
+  color: var(--text-primary);
+  width: 30%;
+}
+
+.kasus-sub {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-top: 0.1rem;
+}
+
+.cell-form {
+  line-height: 1.3;
+}
+
+.cell-form .form-deva {
+  display: block;
+  font-family: var(--font-deva);
+  font-size: 1.15rem;
+  color: var(--text-primary);
+}
+
+.cell-form .form-translit {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--accent-gold);
+  font-style: italic;
+}
+
+.grammar-rule-hint {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  background: rgba(180, 83, 9, 0.06);
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.hint-sub {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Ergative & Verb Badges */
+.ne-badge,
+.ne-badge-top {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.ne-badge-top {
+  margin-left: 0.25rem;
+}
+
+.badge-transitive {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+[data-theme="dark"] .badge-transitive {
+  background: #064e3b;
+  color: #86efac;
+  border-color: #059669;
+}
+
+.badge-intransitive {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+[data-theme="dark"] .badge-intransitive {
+  background: #082f49;
+  color: #7dd3fc;
+  border-color: #0284c7;
+}
+
+.badge-special {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
+}
+
+[data-theme="dark"] .badge-special {
+  background: #3b0764;
+  color: #d8b4fe;
+  border-color: #7e22ce;
+}
+
+.ne-explanation-box {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  background: rgba(3, 25, 46, 0.03);
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  border-left: 3px solid #2563eb;
+  margin-bottom: 0.75rem;
+}
+
+[data-theme="dark"] .ne-explanation-box {
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: #3b82f6;
+}
+
+/* Verb Grid */
+.verb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.65rem;
+}
+
+.verb-cell {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.verb-cell-wide {
+  grid-column: 1 / -1;
+}
+
+.verb-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.verb-deva {
+  font-family: var(--font-deva);
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.verb-translit {
+  font-size: 0.8rem;
+  color: var(--accent-gold);
+  font-style: italic;
 }
 
 .card-tags {

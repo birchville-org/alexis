@@ -88,6 +88,8 @@ pub struct StudyCardItem {
     pub lemma_translit: String,
     pub pos: Option<String>,
     pub gender: Option<String>,
+    #[serde(default)]
+    pub grammar_metadata: Option<serde_json::Value>,
     pub definitions: Vec<EntryDefinition>,
     pub tags: Vec<String>,
     pub box_number: i32,
@@ -375,6 +377,7 @@ pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<V
             lemma_translit: row.get(6)?,
             pos: row.get(7)?,
             gender: row.get(8)?,
+            grammar_metadata: None,
             definitions: defs,
             tags,
             box_number: row.get(11)?,

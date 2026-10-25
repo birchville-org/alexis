@@ -74,6 +74,7 @@ export interface StudyCardItem {
   lemma_translit: string;
   pos?: string;
   gender?: string;
+  grammar_metadata?: Record<string, any>;
   definitions: EntryDefinition[];
   tags: string[];
   box_number: number;

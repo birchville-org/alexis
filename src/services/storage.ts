@@ -231,6 +231,7 @@ class StorageService {
         lemma_translit: e.lemma_translit,
         pos: e.pos,
         gender: e.gender,
+        grammar_metadata: e.grammar_metadata,
         definitions: e.definitions,
         tags: e.tags || [],
         box_number: state.box,
