@@ -1,0 +1,260 @@
+volume	lesson	native	transliteration	pos	gender	meaning_de	tags
+payer_vol1	2	देव	deva	noun	m	Himmlischer, Gott; Fürst, König	lektion02
+payer_vol1	2	ईश्वर	īśvara	noun	m	Herr, Herrscher, Gott (monotheistisch)	lektion02
+payer_vol1	2	ब्राह्मण	brāhmaṇa	noun	m	Brahmane (geistlicher Stand)	lektion02
+payer_vol1	2	क्षत्रिय	kṣatriya	noun	m	Kṣatriya (Fürsten- und Wehrstand)	lektion02
+payer_vol1	2	वैश्य	vaiśya	noun	m	Vaiśya (Nähr- und Händlerstand)	lektion02
+payer_vol1	2	शूद्र	śūdra	noun	m	Śūdra (Dienstleistungsstand)	lektion02
+payer_vol1	2	द्विज	dvija	noun	m	"Zweimalgeborener" (Initiierte der oberen drei Stände: Brāhmaṇa, Kṣatriya, Vaiśya)	lektion02
+payer_vol1	2	वर्ण	varṇa	noun	m	Farbe, Geburtsstand (Strebung)	lektion02
+payer_vol1	2	कवि	kavi	noun	m	Dichter	lektion02
+payer_vol1	2	अग्नि	agni	noun	m	Feuer, Gott Agni	lektion02
+payer_vol1	2	साधु	sādhu	adj	-	richtig, gut	lektion02
+payer_vol1	2	साधु	sādhu	noun	m	"heiliger" Mann, Sādhu	lektion02
+payer_vol1	2	गुरु	guru	adj	-	schwer, bedeutend, verehrenswert	lektion02
+payer_vol1	2	गुरु	guru	noun	m	verehrenswerte Person: Vater, Mutter, älterer Verwandter, insbes. Lehrer, Meister	lektion02
+payer_vol1	3	श्रुति	śruti	noun	f	das Hören, die ewige Überlieferung (Bezeichnung für die Veden und Brāhmaṇa's)	lektion03
+payer_vol1	3	स्मृति	smṛti	noun	f	Vergegenwärtigung, Erinnerung, meditative Vergegenwärtigung = Achtsamkeit, Überlieferung (Gegenbegriff zu **śruti**). Umfasst:	lektion03
+payer_vol1	3	शिक्षा	śikṣā	noun	f	rechte Aussprache	lektion03
+payer_vol1	3	छन्दस्	chandas	noun	n	Metrum	lektion03
+payer_vol1	3	व्याकरण	vyākaraṇa	noun	n	Grammatik	lektion03
+payer_vol1	3	निरुक्त	nirukta	noun	n	Worterklärung, Etymologie	lektion03
+payer_vol1	3	ज्योतिष	jyotiṣa	noun	n	Astronomie, Kalenderlehre	lektion03
+payer_vol1	3	कल्प	kalpa	noun	m	Zeremoniell	lektion03
+payer_vol1	3	श्रौतसूत्र	śrautasūtra	noun	n	Lehrwerke für den Vollzug der grossen Opfer	lektion03
+payer_vol1	3	गृह्यसूत्र	gṛhyasūtra	noun	n	Lehrwerke für die Zeremonien und Opfer des täglichen Lebens	lektion03
+payer_vol1	3	धर्मशास्त्र	dharmaśāstra	noun	n	Lehrwerke zu Recht und Sitte (rechtes Verhalten)	lektion03
+payer_vol1	3	नीतिशास्त्र	nītiśāstra	noun	n	Lehrwerke der Lebensklugheit	lektion03
+payer_vol1	3	धेनु	dhenu	noun	f	(Milch-)kuh	lektion03
+payer_vol1	3	पशु	paśu	noun	m	domestiziertes Nutztier, Vieh (Kollektivum)	lektion03
+payer_vol1	3	देवता	devatā	noun	f	Gottheit (abstrakt und konkret)	lektion03
+payer_vol1	3	ब्राह्मणी	brāhmaṇī	noun	f	Brahmanin	lektion03
+payer_vol1	3	क्षत्रिया	kṣatriyā	noun	f	weibliche Kṣatriya	lektion03
+payer_vol1	3	क्षत्रियी	kṣatriyī	noun	f	Frau eines Kṣatriya	lektion03
+payer_vol1	3	वैश्या	vaiśyā	noun	f	weibliche Vaiśya	lektion03
+payer_vol1	3	शूद्रा	śūdrā	noun	f	weibliche Śūdra	lektion03
+payer_vol1	3	देवी	devī	noun	f	Göttin, insbes. Durgā f. = ⟪दुर्गा⟫, die Gattin Śiva's = ⟪शिव⟫	lektion03
+payer_vol1	3	साध्वी	sādhvī	noun	f	fem. zu sādhu	lektion03
+payer_vol1	3	गुर्वी	gurvī	noun	f	fem. zu guru	lektion03
+payer_vol1	3	अस्मिता	asmitā	noun	f	"Ich-bin-heit", d.h. der (falsche) Glaube: **Ich** bin es, der sieht usw	lektion03
+payer_vol1	3	आन्वीक्षिकी	ānvīkṣikī	noun	f	Philosophie (die Wissenschaft, die durch logisch korrekte Begründungen zu ihren Schlussfolgerungen kommt)	lektion03
+payer_vol1	3	उपेक्षा	upekṣā	noun	f	Nichtbeachtung, Gleichmut	lektion03
+payer_vol1	3	करुणा	karuṇā	noun	f	Mitgefühl, Mitleid	lektion03
+payer_vol1	3	मुदिता	muditā	noun	f	Freude, insbesondere Mitfreude (Gegensatz zu Neid)	lektion03
+payer_vol1	5	अभिनिवेष	abhiniveṣa	noun	m	Neigung zu, Hartnäckigkeit, Bestehen auf; speziell: Anhänglichkeit an den Leib als sei er etwas Eigenes	lektion05
+payer_vol1	5	काम	kāma	noun	m	Wunsch, Begehren, erwünschte Gabe, Sinnenlust, Liebe; Liebesgott Kāma	lektion05
+payer_vol1	5	क्रोध	krodha	noun	m	Zorn	lektion05
+payer_vol1	5	क्लेश	kleśa	noun	m	Qual, Plage	lektion05
+payer_vol1	5	त्रयी	trayī	noun	f	Dreizahl; insbes. die drei Veden (Ṛgveda, Sāmaveda, Yajurveda)	lektion05
+payer_vol1	5	दण्डनीति	daṇḍanīti	noun	f	Politik (ein Tatpuruṣa aus daṇḍa m. = "Stock, Macht, Herrschaft, Strafe" und nīti f. = "rechte Führung")	lektion05
+payer_vol1	5	द्विजाति	dvijāti	adj	-	Zweimalgeborener	lektion05
+payer_vol1	5	द्विज	dvija	adj	-	Zweimalgeborener	lektion05
+payer_vol1	5	द्वेष	dveṣa	noun	m	Hass	lektion05
+payer_vol1	5	मैत्री	maitrī	noun	f	Freundschaft, Freundlichkeit, freundliches Wohlwollen	lektion05
+payer_vol1	5	राग	rāga	noun	m	(rote) Farbe, Leidenschaft, Liebe	lektion05
+payer_vol1	5	लोभ	lobha	noun	m	Gier, Habsucht	lektion05
+payer_vol1	5	वर्ण	varṇa	noun	m	Farbe, Gattung, Stand	lektion05
+payer_vol1	5	वार्त्ता	vārttā	noun	f	Erwerb, Ökonomie (Wirtschaft)	lektion05
+payer_vol1	5	विद्या	vidyā	noun	f	Wissen, Wissenschaft	lektion05
+payer_vol1	5	अविद्या	avidyā	noun	f	Unwissenheit, Nichtwissen	lektion05
+payer_vol1	5	च	ca	noun	-	und	lektion05
+payer_vol1	6	यजति	yaj (yajati)	verb	-	mit einem Opfer verehren, opfern	verb;klasse_1 U;lektion06
+payer_vol1	6	भवति	bhū (bhavati)	verb	-	werden, entstehen, sein	verb;klasse_1 P;lektion06
+payer_vol1	6	स्मरति	smṛ (smarati)	verb	-	vergegenwärtigen, sich erinnern	verb;klasse_1 P;lektion06
+payer_vol1	6	नृत्यति	nṛt (nṛtyati)	verb	-	tanzen	verb;klasse_4 P;lektion06
+payer_vol1	6	नयति	nī (nayati)	verb	-	führen	verb;klasse_1 U;lektion06
+payer_vol1	6	मन्यते	man (manyate)	verb	-	denken	verb;klasse_4 Ā;lektion06
+payer_vol1	6	मुह्यति	muh (muhyati)	verb	-	verwirrt sein	verb;klasse_4 P;lektion06
+payer_vol1	6	युध्यते	yudh (yudhyate)	verb	-	kämpfen	verb;klasse_4 Ā;lektion06
+payer_vol1	6	विशति	viś (viśati)	verb	-	eintreten	verb;klasse_6 P;lektion06
+payer_vol1	6	सृजति	sṛj (sṛjati)	verb	-	loslassen, aus sich entlassen, emanieren lassen	verb;klasse_6 P;lektion06
+payer_vol1	7	अश्नुते	aś (aśnute)	verb	-	erreichen, gelangen zu, erlangen	verb;klasse_5 Ā;lektion07
+payer_vol1	7	आप्नोति	āp (āpnoti)	verb	-	erreichen, erlangen	verb;klasse_5 P;lektion07
+payer_vol1	7	कुप्यति	kup (kupyati)	verb	-	zürnen	verb;klasse_4 P;lektion07
+payer_vol1	7	क्रुध्यति	krudh (krudhyati)	verb	-	zürnen	verb;klasse_4 P;lektion07
+payer_vol1	7	खादति	khād (khādati)	verb	-	kauen, essen	verb;klasse_1 P;lektion07
+payer_vol1	7	शृणोति	śru (śṛṇoti !)	verb	-	hören (etwas: Akkusativ, jemanden: Genetiv oder Akkusativ; über: Akkusativ; von jemandem: Genetiv, Ablativ, Instrumentalis)	verb;klasse_5 P;lektion07
+payer_vol1	7	सुनोति	su (sunoti)	verb	-	auspressen	verb;klasse_5 U;lektion07
+payer_vol1	7	सोम	soma	noun	m	Presstrank, Soma; Mond (Aus welcher Pflanze Soma gepresst wurde, ist bis heute umstritten)	lektion07
+payer_vol1	7	फल	phala	noun	n	Frucht (auch im übertragenen Sinn: (karmische) Frucht einer Tat)	lektion07
+payer_vol1	7	नृत्य	nṛtya	noun	n	Tanz	lektion07
+payer_vol1	7	स्वर्ग	svarga	noun	m	Himmel	lektion07
+payer_vol1	7	नरक	naraka	noun	m	Hölle (nach einer Hinduauffassung hat das Universum die Form eines Eis (**Brahmāṇḍa** m.n. = ⟪ब्रह्माण्ड⟫ = "Ei Brahmās"): oberhalb der Erde sind sechs Himmel mit ansteigender Glückseligkeit, unterhalb der Erde sind sieben sog. **pātāla** n. = ⟪पाताल⟫, Wohnstätten der **nāga** m. = ⟪नाग⟫ (Schlangen) und anderer mythischer Wesen, darunter kommen 7 Höllen mit steigenden Qualen)	lektion07
+payer_vol1	7	अङ्ग	aṅga	noun	n	Glied des Körpers, Bestandteil; auch = **vedāṅga** = ⟪वेदाङ्ग⟫	lektion07
+payer_vol1	7	गच्छति	gam (gacchati)	verb	-	gehen (Gehört nach der einheimischen Verbklassifikation zur Präsensklasse 1, ist aber in Wirklichkeit eine Bildung mit einem Präsensstammbildungssuffix **-ccha-**: **gam** » Tiefstufe (**gm** ») **ga-ccha-ti**)	verb;klasse_1 P;lektion07
+payer_vol1	8	जयति	ji (jayati)	verb	-	siegen, besiegen, ersiegen	verb;klasse_1 P;lektion08
+payer_vol1	8	लभते	labh (labhate)	verb	-	fassen, erhalten, ergreifen	verb;klasse_1 Ā;lektion08
+payer_vol1	8	तु	tu	noun	-	aber (steht nach dem ersten Wort des entgegengesetzten Satzes oder Satzteils)	lektion08
+payer_vol1	8	पश्यति	paś (paśyati)	verb	-	sehen, erblicken (wird als Präsensstamm statt der Wurzel **dṛś** 0 "sehen, erblicken" verwendet)	verb;klasse_4 P;lektion08
+payer_vol1	8	करोति	kṛ (karoti)	verb	-	machen, tun	verb;klasse_8 U;lektion08
+payer_vol1	8	तनोति	tan (tanoti)	verb	-	dehnen	verb;klasse_8 U;lektion08
+payer_vol1	8	रक्षति	rakṣ (rakṣati)	verb	-	hüten	verb;klasse_1 P;lektion08
+payer_vol1	8	सारथि	sārathi	noun	m	Wagenlenker, Fuhrmann	lektion08
+payer_vol1	8	कपि	kapi	noun	m	Affe	lektion08
+payer_vol1	8	कुमारी	kumārī	noun	f	das Mädchen, die Jungfrau	lektion08
+payer_vol1	8	नाग	nāga	noun	m	der Nackte, der Elefant, die Schlange (Elefant und Schlange haben kein Fell, ebenso wie der "nackte Affe" Mensch)	lektion08
+payer_vol1	8	गज	gaja	noun	m	Elefant	lektion08
+payer_vol1	8	शोचति	śuc (śocati)	verb	-	trauern	verb;klasse_1 P;lektion08
+payer_vol1	8	शुक	śuka	noun	m	Papagei	lektion08
+payer_vol1	8	पतति	pat (patati)	verb	-	fallen, fliegen	verb;klasse_1 P;lektion08
+payer_vol1	8	पत्रिका	patrikā	noun	f	Brief	lektion08
+payer_vol1	8	लिखति	likh (likhati)	verb	-	ritzen, schreiben (ursprünglich mit dem Stichel auf einem Palmblatt, dann aber allgemein)	verb;klasse_1 P;lektion08
+payer_vol1	8	सुख	sukha	noun	n	Glück, Wohlsein	lektion08
+payer_vol1	8	दुःख	duḥkha	noun	n	Unglück, Leid	lektion08
+payer_vol1	9	अध्ययन	adhyayana	noun	n	Lernen, insbes. Vedastudium	lektion09
+payer_vol1	9	कारु	kāru	noun	m	Handwerker	lektion09
+payer_vol1	9	कारुक	kāruka	noun	m	Handwerker	lektion09
+payer_vol1	9	कुशीलव	kuśīlava	noun	m	(fahrender) Schausteller, Schauspieler, Sänger	lektion09
+payer_vol1	9	कुसीद	kusīda	noun	n	Wucher	lektion09
+payer_vol1	9	कर्षति	kṛṣ (karṣati)	verb	-	ziehen	verb;klasse_1 P;lektion09
+payer_vol1	9	कृषति	kṛṣ (kṛṣati)	verb	-	pflügen	verb;klasse_6 U;lektion09
+payer_vol1	9	कृषि	kṛṣi	noun	f	Ackerbau	lektion09
+payer_vol1	9	कृषिका	kṛṣikā	noun	f	Ackerbau	lektion09
+payer_vol1	9	दान	dāna	noun	n	Geben, Gabe, Freigebigkeit	lektion09
+payer_vol1	9	प्रतिग्रह	pratigraha	noun	m	Empfangen, Geschenk	lektion09
+payer_vol1	9	प्रवचन	pravacana	noun	n	Rede, (mündlicher) Unterricht	lektion09
+payer_vol1	9	पाशुपाल्य	pāśupālya	noun	n	Viehhaltung, Viehzucht	lektion09
+payer_vol1	9	इज्या	ijyā	noun	f	Opfer (aus \*yj » ij + Suffix **yā**)	lektion09
+payer_vol1	9	यजन	yajana	noun	n	Opfer im Auftrag von jemand anderem	lektion09
+payer_vol1	9	रूप	rūpa	noun	n	Aussehen, Form, schöne Form, Natur, Wesen	lektion09
+payer_vol1	9	शुश्रूषा	śuśrūṣā	noun	f	Gehorsam, gehorsamer Dienst	lektion09
+payer_vol1	10	गृह	gṛha	noun	n	Haus	lektion10
+payer_vol1	10	ग्राम	grāma	noun	m	Dorf	lektion10
+payer_vol1	10	नगर	nagara	noun	n	Stadt	lektion10
+payer_vol1	10	यज्ञ	yajña	noun	m	Opfer	lektion10
+payer_vol1	10	पुण्य	puṇya	noun	n	gutes Werk, Verdienst	lektion10
+payer_vol1	10	पाप	pāpa	noun	n	Übeltat, Böses (Gegensatz zu **puṇya**)	lektion10
+payer_vol1	10	सत्य	satya	noun	n	Wahrheit	lektion10
+payer_vol1	10	अनृत	anṛta	noun	n	Unwahrheit, Lüge (Gegensatz zu **satya**)	lektion10
+payer_vol1	10	ऋषि	ṛṣi	noun	m	vedischer Weiser, Verfasser vedischer Lieder	lektion10
+payer_vol1	10	वदति	vad (vadati)	verb	-	sagen, sprechen	verb;klasse_1 P;lektion10
+payer_vol1	10	पृच्छति	prach (pṛcchati !)	verb	-	fragen (jemanden: Akk.; nach etwas: Akk.)	verb;klasse_6 P;lektion10
+payer_vol1	10	सह	saha	noun	-	zusammen mit, gemeinsam mit (auch bei „kämpfen mit“ usw.) (Postposition mit Instrumentalis)	lektion10
+payer_vol1	10	अनृत	anṛta	noun	n	Unwahrheit, Lüge (Gegensatz zu **satya**)	lektion10
+payer_vol1	10	ऋषि	ṛṣi	noun	m	vedischer Weiser, Verfasser vedischer Lieder	lektion10
+payer_vol1	10	वदति	vad (vadati)	verb	-	sagen, sprechen	verb;klasse_1 P;lektion10
+payer_vol1	10	पृच्छति	prach (pṛcchati !)	verb	-	fragen (jemanden: Akk.; nach etwas: Akk.)	verb;klasse_6 P;lektion10
+payer_vol1	10	सह	saha	noun	-	zusammen mit, gemeinsam mit (auch bei „kämpfen mit“ usw.) (Postposition mit Instrumentalis)	lektion10
+payer_vol1	10	अनृत	anṛta	noun	n	Unwahrheit, Lüge (Gegensatz zu **satya**)	lektion10
+payer_vol1	10	ऋषि	ṛṣi	noun	m	vedischer Weiser, Verfasser vedischer Lieder	lektion10
+payer_vol1	10	वदति	vad (vadati)	verb	-	sagen, sprechen	verb;klasse_1 P;lektion10
+payer_vol1	10	पृच्छति	prach (pṛcchati !)	verb	-	fragen (jemanden: Akk.; nach etwas: Akk.)	verb;klasse_6 P;lektion10
+payer_vol1	10	सह	saha	noun	-	zusammen mit, gemeinsam mit (auch bei „kämpfen mit“ usw.) (Postposition mit Instrumentalis)	lektion10
+payer_vol1	11	इति	iti	noun	-	so	lektion11
+payer_vol1	11	एवम्	evam	noun	-	so (adverbiell, z.B. **evaṃ jayati** "so siegt er")	lektion11
+payer_vol1	11	न	na	noun	-	nicht	lektion11
+payer_vol1	11	पुत्र	putra	noun	m	Sohn (In Indien war es notwendig, einen Sohn zu zeugen, der die Opfer für die Vorfahren darbringen konnte.)	lektion11
+payer_vol1	11	धर्म	dharma	noun	m	("das, was fest ist", d.h.) Recht, Gesetz, Sitte, Charakter	lektion11
+payer_vol1	11	अधर्म	adharma	noun	m	Unrecht (Gegensatz zu **dharma**)	lektion11
+payer_vol1	11	इच्छति	iṣ (icchati)	verb	-	wünschen (**iṣ-ccha-ti**)	verb;klasse_6 P;lektion11
+payer_vol1	11	वद्	vad	verb	-	sagen	lektion11
+payer_vol1	11	वाद	vāda	noun	m	Ausspruch, Aussage, Wort	lektion11
+payer_vol1	11	वदन	vadana	noun	n	das Sprechen; Sprechwerkzeug: Mund, Gesicht	lektion11
+payer_vol1	11	प्रच्छ्	prach	verb	-	fragen	lektion11
+payer_vol1	11	प्रश्न	praśna	noun	m	Frage (Suffix **-na** wie in **yaj-ña**)	lektion11
+payer_vol1	11	इष्	iṣ	verb	-	wünschen	lektion11
+payer_vol1	11	इष्टि	iṣṭi	noun	f	Wunsch (**iṣ** + **-ti**)	lektion11
+payer_vol1	12	मृग	mṛga	noun	m	Wildtier	lektion12
+payer_vol1	12	मार्ग	mārga	noun	m	Weg (Wege waren oft die Wildwechsel)	lektion12
+payer_vol1	12	अपि	api	noun	-	auch (nachgestellt)	lektion12
+payer_vol1	12	मोक्ष	mokṣa	noun	m	Loslösung, Befreiung, Erlösung	lektion12
+payer_vol1	12	अभिषेक	abhiṣeka	noun	m	Besprengung eines Königs bei der Königsweihe, Königsweihe	lektion12
+payer_vol1	12	बोधि	bodhi	noun	-	das Erwachen (wodurch ein Buddha oder Jina zur erlösenden Einsicht gelangt)	lektion12
+payer_vol1	13	एव	eva	noun	-	betont vorhergehendes Wort	lektion13
+payer_vol1	13	असुर	asura	noun	m	Dämon	lektion13
+payer_vol1	13	गुण	guṇa	noun	m	Faden, Schnur; Eigenschaft, gute Eigenschaft	lektion13
+payer_vol1	13	अस्ति	as (asti)	verb	-	sein, da sein	verb;klasse_2 P;lektion13
+payer_vol1	13	अन्न	anna	noun	n	Speise (aus PPP: *ad-na: das Gegessene)	lektion13
+payer_vol1	13	पद	pada	noun	n	Schritt, Standort, Stätte	lektion13
+payer_vol1	13	पाद	pāda	noun	m	Fuss, ein Viertel, Verszeile	lektion13
+payer_vol1	13	द्वेष	dveṣa	noun	-	Hass	lektion13
+payer_vol1	14	शील	śīla n.	noun	-	(guter) Charakter, Sittlichkeit	lektion14
+payer_vol1	14	भूषण	bhūṣ-aṇa n	noun	-	Schmuck	lektion14
+payer_vol1	14	दीप	dīpa m.	noun	-	Lampe	lektion14
+payer_vol1	14	बल	bala n.	noun	-	Gewalt, Kraft, Stärke; Heereskraft, Heerschar	lektion14
+payer_vol1	14	बाल	bāla 3	noun	-	jung, kindlich, töricht; m. Knabe	lektion14
+payer_vol1	14	बाला	bālā f.	noun	-	junges Mädchen	lektion14
+payer_vol1	14	नर	nara m.	noun	-	Mann, Mensch	lektion14
+payer_vol1	14	शत्रु	śatru m.	noun	-	Feind	lektion14
+payer_vol1	14	लोक	loka m.	noun	-	Welt; Sing. u. Plur.: die Leute, die Menschen, das Volk	lektion14
+payer_vol1	14	जल	jala n.	noun	-	Wasser	lektion14
+payer_vol1	14	जन	jan-a m.	noun	-	Geschöpf, Mensch, Leute	lektion14
+payer_vol1	14	उक्ति	uk-ti f.	noun	-	Ausspruch, Wort	lektion14
+payer_vol1	14	वचन	vac-ana n.	noun	-	das Sprechen, das Wort	lektion14
+payer_vol1	14	वाक्य	vāk-ya n.	noun	-	Wort, Rede	lektion14
+payer_vol1	15	पुष्कल	puṣkala	adj	-	herrlich, prächtig, reichlich	lektion15
+payer_vol1	15	वा	vā	noun	-	oder (nachgestellt)	lektion15
+payer_vol1	15	अथवा	athavā	noun	-	oder (vorangestellt)	lektion15
+payer_vol1	15	अर्ध	ardha	adj	-	halb, m.n. Hälfte	lektion15
+payer_vol1	15	पूजा	pūjā	noun	f	Ehrung, ehrenvoller Empfang, religiöse Verehrung (Pūjā)	lektion15
+payer_vol1	15	कुल	kula	noun	n	Herde, Menge, Geschlecht, Abstammung, Familie	lektion15
+payer_vol1	15	इन्द्र	indra	noun	m	Fürst, Erster, Bester unter ; Götterkönig Indra	lektion15
+payer_vol1	15	दास	dāsa	noun	m	Sklave, Leibeigener, Diener	lektion15
+payer_vol1	15	दासी	dāsī	noun	f	Sklavin, Leibeigene, Dienerin	lektion15
+payer_vol1	15	काल	kāla	noun	m	Zeit, (rechter) Zeitpunkt ; Schicksal, Tod ; Todesgott Kāla	lektion15
+payer_vol1	15	काल	kāla	adj	-	schwarz, blauschwarz, dunkel	lektion15
+payer_vol1	15	पुरुष	puruṣa	noun	m	Mensch, Mann, Knecht	lektion15
+payer_vol1	15	स्तुति	stuti	noun	f	Lobpreis, Loblied	lektion15
+payer_vol1	15	स्तोत्र	stotra	noun	n	(Mittel zum Preisen =) Loblied, Hymnus	lektion15
+payer_vol1	15	सिंह	siṃha	noun	m	Löwe (_Panthera leo persica_)	lektion15
+payer_vol1	15	व्याघ्र	vyāghra	noun	m	Tiger (_Panthera tigris tigris_) (wörtl: Gähner)	lektion15
+payer_vol1	15	अरि	ari	noun	m	Feind (laut Thieme, Der Fremdling im Ṛgveda: ursprünglich = Fremdling)	lektion15
+payer_vol1	15	आर्य	ārya	adj	-	arisch, edel ; m. Arier (Selbstbezeichnung der sanskritsprechenden alten Inder, wörtlich: Gastfreundlicher (Thieme)) ; Edler, Ehrenmann	lektion15
+payer_vol1	15	जाति	jāti	noun	f	Geburt, Art, Kaste (zu ⟪जाति⟫ als Kaste siehe Basham, Wonder, S. 148ff.)	lektion15
+payer_vol1	15	मरण	maraṇa	noun	n	Sterben, Tod	lektion15
+payer_vol1	15	मृति	mṛti	noun	f	Sterben, Tod	lektion15
+payer_vol1	15	मृत्यु	mṛtyu	noun	m	Tod ; personifiziert: Todesgott	lektion15
+payer_vol1	16	अध्यापन	adhyāpana	noun	n	Unterrichten, Unterricht	lektion16
+payer_vol1	16	अनसूया	anasūyā	noun	f	Nicht-Murren, Neidlosigkeit	lektion16
+payer_vol1	16	नृशंस्य	nṛśaṃsya	noun	n	Boshaftigkeit, Niedertracht	lektion16
+payer_vol1	16	अनृशंस्य	anṛśaṃsya	noun	n	Nicht-Boshaftigkeit	lektion16
+payer_vol1	16	आजीव	ājīva	noun	m	Lebensunterhalt	lektion16
+payer_vol1	16	क्षमा	kṣamā	noun	f	Geduld, Langmut, Nachsicht	lektion16
+payer_vol1	16	क्षेम	kṣema	noun	n	Ruhe, Frieden, Wohlergehen, sicherer Besitz	lektion16
+payer_vol1	16	चित्त	citta	noun	n	Bewusstsein, Denken, Geist	lektion16
+payer_vol1	16	निरोध	nirodha	noun	m	Stoppen, Zum-Stillstand-Bringen	lektion16
+payer_vol1	16	योग	yoga	noun	m	Anschirrung, Verbindung, Vereinigung, Erwerb ; Yoga	lektion16
+payer_vol1	16	शौच	śauca	noun	n	Reinigung, Reinheit	lektion16
+payer_vol1	16	अहिंसा	ahiṃsā	noun	f	das Niemandem-etwas-zu-Leide-Tun, Nichtverletzen, Gewaltlosigkeit	lektion16
+payer_vol1	17	घात	ghāta	noun	m	Tötung	lektion17
+payer_vol1	17	आस्ते	ās (āste)	verb	-	Pass. ⟪आस्यते⟫ PPP ⟪आसित⟫ : sitzen	verb;klasse_2Ā;lektion17
+payer_vol1	17	आसन	āsana	noun	n	das Sitzen, Sitz ; auch: Sitzpositionen des Yogin	lektion17
+payer_vol1	17	रुद्र	rudra	noun	m	(der Heuler =) der Sturmgott Rudra	lektion17
+payer_vol1	17	दिष्टि	diṣṭi	noun	f	Anweisung, glückliche Fügung	lektion17
+payer_vol1	18	सुष्टु	suṣṭu	adj	-	hochgepriesen, ausgezeichnet, gut	lektion18
+payer_vol1	18	शोभन	śobhana	adj	-	glänzend, prächtig, herrlich, schön, gut	lektion18
+payer_vol1	18	सम	sama	adj	-	gleich, eben, ähnlich (mit Instrumentalis)	lektion18
+payer_vol1	18	व्याधि	vyādhi	noun	m	Krankheit	lektion18
+payer_vol1	18	रिपु	ripu	noun	m	⟪शत्रु⟫ , Betrüger	lektion18
+payer_vol1	18	वह्नि	vahni	noun	m	⟪अग्नि⟫	lektion18
+payer_vol1	18	ज्ञान	jñāna	noun	n	Erkenntnis	lektion18
+payer_vol1	18	शूर	śūra	adj	-	tapfer, heldenhaft ; m.: Held	lektion18
+payer_vol1	18	शब्द	śabda	noun	m	Laut, Ton, Signallaut: Wort	lektion18
+payer_vol1	18	उदक	udaka	noun	n	Wasser	lektion18
+payer_vol1	18	अन्त	anta	noun	m	Ende, Grenze	lektion18
+payer_vol1	18	आदि	ādi	noun	m	Anfang	lektion18
+payer_vol1	18	दण्ड	daṇḍa	noun	m	Stock, Prügel, Strafe	lektion18
+payer_vol1	18	सहित	sahita	adj	-	vereinigt, versehen mit	lektion18
+payer_vol1	18	हस्त	hasta	noun	m	Hand	lektion18
+payer_vol1	18	प्रभृति	prabhṛti	noun	f	Anfang	lektion18
+payer_vol1	20	वा	vā	noun	-	oder	lektion20
+payer_vol1	20	कर	kara	noun	m	Hand (zu ⟪कृ⟫ 8)	lektion20
+payer_vol1	20	कर	kara	noun	m	Abgabe, Tribut, Steuer (nicht zu ⟪कृ⟫, sondern vermutlich Lehnwort aus dem Tamil - தமிழ்)	lektion20
+payer_vol1	20	क्रिया	kriyā	noun	f	Handlung, heilige Handlung, Opferhandlung, Zeremonie (zu ⟪कृ⟫ 8)	lektion20
+payer_vol1	20	नृप	nṛpa	noun	m	"Beschützer der Männer" = König	lektion20
+payer_vol1	20	प्रणिधान	praṇidhāna	noun	n	Anwendung, Anstrengung, Aufmerksamkeit gegen, Dienstfertigkeit, Nachdenken, Gelübde	lektion20
+payer_vol1	20	बाधना	bādhanā	noun	f	Bedrängnis, Plage, Pein	lektion20
+payer_vol1	20	भार्या	bhāryā	noun	f	"zu Erhaltende" = Gattin	lektion20
+payer_vol1	20	भावना	bhāvanā	noun	f	meditative Entfaltung (zu ⟪भू⟫ Kausativ)	lektion20
+payer_vol1	20	मही	mahī	noun	f	Erde, Grund und Boden	lektion20
+payer_vol1	20	लक्षण	lakṣaṇa	noun	n	Merkmal, Kennzeichen, Attribut	lektion20
+payer_vol1	20	विप्र	vipra	noun	m	"Zitterer" = Dichter, Sänger, Priester, Brahmane	lektion20
+payer_vol1	20	विषय	viṣaya	noun	m	Gebiet, Bereich, Objekt, Sinnesobjekt	lektion20
+payer_vol1	20	अपवर्ग	apavarga	noun	m	Ende, Erlösung	lektion20
+payer_vol1	20	समाधि	samādhi	noun	m	innere Sammlung, höchste Aufmerksamkeit, meditative "Versenkung"	lektion20
+payer_vol1	20	स्वाध्याय	svādhyāya	noun	m	"Selbststudium", Rezitation (besonders des Veda), Vedastudium	lektion20
+payer_vol1	20	ओष्ठ	oṣṭha	noun	m	Lippe	lektion20
+payer_vol1	20	नाभि	nābhi	noun	f	Nabel	lektion20
+payer_vol1	20	वपुस्	vapus	noun	n	Schönheit, Gestalt Körper (Deklination siehe später)	lektion20
+payer_vol1	20	स्त्री	strī	noun	f	Frau	lektion20
+payer_vol1	20	स्तन	stana	noun	m	Brust	lektion20
