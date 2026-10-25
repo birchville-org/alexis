@@ -13,6 +13,7 @@ export interface VolumeData {
   title: string;
   sort_order: number;
   level?: string;
+  entry_count?: number;
 }
 
 export interface LessonData {

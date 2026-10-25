@@ -95,7 +95,14 @@ fn list_corpora(state: State<AppState>) -> Result<Vec<CorpusMeta>, String> {
 fn list_volumes(state: State<AppState>, corpus_id: String) -> Result<Vec<VolumeData>, String> {
     let conn = state.db.lock().map_err(|e| e.to_string())?;
     let mut stmt = conn
-        .prepare("SELECT id, corpus_id, title, sort_order, level FROM volumes WHERE corpus_id = ?1 ORDER BY sort_order ASC, title ASC")
+        .prepare(
+            "SELECT v.id, v.corpus_id, v.title, v.sort_order, v.level, COUNT(e.id) AS entry_count
+             FROM volumes v
+             LEFT JOIN entries e ON v.id = e.volume_id
+             WHERE v.corpus_id = ?1
+             GROUP BY v.id
+             ORDER BY v.sort_order ASC, v.title ASC",
+        )
         .map_err(|e| e.to_string())?;
 
     let rows = stmt
@@ -106,6 +113,7 @@ fn list_volumes(state: State<AppState>, corpus_id: String) -> Result<Vec<VolumeD
                 title: row.get(2)?,
                 sort_order: row.get(3)?,
                 level: row.get(4)?,
+                entry_count: row.get(5)?,
             })
         })
         .map_err(|e| e.to_string())?;

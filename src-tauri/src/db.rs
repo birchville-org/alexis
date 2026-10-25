@@ -20,6 +20,7 @@ pub struct VolumeData {
     pub title: String,
     pub sort_order: i32,
     pub level: Option<String>,
+    pub entry_count: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -341,8 +342,11 @@ pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<V
 
     sql.push_str(" ORDER BY s.box_number ASC, s.next_due ASC");
 
-    let limit = query.limit.unwrap_or(100);
-    sql.push_str(&format!(" LIMIT {}", limit));
+    if let Some(limit) = query.limit {
+        if limit > 0 {
+            sql.push_str(&format!(" LIMIT {}", limit));
+        }
+    }
 
     let mut stmt = conn.prepare(&sql)?;
     let rows = stmt.query_map(rusqlite::params_from_iter(param_values), |row| {

@@ -39,7 +39,7 @@
 
       <div class="header-right">
         <span v-if="isTauri" class="platform-badge">Rust / Desktop</span>
-        <span v-else class="platform-badge">Payer Web / Offline</span>
+        <span v-else class="platform-badge">Web / Offline-fähig</span>
         <button class="theme-toggle" @click="toggleTheme" :title="'Theme: ' + currentTheme">
           {{ currentTheme === 'dark' ? '☀️' : '🌙' }}
         </button>
@@ -236,7 +236,10 @@
               />
               <div class="vol-info">
                 <span class="vol-title">{{ vol.title }}</span>
-                <span v-if="vol.level" class="vol-level">{{ vol.level }}</span>
+                <span class="vol-meta">
+                  <span v-if="vol.entry_count !== undefined" class="vol-count">{{ vol.entry_count }} Vokabeln</span>
+                  <span v-if="vol.level" class="vol-level"> · {{ vol.level }}</span>
+                </span>
               </div>
             </label>
           </div>
@@ -339,7 +342,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
 import { isTauriEnvironment, storage } from "./services/storage";
 import type {
@@ -414,8 +417,58 @@ function toggleTheme() {
   document.documentElement.setAttribute("data-theme", currentTheme.value);
 }
 
+// Keyboard Shortcut Handler for Spaced Repetition Study
+function onKeydown(e: KeyboardEvent) {
+  const target = e.target as HTMLElement | null;
+  const tag = target?.tagName?.toLowerCase();
+  if (
+    tag === "input" ||
+    tag === "textarea" ||
+    tag === "select" ||
+    target?.isContentEditable
+  ) {
+    return;
+  }
+
+  if (currentTab.value !== "trainer" || !currentCard.value) return;
+
+  if (e.code === "Space" || e.key === " ") {
+    e.preventDefault();
+    if (!isFlipped.value) {
+      isFlipped.value = true;
+    } else {
+      submitRating(3); // Space on revealed card votes "Gut"
+    }
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (!isFlipped.value) {
+      isFlipped.value = true;
+    }
+  } else if (isFlipped.value) {
+    if (e.key === "1") {
+      e.preventDefault();
+      submitRating(1);
+    } else if (e.key === "2") {
+      e.preventDefault();
+      submitRating(2);
+    } else if (e.key === "3") {
+      e.preventDefault();
+      submitRating(3);
+    } else if (e.key === "4") {
+      e.preventDefault();
+      submitRating(4);
+    }
+  }
+
+  if (e.key === "u" || e.key === "U" || e.key === "t" || e.key === "T") {
+    showTranslit.value = !showTranslit.value;
+  }
+}
+
 // Lifecycle Init
 onMounted(async () => {
+  window.addEventListener("keydown", onKeydown);
+
   // Check embed parameter from URL
   const params = new URLSearchParams(window.location.search);
   if (params.get("embed") === "true" || window.self !== window.top) {
@@ -425,7 +478,7 @@ onMounted(async () => {
   // Load available corpora
   corporaList.value = await storage.listCorpora();
   if (corporaList.value.length > 0) {
-    const initialCorpus = params.get("corpus") || corporaList.value[0].id;
+    const initialCorpus = params.get("corpus") || "hindi-bolo";
     await selectCorpus(initialCorpus);
   }
 
@@ -440,13 +493,17 @@ onMounted(async () => {
   await refreshStats();
 });
 
+onUnmounted(() => {
+  window.removeEventListener("keydown", onKeydown);
+});
+
 // Selection Logic
 async function selectCorpus(corpusId: string) {
   selectedCorpusId.value = corpusId;
   volumesList.value = await storage.listVolumes(corpusId);
-  // Default: select first two volumes (e.g. Hindi bolo 1 und 2)
+  // Default: select only first volume (e.g. Hindi bolo 1)
   if (volumesList.value.length > 0) {
-    selectedVolumeIds.value = volumesList.value.slice(0, 2).map((v) => v.id);
+    selectedVolumeIds.value = [volumesList.value[0].id];
   } else {
     selectedVolumeIds.value = [];
   }
@@ -485,7 +542,6 @@ async function reloadQueue(onlyDue: boolean) {
     volume_ids:
       selectedVolumeIds.value.length > 0 ? selectedVolumeIds.value : undefined,
     due_only: onlyDue,
-    limit: 100,
   });
 }
 
@@ -940,8 +996,20 @@ async function performDictSearch() {
   display: block;
 }
 
-.vol-level {
+.vol-meta {
   font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.2rem;
+}
+
+.vol-count {
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.vol-level {
   color: var(--text-muted);
 }
 

@@ -99,7 +99,13 @@ class StorageService {
       return invoke<VolumeData[]>("list_volumes", { corpusId });
     }
     const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
-    return bundle ? bundle.volumes : [];
+    if (!bundle) return [];
+    return bundle.volumes.map((v) => {
+      const entry_count = bundle.entries.filter(
+        (e) => e.volume_id === v.id,
+      ).length;
+      return { ...v, entry_count };
+    });
   }
 
   async getStudyQueue(query: StudyQueueQuery): Promise<StudyCardItem[]> {
@@ -161,11 +167,15 @@ class StorageService {
       };
     });
 
-    if (query.due_only) {
-      return items.filter((item) => item.next_due <= now);
+    let result = query.due_only
+      ? items.filter((item) => item.next_due <= now)
+      : items;
+
+    if (query.limit && query.limit > 0) {
+      result = result.slice(0, query.limit);
     }
 
-    return items.slice(0, query.limit || 100);
+    return result;
   }
 
   async recordReview(
