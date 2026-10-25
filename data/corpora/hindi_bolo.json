@@ -51,20 +51,6 @@
       "lesson_number": 3,
       "title": "Lektion 3",
       "sort_order": 3
-    },
-    {
-      "id": "hb2_l01",
-      "volume_id": "hb2",
-      "lesson_number": 1,
-      "title": "Lektion 1",
-      "sort_order": 1
-    },
-    {
-      "id": "hb3_l01",
-      "volume_id": "hb3",
-      "lesson_number": 1,
-      "title": "Lektion 1",
-      "sort_order": 1
     }
   ],
   "entries": [
@@ -2475,91 +2461,6 @@
         }
       ],
       "tags": ["adjektive", "a1"]
-    },
-    {
-      "id": "hb2_l01_001",
-      "corpus_id": "hindi-bolo",
-      "volume_id": "hb2",
-      "lesson_id": "hb2_l01",
-      "lemma_native": "बोलना",
-      "lemma_translit": "bolnā",
-      "pos": "verb",
-      "gender": null,
-      "grammar_metadata": {
-        "stem": "bol",
-        "aspect": "imperfective"
-      },
-      "definitions": [
-        {
-          "lang": "de",
-          "meaning": "sprechen, reden",
-          "notes": "Intransitives Verb, nimmt im Perfekt kein ne"
-        }
-      ],
-      "tags": ["verben", "kommunikation", "hb2"]
-    },
-    {
-      "id": "hb2_l01_002",
-      "corpus_id": "hindi-bolo",
-      "volume_id": "hb2",
-      "lesson_id": "hb2_l01",
-      "lemma_native": "दुकान",
-      "lemma_translit": "dukān",
-      "pos": "noun",
-      "gender": "f",
-      "grammar_metadata": {
-        "gender": "f"
-      },
-      "definitions": [
-        {
-          "lang": "de",
-          "meaning": "Laden, Geschäft",
-          "notes": "f."
-        }
-      ],
-      "tags": ["einkaufen", "hb2"]
-    },
-    {
-      "id": "hb3_l01_001",
-      "corpus_id": "hindi-bolo",
-      "volume_id": "hb3",
-      "lesson_id": "hb3_l01",
-      "lemma_native": "अनुभव",
-      "lemma_translit": "anubhav",
-      "pos": "noun",
-      "gender": "m",
-      "grammar_metadata": {
-        "origin": "tatsama"
-      },
-      "definitions": [
-        {
-          "lang": "de",
-          "meaning": "Erfahrung, Erlebnis",
-          "notes": "m."
-        }
-      ],
-      "tags": ["abstrakt", "hb3"]
-    },
-    {
-      "id": "hb3_l01_002",
-      "corpus_id": "hindi-bolo",
-      "volume_id": "hb3",
-      "lesson_id": "hb3_l01",
-      "lemma_native": "समाचार",
-      "lemma_translit": "samācār",
-      "pos": "noun",
-      "gender": "m",
-      "grammar_metadata": {
-        "origin": "tatsama"
-      },
-      "definitions": [
-        {
-          "lang": "de",
-          "meaning": "Nachrichten, Neuigkeiten",
-          "notes": "m. Plural oft kollektiv"
-        }
-      ],
-      "tags": ["medien", "hb3"]
     },
     {
       "id": "hb1_l02_001",

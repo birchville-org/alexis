@@ -290,8 +290,16 @@
                   v-model="selectedLessonIds"
                 />
                 <div class="les-info">
-                  <span class="les-title">{{ les.title }}</span>
-                  <span v-if="les.entry_count !== undefined" class="les-count">{{ les.entry_count }} Vokabeln</span>
+                  <span class="les-title">
+                    {{
+                      selectedVolumeIds.length > 1
+                        ? `${getVolumeTitle(les.volume_id)} · ${les.title}`
+                        : les.title
+                    }}
+                  </span>
+                  <span v-if="les.entry_count !== undefined" class="les-count"
+                    >{{ les.entry_count }} Vokabeln</span
+                  >
                 </div>
               </label>
             </div>
@@ -426,11 +434,17 @@ const selectedLessonIds = ref<string[]>([]);
 const dueOnly = ref(false);
 
 const filteredLessons = computed(() => {
-  if (selectedVolumeIds.value.length === 0) return lessonsList.value;
-  return lessonsList.value.filter((l) =>
-    selectedVolumeIds.value.includes(l.volume_id),
-  );
+  let list = lessonsList.value.filter((l) => (l.entry_count ?? 0) > 0);
+  if (selectedVolumeIds.value.length > 0) {
+    list = list.filter((l) => selectedVolumeIds.value.includes(l.volume_id));
+  }
+  return list;
 });
+
+function getVolumeTitle(volId: string): string {
+  const v = volumesList.value.find((vol) => vol.id === volId);
+  return v ? v.title : volId;
+}
 
 // Study Session Queue State
 const queue = ref<StudyCardItem[]>([]);
@@ -1158,6 +1172,12 @@ async function performDictSearch() {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.panel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .volumes-grid {
