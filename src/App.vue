@@ -244,6 +244,45 @@
             </label>
           </div>
 
+          <!-- Lessons Filter Subpanel -->
+          <div class="lessons-subpanel" v-if="filteredLessons.length > 0">
+            <div class="subpanel-header">
+              <h4>Lektionen auswählen:</h4>
+              <div class="panel-header-actions">
+                <button
+                  class="btn-link"
+                  @click="selectedLessonIds = filteredLessons.map((l) => l.id)"
+                >
+                  Alle Lektionen
+                </button>
+                <button
+                  class="btn-link"
+                  @click="selectedLessonIds = []"
+                >
+                  Zurücksetzen
+                </button>
+              </div>
+            </div>
+
+            <div class="lessons-grid">
+              <label
+                v-for="les in filteredLessons"
+                :key="les.id"
+                :class="['lesson-checkbox-card', { checked: selectedLessonIds.includes(les.id) }]"
+              >
+                <input
+                  type="checkbox"
+                  :value="les.id"
+                  v-model="selectedLessonIds"
+                />
+                <div class="les-info">
+                  <span class="les-title">{{ les.title }}</span>
+                  <span v-if="les.entry_count !== undefined" class="les-count">{{ les.entry_count }} Vokabeln</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
           <div class="filter-options">
             <label class="checkbox-inline">
               <input type="checkbox" v-model="dueOnly" />
@@ -349,6 +388,7 @@ import type {
   CorpusMeta,
   DeckStats,
   DictionaryResult,
+  LessonData,
   StudyCardItem,
   VolumeData,
 } from "./types";
@@ -366,8 +406,17 @@ const currentTab = ref<Tab>("trainer");
 const corporaList = ref<CorpusMeta[]>([]);
 const selectedCorpusId = ref<string>("hindi-bolo");
 const volumesList = ref<VolumeData[]>([]);
-const selectedVolumeIds = ref<string[]>(["hb1", "hb2"]);
+const selectedVolumeIds = ref<string[]>(["hb1"]);
+const lessonsList = ref<LessonData[]>([]);
+const selectedLessonIds = ref<string[]>([]);
 const dueOnly = ref(false);
+
+const filteredLessons = computed(() => {
+  if (selectedVolumeIds.value.length === 0) return lessonsList.value;
+  return lessonsList.value.filter((l) =>
+    selectedVolumeIds.value.includes(l.volume_id),
+  );
+});
 
 // Study Session Queue State
 const queue = ref<StudyCardItem[]>([]);
@@ -391,12 +440,18 @@ const activeCorpusTitle = computed(() => {
 });
 
 const selectedVolumesSummary = computed(() => {
+  if (selectedLessonIds.value.length > 0) {
+    const titles = lessonsList.value
+      .filter((l) => selectedLessonIds.value.includes(l.id))
+      .map((l) => l.title);
+    return `${activeCorpusTitle.value} · ${titles.join(", ")}`;
+  }
   if (selectedVolumeIds.value.length === 0) return "Keine Gliederung";
   if (
     selectedVolumeIds.value.length === volumesList.value.length &&
     volumesList.value.length > 0
   ) {
-    return `Alle Glieder (1–${volumesList.value.length})`;
+    return `Alle Bände (1–${volumesList.value.length})`;
   }
   const titles = volumesList.value
     .filter((v) => selectedVolumeIds.value.includes(v.id))
@@ -487,6 +542,10 @@ onMounted(async () => {
   if (volParam) {
     selectedVolumeIds.value = [volParam];
   }
+  const lesParam = params.get("lesson");
+  if (lesParam) {
+    selectedLessonIds.value = [lesParam];
+  }
 
   // Load queue
   await reloadQueue(false);
@@ -501,6 +560,8 @@ onUnmounted(() => {
 async function selectCorpus(corpusId: string) {
   selectedCorpusId.value = corpusId;
   volumesList.value = await storage.listVolumes(corpusId);
+  lessonsList.value = await storage.listLessons(corpusId);
+  selectedLessonIds.value = [];
   // Default: select only first volume (e.g. Hindi bolo 1)
   if (volumesList.value.length > 0) {
     selectedVolumeIds.value = [volumesList.value[0].id];
@@ -518,6 +579,8 @@ async function handleFileUpload(e: Event) {
   const text = await file.text();
   const count = await storage.importTSV(text, selectedCorpusId.value);
   importNotice.value = `${count} Vokabeln aus "${file.name}" erfolgreich importiert!`;
+  volumesList.value = await storage.listVolumes(selectedCorpusId.value);
+  lessonsList.value = await storage.listLessons(selectedCorpusId.value);
   await reloadQueue(false);
   await refreshStats();
   setTimeout(() => {
@@ -527,6 +590,7 @@ async function handleFileUpload(e: Event) {
 
 function selectAllVolumes() {
   selectedVolumeIds.value = volumesList.value.map((v) => v.id);
+  selectedLessonIds.value = [];
 }
 
 async function startSessionWithSelectedVolumes() {
@@ -541,6 +605,8 @@ async function reloadQueue(onlyDue: boolean) {
     corpus_id: selectedCorpusId.value,
     volume_ids:
       selectedVolumeIds.value.length > 0 ? selectedVolumeIds.value : undefined,
+    lesson_ids:
+      selectedLessonIds.value.length > 0 ? selectedLessonIds.value : undefined,
     due_only: onlyDue,
   });
 }
@@ -1011,6 +1077,64 @@ async function performDictSearch() {
 
 .vol-level {
   color: var(--text-muted);
+}
+
+/* Lessons Subpanel */
+.lessons-subpanel {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.subpanel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.subpanel-header h4 {
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+}
+
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.lesson-checkbox-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.lesson-checkbox-card.checked {
+  border-color: var(--accent-gold);
+}
+
+.les-info {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.les-title {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.les-count {
+  font-size: 0.75rem;
+  color: var(--accent-gold);
 }
 
 .start-session-bar {

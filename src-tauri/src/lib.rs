@@ -125,6 +125,59 @@ fn list_volumes(state: State<AppState>, corpus_id: String) -> Result<Vec<VolumeD
     Ok(result)
 }
 
+#[tauri::command]
+fn list_lessons(
+    state: State<AppState>,
+    corpus_id: String,
+    volume_id: Option<String>,
+) -> Result<Vec<db::LessonData>, String> {
+    let conn = state.db.lock().map_err(|e| e.to_string())?;
+    let (sql, params_vec): (String, Vec<rusqlite::types::Value>) = match volume_id {
+        Some(v) => (
+            "SELECT l.id, l.volume_id, l.lesson_number, l.title, l.sort_order, COUNT(e.id) AS entry_count
+             FROM lessons l
+             JOIN volumes vol ON l.volume_id = vol.id
+             LEFT JOIN entries e ON l.id = e.lesson_id
+             WHERE vol.corpus_id = ?1 AND l.volume_id = ?2
+             GROUP BY l.id
+             ORDER BY l.sort_order ASC, l.lesson_number ASC"
+                .to_string(),
+            vec![corpus_id.into(), v.into()],
+        ),
+        None => (
+            "SELECT l.id, l.volume_id, l.lesson_number, l.title, l.sort_order, COUNT(e.id) AS entry_count
+             FROM lessons l
+             JOIN volumes vol ON l.volume_id = vol.id
+             LEFT JOIN entries e ON l.id = e.lesson_id
+             WHERE vol.corpus_id = ?1
+             GROUP BY l.id
+             ORDER BY l.sort_order ASC, l.lesson_number ASC"
+                .to_string(),
+            vec![corpus_id.into()],
+        ),
+    };
+
+    let mut stmt = conn.prepare(&sql).map_err(|e| e.to_string())?;
+    let rows = stmt
+        .query_map(rusqlite::params_from_iter(params_vec), |row| {
+            Ok(db::LessonData {
+                id: row.get(0)?,
+                volume_id: row.get(1)?,
+                lesson_number: row.get(2)?,
+                title: row.get(3)?,
+                sort_order: row.get(4)?,
+                entry_count: row.get(5)?,
+            })
+        })
+        .map_err(|e| e.to_string())?;
+
+    let mut result = Vec::new();
+    for r in rows {
+        result.push(r.map_err(|e| e.to_string())?);
+    }
+    Ok(result)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -148,7 +201,8 @@ pub fn run() {
             record_review,
             get_deck_stats,
             list_corpora,
-            list_volumes
+            list_volumes,
+            list_lessons
         ])
         .run(tauri::generate_context!())
         .expect("error while running Alexis tauri application");

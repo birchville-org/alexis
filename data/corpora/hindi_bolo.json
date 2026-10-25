@@ -35,28 +35,35 @@
       "id": "hb1_l01",
       "volume_id": "hb1",
       "lesson_number": 1,
-      "title": "Lektion 1: Begrüßung & Kennenlernen",
+      "title": "Lektion 1",
       "sort_order": 1
     },
     {
       "id": "hb1_l02",
       "volume_id": "hb1",
       "lesson_number": 2,
-      "title": "Lektion 2: Im Haus & Familie",
+      "title": "Lektion 2",
       "sort_order": 2
+    },
+    {
+      "id": "hb1_l03",
+      "volume_id": "hb1",
+      "lesson_number": 3,
+      "title": "Lektion 3",
+      "sort_order": 3
     },
     {
       "id": "hb2_l01",
       "volume_id": "hb2",
       "lesson_number": 1,
-      "title": "Lektion 1: Auf dem Markt",
+      "title": "Lektion 1",
       "sort_order": 1
     },
     {
       "id": "hb3_l01",
       "volume_id": "hb3",
       "lesson_number": 1,
-      "title": "Lektion 1: Medien & Gesellschaft",
+      "title": "Lektion 1",
       "sort_order": 1
     }
   ],
@@ -210,9 +217,13 @@
         {
           "lang": "de",
           "meaning": "Ihr, Ihre"
+        },
+        {
+          "lang": "de",
+          "meaning": "Ihr"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1\r", "a1"]
     },
     {
       "id": "hb1_l01_010",
@@ -397,9 +408,13 @@
         {
           "lang": "de",
           "meaning": "und"
+        },
+        {
+          "lang": "de",
+          "meaning": "und; noch (mehr)"
         }
       ],
-      "tags": ["grammatik", "a1\r"]
+      "tags": ["grammatik", "a1\r", "verbindung", "a1"]
     },
     {
       "id": "hb1_l01_021",
@@ -1370,9 +1385,13 @@
         {
           "lang": "de",
           "meaning": "hervorragend"
+        },
+        {
+          "lang": "de",
+          "meaning": "ausgezeichnet, hervorragend"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1\r", "a1"]
     },
     {
       "id": "hb1_l01_079",
@@ -1387,9 +1406,13 @@
         {
           "lang": "de",
           "meaning": "genug; es reicht!, basta!"
+        },
+        {
+          "lang": "de",
+          "meaning": "Bus"
         }
       ],
-      "tags": ["ausruf", "a1\r"]
+      "tags": ["ausruf", "a1\r", "verkehr", "a1"]
     },
     {
       "id": "hb1_l01_080",
@@ -1455,9 +1478,13 @@
         {
           "lang": "de",
           "meaning": "Sache, Angelegenheit; Wort(e)"
+        },
+        {
+          "lang": "de",
+          "meaning": "Sache, Angelegenheit; Wort"
         }
       ],
-      "tags": ["grundwortschatz", "a1\r"]
+      "tags": ["grundwortschatz", "a1\r", "sprache", "a1"]
     },
     {
       "id": "hb1_l01_084",
@@ -2067,9 +2094,13 @@
         {
           "lang": "de",
           "meaning": "Vegetarier/in"
+        },
+        {
+          "lang": "de",
+          "meaning": "vegetarisch"
         }
       ],
-      "tags": ["personen", "essen", "a1\r"]
+      "tags": ["personen", "essen", "a1\r", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_120",
@@ -2205,7 +2236,7 @@
           "meaning": "Herr (respektvolle Anredeform)"
         }
       ],
-      "tags": ["hoeflichkeit", "personen", "a1\r"]
+      "tags": ["hoeflichkeit", "personen", "a1\r", "anrede", "a1"]
     },
     {
       "id": "hb1_l01_128",
@@ -2529,6 +2560,4417 @@
         }
       ],
       "tags": ["medien", "hb3"]
+    },
+    {
+      "id": "hb1_l02_001",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अंग्रेज़",
+      "lemma_translit": "ā̃grez",
+      "pos": "adj",
+      "gender": "m/f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "englisch; Engländer/in"
+        }
+      ],
+      "tags": ["laender", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_002",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अंग्रेज़ी",
+      "lemma_translit": "ā̃grezī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Englisch (Sprache)"
+        }
+      ],
+      "tags": ["sprachen", "a1"]
+    },
+    {
+      "id": "hb1_l02_003",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अकेला",
+      "lemma_translit": "akelā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "allein"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_004",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अख़बार",
+      "lemma_translit": "akhbār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Zeitung"
+        }
+      ],
+      "tags": ["medien", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_005",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अच्छी तरह",
+      "lemma_translit": "acchī tarah",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "gut"
+        }
+      ],
+      "tags": ["adv", "a1"]
+    },
+    {
+      "id": "hb1_l02_006",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अढ़ाई",
+      "lemma_translit": "aṛhāī",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zweieinhalb"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_007",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अब्दुल",
+      "lemma_translit": "Abdul",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Abdul (Fam.-name)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_008",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अभी",
+      "lemma_translit": "abhī",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "jetzt; sofort"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_009",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अम्माँ",
+      "lemma_translit": "ammā̃",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mutter"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_010",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "अस्सी",
+      "lemma_translit": "assī",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "achtzig"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_011",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "आजकल",
+      "lemma_translit": "ājkal",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dieser Tage, gegenwärtig, heutzutage"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_012",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "आठ",
+      "lemma_translit": "āṭh",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "acht"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_013",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "आदाब",
+      "lemma_translit": "ādāb",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "muslim. Grußformel"
+        }
+      ],
+      "tags": ["begruessung", "a1"]
+    },
+    {
+      "id": "hb1_l02_015",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "आस-पास",
+      "lemma_translit": "ās-pās",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "in der Nähe, in der Umgebung; rundherum"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_016",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "इनका",
+      "lemma_translit": "inkā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ihr (3. Pers. Pl.); sein, ihr (3. Pers. Sg. höflich)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_017",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "इसका",
+      "lemma_translit": "iskā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "sein, ihr"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_018",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "इसलिए",
+      "lemma_translit": "islie",
+      "pos": "conj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "deshalb, deswegen, darum"
+        }
+      ],
+      "tags": ["grammatik", "verbindung", "a1"]
+    },
+    {
+      "id": "hb1_l02_019",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "उनका",
+      "lemma_translit": "unkā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ihr (3. Pers. Pl.); sein, ihr (3. Pers. Sg. höflich)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_020",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "उसका",
+      "lemma_translit": "uskā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "sein, ihr"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_021",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "ओलाफ़",
+      "lemma_translit": "Olāf",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Olaf (Vorname)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_023",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "औरत",
+      "lemma_translit": "aurat",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Frau"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_024",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कप",
+      "lemma_translit": "kap",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Tasse, Becher"
+        }
+      ],
+      "tags": ["geschirr", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_025",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कब",
+      "lemma_translit": "kab",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wann?"
+        }
+      ],
+      "tags": ["fragen", "zeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_026",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कम से कम",
+      "lemma_translit": "kam se kam",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "mindestens, wenigstens"
+        }
+      ],
+      "tags": ["adv", "a1"]
+    },
+    {
+      "id": "hb1_l02_027",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "करोड़",
+      "lemma_translit": "karoṛ",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zeihn Millionen"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_028",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कलम",
+      "lemma_translit": "kalam",
+      "pos": "noun",
+      "gender": "m/f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Schreibstift; Kugelschreiber"
+        }
+      ],
+      "tags": ["schule", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_029",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कागज़",
+      "lemma_translit": "kāgaz",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Papier; Dokument"
+        }
+      ],
+      "tags": ["schule", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_030",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कहाँ",
+      "lemma_translit": "kahā̃",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wo?"
+        }
+      ],
+      "tags": ["fragen", "ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_031",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "काफ़ी",
+      "lemma_translit": "kāfī",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "genügend, ausreichend; ziemlich"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_032",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कार",
+      "lemma_translit": "kār",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Auto"
+        }
+      ],
+      "tags": ["verkehr", "a1"]
+    },
+    {
+      "id": "hb1_l02_033",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "किधर",
+      "lemma_translit": "kidhar",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wohin?"
+        }
+      ],
+      "tags": ["fragen", "ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_034",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कितना",
+      "lemma_translit": "kitnā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wie viel?"
+        }
+      ],
+      "tags": ["fragen", "zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_035",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "किसका",
+      "lemma_translit": "kiskā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wessen?"
+        }
+      ],
+      "tags": ["fragen", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_036",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "क़ीमत",
+      "lemma_translit": "kīmat",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Preis, Wert"
+        }
+      ],
+      "tags": ["einkaufen", "a1"]
+    },
+    {
+      "id": "hb1_l02_037",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कुमकुम",
+      "lemma_translit": "Kumkum",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Kumkum (Vorname)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_038",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कुमारी",
+      "lemma_translit": "kumārī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Fräulein (Anrede)"
+        }
+      ],
+      "tags": ["anrede", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_039",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कुशल",
+      "lemma_translit": "kuśal",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "gewandt, geschickt"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_040",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कैसा",
+      "lemma_translit": "kaisā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wie?"
+        }
+      ],
+      "tags": ["fragen", "a1"]
+    },
+    {
+      "id": "hb1_l02_041",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कोई",
+      "lemma_translit": "koī",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "(irgend)ein; (irgend)jemand"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_042",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कौन",
+      "lemma_translit": "kaun",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wer?"
+        }
+      ],
+      "tags": ["fragen", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_043",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "कौन-सा",
+      "lemma_translit": "kaun-sā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "welch?"
+        }
+      ],
+      "tags": ["fragen", "a1"]
+    },
+    {
+      "id": "hb1_l02_044",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "क्यों",
+      "lemma_translit": "kyõ",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "warum?"
+        }
+      ],
+      "tags": ["fragen", "a1"]
+    },
+    {
+      "id": "hb1_l02_045",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "क्योंकि",
+      "lemma_translit": "kyõki",
+      "pos": "conj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "weil, da; denn"
+        }
+      ],
+      "tags": ["grammatik", "verbindung", "a1"]
+    },
+    {
+      "id": "hb1_l02_046",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "खाना",
+      "lemma_translit": "khānā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Essen, Speise"
+        },
+        {
+          "lang": "de",
+          "meaning": "essen"
+        }
+      ],
+      "tags": ["essen", "a1", "verben"]
+    },
+    {
+      "id": "hb1_l02_047",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "ख़ुदा हाफ़िज़",
+      "lemma_translit": "khudā hāfiz",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "muslim. Formel zum Abschied"
+        }
+      ],
+      "tags": ["begruessung", "a1"]
+    },
+    {
+      "id": "hb1_l02_048",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "ख़ुश",
+      "lemma_translit": "khuś",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zufrieden, froh, glücklich"
+        }
+      ],
+      "tags": ["adjektive", "gefuehle", "a1"]
+    },
+    {
+      "id": "hb1_l02_049",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "गाड़ी",
+      "lemma_translit": "gāṛī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Auto, Wagen; Zug"
+        }
+      ],
+      "tags": ["verkehr", "a1"]
+    },
+    {
+      "id": "hb1_l02_050",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "गिलास",
+      "lemma_translit": "gilās",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Glas"
+        }
+      ],
+      "tags": ["geschirr", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_051",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "गुरु",
+      "lemma_translit": "guru",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Hind. Lehrer (auch als Anrede: guru jī)"
+        }
+      ],
+      "tags": ["personen", "beruf", "a1"]
+    },
+    {
+      "id": "hb1_l02_052",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "गुरुवार",
+      "lemma_translit": "guruvār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Donnerstag"
+        }
+      ],
+      "tags": ["zeit", "wochentage", "a1"]
+    },
+    {
+      "id": "hb1_l02_053",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "घड़ी",
+      "lemma_translit": "ghaṛī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Uhr"
+        }
+      ],
+      "tags": ["gegenstand", "zeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_054",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "चप्पल",
+      "lemma_translit": "cappal",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Sandale; Schlappe"
+        }
+      ],
+      "tags": ["kleidung", "a1"]
+    },
+    {
+      "id": "hb1_l02_055",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "चाय",
+      "lemma_translit": "cāy",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Tee"
+        }
+      ],
+      "tags": ["essen", "getraenke", "a1"]
+    },
+    {
+      "id": "hb1_l02_056",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "चार",
+      "lemma_translit": "cār",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "vier"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_057",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "चिट्ठी",
+      "lemma_translit": "ciṭṭhī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Brief"
+        }
+      ],
+      "tags": ["post", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_058",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "चैंबर",
+      "lemma_translit": "cembar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Praxis"
+        }
+      ],
+      "tags": ["medizin", "ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_059",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "चित्र",
+      "lemma_translit": "citra",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Bild, Gemälde"
+        }
+      ],
+      "tags": ["kunst", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_060",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "छह, छः",
+      "lemma_translit": "chah, chah",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "sechs"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_061",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "ज़रूर",
+      "lemma_translit": "zarūr",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "bestimmt, sicher, gewiss"
+        }
+      ],
+      "tags": ["adv", "a1"]
+    },
+    {
+      "id": "hb1_l02_062",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "जूता",
+      "lemma_translit": "jūtā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Schuh"
+        }
+      ],
+      "tags": ["kleidung", "a1"]
+    },
+    {
+      "id": "hb1_l02_063",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "डॉक्टर",
+      "lemma_translit": "ḍākṭar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Doktor, Arzt"
+        }
+      ],
+      "tags": ["beruf", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_064",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "डेढ़",
+      "lemma_translit": "ḍeṛh",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "eineinhalb"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_065",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "ढाई",
+      "lemma_translit": "ḍhāī",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zweieinhalb"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_066",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "तस्वीर",
+      "lemma_translit": "tasvīr",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Bild, Gemälde; Foto"
+        }
+      ],
+      "tags": ["kunst", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_067",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "तारीख़",
+      "lemma_translit": "tārīkh",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Datum"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_068",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "तुम्हारा",
+      "lemma_translit": "tumhārā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dein"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_069",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "तेरा",
+      "lemma_translit": "terā",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dein"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l02_070",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दस",
+      "lemma_translit": "das",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zeihn"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_071",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दादा",
+      "lemma_translit": "dādā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Großvater (väterl.)"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_072",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दिन",
+      "lemma_translit": "din",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Tag"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_073",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दुआ",
+      "lemma_translit": "duā",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Segen"
+        }
+      ],
+      "tags": ["religion", "a1"]
+    },
+    {
+      "id": "hb1_l02_074",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दुकान",
+      "lemma_translit": "dukān",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Geschäft, Laden"
+        }
+      ],
+      "tags": ["einkaufen", "ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_075",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दूर",
+      "lemma_translit": "dūr",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "(weit) weg, fern"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_076",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "दोनों",
+      "lemma_translit": "donõ",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "(alle) beide"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_077",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "धन्यवाद",
+      "lemma_translit": "dhanyavād",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "danke; Dank"
+        }
+      ],
+      "tags": ["begruessung", "hoeflichkeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_078",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "न",
+      "lemma_translit": "na",
+      "pos": "part",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "nein; nicht wahr?"
+        }
+      ],
+      "tags": ["grammatik", "a1"]
+    },
+    {
+      "id": "hb1_l02_079",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "नज़दीक",
+      "lemma_translit": "nazdīk",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "nah"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_080",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "नमस्कार",
+      "lemma_translit": "namaskār",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Guten Tag! Seien Sie gegrüßt/sei gegrüßt!; Auf Wiedersehen!"
+        }
+      ],
+      "tags": ["begruessung", "a1"]
+    },
+    {
+      "id": "hb1_l02_081",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "नेता",
+      "lemma_translit": "netā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Anführer, Leiter, Politiker"
+        }
+      ],
+      "tags": ["beruf", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_082",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "नेपाली",
+      "lemma_translit": "nepālī",
+      "pos": "adj",
+      "gender": "m/f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "nepalesisch; Nepalese/in; Nepali (Sprache)"
+        }
+      ],
+      "tags": ["laender", "sprachen", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_083",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "नौ",
+      "lemma_translit": "nau",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "neun"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_084",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "पंडित",
+      "lemma_translit": "paṇḍit",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Priester; Gelehrter (nach hinduist. Tradition)"
+        }
+      ],
+      "tags": ["religion", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_085",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "पति",
+      "lemma_translit": "pati",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Ehemann, Gatte"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_086",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "पाँच",
+      "lemma_translit": "pā̃c",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "fünf"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_087",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "पिता",
+      "lemma_translit": "pitā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Vater"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_088",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "पोद्दार",
+      "lemma_translit": "Poddār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Poddar (Fam.-name)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_089",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "प्लीज़",
+      "lemma_translit": "plīz",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "bitte (please)"
+        }
+      ],
+      "tags": ["hoeflichkeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_090",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "फ़िल्म",
+      "lemma_translit": "film",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Film"
+        }
+      ],
+      "tags": ["medien", "unterhaltung", "a1"]
+    },
+    {
+      "id": "hb1_l02_091",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "फ़्रांसीसी",
+      "lemma_translit": "frā̃sīsī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Französisch (Sprache)"
+        }
+      ],
+      "tags": ["sprachen", "a1"]
+    },
+    {
+      "id": "hb1_l02_092",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "फ़्रेंच",
+      "lemma_translit": "frenč",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "französisch"
+        }
+      ],
+      "tags": ["laender", "a1"]
+    },
+    {
+      "id": "hb1_l02_093",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बंद",
+      "lemma_translit": "band",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "geschlossen"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_094",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बच्चा",
+      "lemma_translit": "baccā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Kind"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_096",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बहन",
+      "lemma_translit": "bahan",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Schwester"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_097",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बाहर",
+      "lemma_translit": "bāhar",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "außen, draußen; hinaus"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_099",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बीमार",
+      "lemma_translit": "bīmār",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "krank"
+        }
+      ],
+      "tags": ["gesundheit", "adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_100",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बुधवार",
+      "lemma_translit": "budhvār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mittwoch"
+        }
+      ],
+      "tags": ["zeit", "wochentage", "a1"]
+    },
+    {
+      "id": "hb1_l02_101",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "बोतल",
+      "lemma_translit": "botal",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Flasche"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l02_102",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "भारत",
+      "lemma_translit": "bhārat",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Indien"
+        }
+      ],
+      "tags": ["laender", "a1"]
+    },
+    {
+      "id": "hb1_l02_103",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मंगलवार",
+      "lemma_translit": "maṅgalvār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Dienstag"
+        }
+      ],
+      "tags": ["zeit", "wochentage", "a1"]
+    },
+    {
+      "id": "hb1_l02_104",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "महँगा",
+      "lemma_translit": "mahãgā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "teuer"
+        }
+      ],
+      "tags": ["adjektive", "einkaufen", "a1"]
+    },
+    {
+      "id": "hb1_l02_105",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "माँ",
+      "lemma_translit": "mā̃",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mutter"
+        }
+      ],
+      "tags": ["familie", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_106",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मिश्र",
+      "lemma_translit": "Miśra",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mishra (Fam.-name)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_107",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मिस",
+      "lemma_translit": "mis",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Fräulein (Anrede)"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_108",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मुस्लिम",
+      "lemma_translit": "muslim",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Muslim"
+        }
+      ],
+      "tags": ["religion", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_109",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मेहमान",
+      "lemma_translit": "mehmān",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Gast"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_110",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मेहरबानी",
+      "lemma_translit": "meharbānī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Liebenswürdigkeit, Güte"
+        }
+      ],
+      "tags": ["hoeflichkeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_111",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मैडम",
+      "lemma_translit": "maiḍam",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Madam"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_112",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मोहिनी",
+      "lemma_translit": "Mohinī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mohini (Vorname)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_113",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "मौसम",
+      "lemma_translit": "mausam",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Wetter"
+        }
+      ],
+      "tags": ["wetter", "a1"]
+    },
+    {
+      "id": "hb1_l02_114",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "रहमान",
+      "lemma_translit": "Rahmān",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Rahman (Fam.-name)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_115",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "लाख",
+      "lemma_translit": "lākh",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "hunderttausend"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_116",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "वहाँ",
+      "lemma_translit": "vahā̃",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dort"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l02_117",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "वीणा",
+      "lemma_translit": "Vīṇā",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Veena (Vorname)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l02_119",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "वैद्य",
+      "lemma_translit": "vaidya",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ayurvedischer Arzt"
+        }
+      ],
+      "tags": ["beruf", "medizin", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l02_120",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "शायद",
+      "lemma_translit": "śāyad",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "vielleicht"
+        }
+      ],
+      "tags": ["adv", "a1"]
+    },
+    {
+      "id": "hb1_l02_121",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "शुक्रवार",
+      "lemma_translit": "śukravār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Freitag"
+        }
+      ],
+      "tags": ["zeit", "wochentage", "a1"]
+    },
+    {
+      "id": "hb1_l02_122",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "शुक्रिया",
+      "lemma_translit": "śukriyā",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "danke; Dank"
+        }
+      ],
+      "tags": ["begruessung", "hoeflichkeit", "a1"]
+    },
+    {
+      "id": "hb1_l02_123",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "शून्य",
+      "lemma_translit": "śūnya",
+      "pos": "num",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Null"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_124",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "श्री",
+      "lemma_translit": "śrī",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Herr"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_125",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "श्रीमती",
+      "lemma_translit": "śrīmatī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Frau (formelle Anrede)"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_126",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "श्रीमान",
+      "lemma_translit": "śrīmān",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Herr (formelle Anrede)"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_127",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सत् श्री अकाल",
+      "lemma_translit": "sat śrī akāl",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Grußformel der Sikhs"
+        }
+      ],
+      "tags": ["begruessung", "a1"]
+    },
+    {
+      "id": "hb1_l02_128",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सब",
+      "lemma_translit": "sab",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "alle; alles"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_129",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सर",
+      "lemma_translit": "sar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Sir"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_130",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सरदार-जी",
+      "lemma_translit": "sardār-jī",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Anrede für einen turbantragenden Sikh"
+        }
+      ],
+      "tags": ["anrede", "a1"]
+    },
+    {
+      "id": "hb1_l02_131",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सलाम अलैकुम",
+      "lemma_translit": "salām alaikum",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Friede sei mit Ihnen (Dir)!"
+        }
+      ],
+      "tags": ["begruessung", "a1"]
+    },
+    {
+      "id": "hb1_l02_132",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सात",
+      "lemma_translit": "sāt",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "sieben"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_134",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सिफ़र",
+      "lemma_translit": "sifar",
+      "pos": "num",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Null"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_135",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सुंदर",
+      "lemma_translit": "sundar",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "schön, hübsch"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l02_136",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सैकड़ों",
+      "lemma_translit": "saikṛõ",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "hunderte"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_137",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सोमवार",
+      "lemma_translit": "somvār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Montag"
+        }
+      ],
+      "tags": ["zeit", "wochentage", "a1"]
+    },
+    {
+      "id": "hb1_l02_138",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "सौ",
+      "lemma_translit": "sau",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "hundert"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_139",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "हज़ार",
+      "lemma_translit": "hazār",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "tausend"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l02_140",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "हाल",
+      "lemma_translit": "hāl",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Zustand, Lage"
+        }
+      ],
+      "tags": ["gesundheit", "a1"]
+    },
+    {
+      "id": "hb1_l02_141",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l02",
+      "lemma_native": "हिंदुस्तान",
+      "lemma_translit": "hindustān",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Indien"
+        }
+      ],
+      "tags": ["laender", "a1"]
+    },
+    {
+      "id": "hb1_l03_001",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "अंधा",
+      "lemma_translit": "andhā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "blind"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_002",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "अमृतसर",
+      "lemma_translit": "amṛtsar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Amritsar (Stadt im Bundesstaat Punjab)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_003",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "अरी",
+      "lemma_translit": "arī",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ach!, oh!, he!"
+        }
+      ],
+      "tags": ["ausruf", "a1"]
+    },
+    {
+      "id": "hb1_l03_004",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "अरे",
+      "lemma_translit": "are",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ach!, oh!, he!"
+        }
+      ],
+      "tags": ["ausruf", "a1"]
+    },
+    {
+      "id": "hb1_l03_005",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "अलीगढ़",
+      "lemma_translit": "alīgaṛh",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Aligarh (Stadt im Bundesstaat Uttar Pradesh)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_006",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "असम",
+      "lemma_translit": "asam",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Assam (ind. Bundesstaat)"
+        }
+      ],
+      "tags": ["laender", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_007",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "आगरा",
+      "lemma_translit": "āgrā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Agra (Stadt im Bundesstaat Uttar Pradesh)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_008",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "आटा",
+      "lemma_translit": "āṭā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Vollkornmehl"
+        }
+      ],
+      "tags": ["essen", "a1"]
+    },
+    {
+      "id": "hb1_l03_009",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "आराम",
+      "lemma_translit": "ārām",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Ruhe, Erholung; Komfort"
+        }
+      ],
+      "tags": ["abstrakt", "a1"]
+    },
+    {
+      "id": "hb1_l03_010",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "आराम से",
+      "lemma_translit": "ārām se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "in aller Ruhe, gemütlich"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_011",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "इन",
+      "lemma_translit": "in",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus Pl. von यह (ye)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_012",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "इस",
+      "lemma_translit": "is",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus Sg. von यह (yah)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_013",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "उन",
+      "lemma_translit": "un",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus Pl. von वे (ve)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_014",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "उम्र",
+      "lemma_translit": "umr",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Lebensalter"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_015",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "उस",
+      "lemma_translit": "us",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus Sg. von वह (vah)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_016",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "ऊपर",
+      "lemma_translit": "ūpar",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "oben, hinauf"
+        }
+      ],
+      "tags": ["ort", "adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_017",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "ऐ",
+      "lemma_translit": "ai",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "he!, du da"
+        }
+      ],
+      "tags": ["ausruf", "a1"]
+    },
+    {
+      "id": "hb1_l03_018",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "कई",
+      "lemma_translit": "kaī",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "mehrere"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_019",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "कपड़ा",
+      "lemma_translit": "kapṛā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Kleidung(sstück), Gewand; Stoff"
+        }
+      ],
+      "tags": ["kleidung", "a1"]
+    },
+    {
+      "id": "hb1_l03_020",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "क़रीब",
+      "lemma_translit": "karīb",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ungefähr, annähernd"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_021",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "कल",
+      "lemma_translit": "kal",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "gestern; morgen"
+        }
+      ],
+      "tags": ["zeit", "adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_022",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "का",
+      "lemma_translit": "kā",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "von (drückt u.a. Genitiv m. Sg. aus)"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_023",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "काम",
+      "lemma_translit": "kām",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Arbeit"
+        }
+      ],
+      "tags": ["beruf", "a1"]
+    },
+    {
+      "id": "hb1_l03_024",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "किन",
+      "lemma_translit": "kin",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus Pl. von कौन (kaun), क्या (kyā)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_025",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "किस",
+      "lemma_translit": "kis",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus Sg. von कौन (kaun), क्या (kyā)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_026",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "की",
+      "lemma_translit": "kī",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "von (drückt u.a. Genitiv f. aus)"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_027",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "के",
+      "lemma_translit": "ke",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "von (drückt u.a. Genitiv m. Pl. / Obl. aus)"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_028",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "केला",
+      "lemma_translit": "kelā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Banane"
+        }
+      ],
+      "tags": ["essen", "a1"]
+    },
+    {
+      "id": "hb1_l03_029",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "को",
+      "lemma_translit": "ko",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "an, zu, nach (drückt Dativ/Akkusativ aus)"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_030",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "ख़्याल",
+      "lemma_translit": "khayāl",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Gedanke; Meinung"
+        }
+      ],
+      "tags": ["abstrakt", "a1"]
+    },
+    {
+      "id": "hb1_l03_032",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "खुशी से",
+      "lemma_translit": "khuśī se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "mit Freude, gerne"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_033",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "ग़लती से",
+      "lemma_translit": "galtī se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "irrtümlich, versehentlich"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_034",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "गहना",
+      "lemma_translit": "gahnā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Schmuck(stück)"
+        }
+      ],
+      "tags": ["kleidung", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_035",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "गाँव",
+      "lemma_translit": "gā̃v",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Dorf"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l03_036",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "गुड़गाँव",
+      "lemma_translit": "guṛgā̃v",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Gurgaon (Stadt im Bundesstaat Haryana)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_037",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "गेंडा",
+      "lemma_translit": "gaiṁḍā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Nashorn"
+        }
+      ],
+      "tags": ["tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_038",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चंडीगढ़",
+      "lemma_translit": "caṇḍīgaṛh",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Chandigarh (Hauptstadt von Punjab und Haryana)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_039",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चंदू",
+      "lemma_translit": "Candū",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Chandu (Vorname)"
+        }
+      ],
+      "tags": ["namen", "a1"]
+    },
+    {
+      "id": "hb1_l03_040",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चम्मच",
+      "lemma_translit": "cammac",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Löffel"
+        }
+      ],
+      "tags": ["haus", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_041",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चश्मा",
+      "lemma_translit": "caśmā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Brille"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_042",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चाँदी",
+      "lemma_translit": "cā̃dī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Silber"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_043",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चाबी",
+      "lemma_translit": "cābī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Schlüssel"
+        }
+      ],
+      "tags": ["haus", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_044",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "चिड़ियाघर",
+      "lemma_translit": "ciṛiyāghar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zoologischer Garten, Zoo"
+        }
+      ],
+      "tags": ["ort", "tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_045",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "छत",
+      "lemma_translit": "chat",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Dach; (Zimmer-)Decke"
+        }
+      ],
+      "tags": ["haus", "a1"]
+    },
+    {
+      "id": "hb1_l03_046",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "छुट्टी",
+      "lemma_translit": "chuṭṭī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "freier Tag, Urlaub(stag), Ferien"
+        }
+      ],
+      "tags": ["zeit", "abstrakt", "a1"]
+    },
+    {
+      "id": "hb1_l03_047",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "जगह",
+      "lemma_translit": "jagah",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Platz, Stelle, Ort"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l03_048",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "जयपुर",
+      "lemma_translit": "jaypur",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Jaipur (Hauptstadt des Bundesstaates Rajasthan)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_049",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "जानवर",
+      "lemma_translit": "jānvar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Tier"
+        }
+      ],
+      "tags": ["tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_050",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "जेब",
+      "lemma_translit": "jeb",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Tasche (an Kleidungsstücken)"
+        }
+      ],
+      "tags": ["kleidung", "a1"]
+    },
+    {
+      "id": "hb1_l03_051",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "ज़ोर से",
+      "lemma_translit": "zor se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "mit Kraft, energisch; laut"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_052",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "टोकरी",
+      "lemma_translit": "ṭokrī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Korb"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_053",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "ठीक से",
+      "lemma_translit": "ṭhīk se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ordentlich, richtig, genau"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_054",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "डर",
+      "lemma_translit": "ḍar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Angst, Furcht"
+        }
+      ],
+      "tags": ["gefuehle", "a1"]
+    },
+    {
+      "id": "hb1_l03_055",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "तक",
+      "lemma_translit": "tak",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "bis, bis zu"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_056",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "तख़्ती",
+      "lemma_translit": "takhtī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "(Informations-)Schild, Täfelchen"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_057",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "तुझ",
+      "lemma_translit": "tujh",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus von तू (tū)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_058",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "थैला",
+      "lemma_translit": "thailā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Tragetasche, Beutel"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_059",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दफ़्तर",
+      "lemma_translit": "daftar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Büro"
+        }
+      ],
+      "tags": ["beruf", "ort", "a1"]
+    },
+    {
+      "id": "hb1_l03_060",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दराज़",
+      "lemma_translit": "darāz",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Schubfach, Schublade"
+        }
+      ],
+      "tags": ["haus", "moebel", "a1"]
+    },
+    {
+      "id": "hb1_l03_061",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दिल्ली",
+      "lemma_translit": "dillī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Delhi (Hauptstadt der Indischen Union)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_062",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दिसंबर",
+      "lemma_translit": "disambar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Dezember"
+        }
+      ],
+      "tags": ["zeit", "monate", "a1"]
+    },
+    {
+      "id": "hb1_l03_063",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दीवार",
+      "lemma_translit": "divār",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Wand, Mauer"
+        }
+      ],
+      "tags": ["haus", "a1"]
+    },
+    {
+      "id": "hb1_l03_064",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "देवी",
+      "lemma_translit": "devī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "bei formaler Ansprache: Dame; Göttin"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_065",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दोपहर",
+      "lemma_translit": "dopahar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mittag"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l03_066",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "दोस्त",
+      "lemma_translit": "dost",
+      "pos": "noun",
+      "gender": "m/f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Freund, Freundin"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_067",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "धीरे से",
+      "lemma_translit": "dhīre se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "langsam, leise"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_068",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "नदी",
+      "lemma_translit": "nadī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Fluss"
+        }
+      ],
+      "tags": ["natur", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_069",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "नर",
+      "lemma_translit": "nar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Männchen"
+        }
+      ],
+      "tags": ["tiere", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_070",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "नीचे",
+      "lemma_translit": "nīce",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "unten, nach unten, hinab"
+        }
+      ],
+      "tags": ["ort", "adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_071",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पक्षी",
+      "lemma_translit": "pakṣī",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Vogel"
+        }
+      ],
+      "tags": ["tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_072",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पत्रिका",
+      "lemma_translit": "patrikā",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Zeitschrift"
+        }
+      ],
+      "tags": ["medien", "a1"]
+    },
+    {
+      "id": "hb1_l03_073",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पर",
+      "lemma_translit": "par",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "auf"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_074",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "परिचय",
+      "lemma_translit": "paricay",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Bekanntschaft; Vorstellung"
+        }
+      ],
+      "tags": ["personen", "abstrakt", "a1"]
+    },
+    {
+      "id": "hb1_l03_075",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पलंग",
+      "lemma_translit": "palaṅg",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Bett"
+        }
+      ],
+      "tags": ["haus", "moebel", "a1"]
+    },
+    {
+      "id": "hb1_l03_076",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पानी",
+      "lemma_translit": "pānī",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Wasser"
+        }
+      ],
+      "tags": ["essen", "getraenke", "a1"]
+    },
+    {
+      "id": "hb1_l03_077",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पिंजरा",
+      "lemma_translit": "piñjrā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Käfig"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_078",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पिछला",
+      "lemma_translit": "pichlā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "vorig, letzt"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_079",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पीठ",
+      "lemma_translit": "pīṭh",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Rücken"
+        }
+      ],
+      "tags": ["koerper", "a1"]
+    },
+    {
+      "id": "hb1_l03_080",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पीना",
+      "lemma_translit": "pīnā",
+      "pos": "verb",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "trinken"
+        }
+      ],
+      "tags": ["verben", "essen", "a1"]
+    },
+    {
+      "id": "hb1_l03_081",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "पेड़",
+      "lemma_translit": "peṛ",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Baum"
+        }
+      ],
+      "tags": ["natur", "a1"]
+    },
+    {
+      "id": "hb1_l03_082",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "प्रति",
+      "lemma_translit": "prati",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Exemplar, Kopie"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_083",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "प्रदेश",
+      "lemma_translit": "pradeś",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Bundes-, Unionsstaat"
+        }
+      ],
+      "tags": ["geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_084",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "प्रिय",
+      "lemma_translit": "priya",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "lieb"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_085",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "फ़ोटो",
+      "lemma_translit": "foṭo",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Foto"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_086",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बगूला",
+      "lemma_translit": "bagulā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Reiher"
+        }
+      ],
+      "tags": ["tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_087",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बत्तख़",
+      "lemma_translit": "battakh",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Ente"
+        }
+      ],
+      "tags": ["tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_089",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बाज़ार",
+      "lemma_translit": "bāzār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Markt, Bazar"
+        }
+      ],
+      "tags": ["ort", "a1"]
+    },
+    {
+      "id": "hb1_l03_090",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बाल",
+      "lemma_translit": "bāl",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Haar(e)"
+        }
+      ],
+      "tags": ["koerper", "a1"]
+    },
+    {
+      "id": "hb1_l03_091",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बिहार",
+      "lemma_translit": "bihār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Bihar (ind. Bundesstaat)"
+        }
+      ],
+      "tags": ["geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_092",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बीस",
+      "lemma_translit": "bīs",
+      "pos": "num",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "zwanzig"
+        }
+      ],
+      "tags": ["zahlen", "a1"]
+    },
+    {
+      "id": "hb1_l03_093",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बेवकूफ़",
+      "lemma_translit": "bevakūf",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dumm"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_094",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "बैठना",
+      "lemma_translit": "baiṭhnā",
+      "pos": "verb",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "sitzen, sich hinsetzen"
+        }
+      ],
+      "tags": ["verben", "a1"]
+    },
+    {
+      "id": "hb1_l03_095",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "मथुरा",
+      "lemma_translit": "mathurā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Mathura (Stadt im Bundesstaat Uttar Pradesh)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_096",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "मालिक",
+      "lemma_translit": "mālik",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Chef, Besitzer, Inhaber"
+        }
+      ],
+      "tags": ["beruf", "personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_097",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "मिनट",
+      "lemma_translit": "minaṭ",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Minute"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l03_098",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "मुझ",
+      "lemma_translit": "mujh",
+      "pos": "pron",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "obliquus von मैं (maĩ)"
+        }
+      ],
+      "tags": ["grammatik", "pronomen", "a1"]
+    },
+    {
+      "id": "hb1_l03_099",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "में",
+      "lemma_translit": "mẽ",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "in, im"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_100",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "मोटा",
+      "lemma_translit": "moṭā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dick, fett"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_101",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "रात",
+      "lemma_translit": "rāt",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Nacht"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l03_102",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "रास्ता",
+      "lemma_translit": "rāstā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Weg, Straße"
+        }
+      ],
+      "tags": ["ort", "verkehr", "a1"]
+    },
+    {
+      "id": "hb1_l03_103",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "रेशम",
+      "lemma_translit": "reśam",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "(Natur-)Seide"
+        }
+      ],
+      "tags": ["kleidung", "gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_104",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "रोटी",
+      "lemma_translit": "roṭī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Brot"
+        }
+      ],
+      "tags": ["essen", "a1"]
+    },
+    {
+      "id": "hb1_l03_105",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "लंडन",
+      "lemma_translit": "landan",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "London"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_106",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "लखनऊ",
+      "lemma_translit": "lakhnaū",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Lucknow (Hauptstadt des Bundesstaates Uttar Pradesh)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_107",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "लगभग",
+      "lemma_translit": "lagbhag",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "ungefähr, annähernd, etwa"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_108",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "लिखा",
+      "lemma_translit": "likhā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "geschrieben (Partizip)"
+        }
+      ],
+      "tags": ["verben", "adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_109",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "वक़्त",
+      "lemma_translit": "vakt",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Zeit"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l03_110",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "वहाँ का",
+      "lemma_translit": "vahā̃ kā",
+      "pos": "adj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "dortig"
+        }
+      ],
+      "tags": ["adjektive", "a1"]
+    },
+    {
+      "id": "hb1_l03_111",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "वाक़ई",
+      "lemma_translit": "vākai",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "wirklich, tatsächlich"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_112",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "शब्दकोश",
+      "lemma_translit": "śabdkoś",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Wörterbuch"
+        }
+      ],
+      "tags": ["gegenstand", "a1"]
+    },
+    {
+      "id": "hb1_l03_113",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "शहर",
+      "lemma_translit": "śahar",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Stadt"
+        }
+      ],
+      "tags": ["ort", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_114",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "शौक़ से",
+      "lemma_translit": "śauk se",
+      "pos": "adv",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "gerne, leidenschaftlich"
+        }
+      ],
+      "tags": ["adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_115",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "सज्जन",
+      "lemma_translit": "sajjan",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Herr, Gentleman"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_116",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "समय",
+      "lemma_translit": "samay",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Zeit, -punkt, -raum, -spanne"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l03_117",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "साड़ी",
+      "lemma_translit": "sāṛī",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Sari"
+        }
+      ],
+      "tags": ["kleidung", "a1"]
+    },
+    {
+      "id": "hb1_l03_118",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "सुबह",
+      "lemma_translit": "subah",
+      "pos": "noun",
+      "gender": "f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Morgen, Vormittag; morgens, in der Früh"
+        }
+      ],
+      "tags": ["zeit", "adverbien", "a1"]
+    },
+    {
+      "id": "hb1_l03_119",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "से",
+      "lemma_translit": "se",
+      "pos": "postp",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "von, aus, mit(tels)"
+        }
+      ],
+      "tags": ["grammatik", "postpositionen", "a1"]
+    },
+    {
+      "id": "hb1_l03_120",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "सोना",
+      "lemma_translit": "sonā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Gold"
+        },
+        {
+          "lang": "de",
+          "meaning": "schlafen"
+        }
+      ],
+      "tags": ["gegenstand", "a1", "verben"]
+    },
+    {
+      "id": "hb1_l03_122",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "हफ्ता",
+      "lemma_translit": "haftā",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Woche"
+        }
+      ],
+      "tags": ["zeit", "a1"]
+    },
+    {
+      "id": "hb1_l03_123",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "हरिद्वार",
+      "lemma_translit": "haridvār",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Haridwar (Stadt im Bundesstaat Uttarakhand)"
+        }
+      ],
+      "tags": ["staedte", "geografie", "a1"]
+    },
+    {
+      "id": "hb1_l03_124",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "हाथी",
+      "lemma_translit": "hāthī",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Elefant"
+        }
+      ],
+      "tags": ["tiere", "a1"]
+    },
+    {
+      "id": "hb1_l03_125",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "हिंदू",
+      "lemma_translit": "hindū",
+      "pos": "noun",
+      "gender": "m/f",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Hindu"
+        }
+      ],
+      "tags": ["personen", "a1"]
+    },
+    {
+      "id": "hb1_l03_126",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "हे",
+      "lemma_translit": "he",
+      "pos": "interj",
+      "gender": null,
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "oh!"
+        }
+      ],
+      "tags": ["ausruf", "a1"]
+    },
+    {
+      "id": "hb1_l03_127",
+      "corpus_id": "hindi-bolo",
+      "volume_id": "hb1",
+      "lesson_id": "hb1_l03",
+      "lemma_native": "हैंडबैग",
+      "lemma_translit": "haiṇḍbaig",
+      "pos": "noun",
+      "gender": "m",
+      "definitions": [
+        {
+          "lang": "de",
+          "meaning": "Handtasche"
+        }
+      ],
+      "tags": ["kleidung", "gegenstand", "a1"]
     }
   ]
 }

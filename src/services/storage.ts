@@ -2,6 +2,7 @@ import type {
   CorpusBundle,
   CorpusMeta,
   DeckStats,
+  LessonData,
   ReviewSubmission,
   StudyCardItem,
   StudyQueueQuery,
@@ -105,6 +106,31 @@ class StorageService {
         (e) => e.volume_id === v.id,
       ).length;
       return { ...v, entry_count };
+    });
+  }
+
+  async listLessons(
+    corpusId: string,
+    volumeId?: string,
+  ): Promise<LessonData[]> {
+    if (isTauriEnvironment()) {
+      const { invoke } = await import("@tauri-apps/api/core");
+      return invoke<LessonData[]>("list_lessons", {
+        corpusId,
+        volumeId: volumeId || null,
+      });
+    }
+    const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
+    if (!bundle) return [];
+    let lessons = bundle.lessons;
+    if (volumeId) {
+      lessons = lessons.filter((l) => l.volume_id === volumeId);
+    }
+    return lessons.map((l) => {
+      const entry_count = bundle.entries.filter(
+        (e) => e.lesson_id === l.id,
+      ).length;
+      return { ...l, entry_count };
     });
   }
 

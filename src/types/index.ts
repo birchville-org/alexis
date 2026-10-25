@@ -22,6 +22,7 @@ export interface LessonData {
   lesson_number: number;
   title: string;
   sort_order: number;
+  entry_count?: number;
 }
 
 export interface EntryDefinition {

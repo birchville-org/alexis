@@ -30,6 +30,7 @@ pub struct LessonData {
     pub lesson_number: i32,
     pub title: String,
     pub sort_order: i32,
+    pub entry_count: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
