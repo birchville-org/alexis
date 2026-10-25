@@ -40,25 +40,52 @@ class StorageService {
 
   private initIndexedDB() {
     this.dbPromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open("alexis_db", 1);
+      const request = indexedDB.open("alexis_db", 2);
       request.onupgradeneeded = (e: any) => {
         const db = e.target.result;
         if (!db.objectStoreNames.contains("study_state")) {
           db.createObjectStore("study_state", { keyPath: "entryId" });
         }
+        if (!db.objectStoreNames.contains("corpus_bundles")) {
+          db.createObjectStore("corpus_bundles", { keyPath: "corpusId" });
+        }
       };
       request.onsuccess = () => {
         const db = request.result;
-        // load initial state into memory cache
-        const tx = db.transaction("study_state", "readonly");
-        const store = tx.objectStore("study_state");
-        const getAll = store.getAll();
-        getAll.onsuccess = () => {
-          for (const item of getAll.result) {
-            this.localStudyState.set(item.entryId, item);
-          }
+        // load initial study state into memory cache
+        if (db.objectStoreNames.contains("study_state")) {
+          const tx = db.transaction("study_state", "readonly");
+          const store = tx.objectStore("study_state");
+          const getAll = store.getAll();
+          getAll.onsuccess = () => {
+            for (const item of getAll.result) {
+              this.localStudyState.set(item.entryId, item);
+            }
+          };
+        }
+
+        // load persisted custom/imported corpus bundles
+        if (db.objectStoreNames.contains("corpus_bundles")) {
+          const txBundles = db.transaction("corpus_bundles", "readonly");
+          const storeBundles = txBundles.objectStore("corpus_bundles");
+          const getAllBundles = storeBundles.getAll();
+          getAllBundles.onsuccess = () => {
+            for (const item of getAllBundles.result) {
+              const idx = this.memoryBundles.findIndex(
+                (b) => b.corpus.id === item.corpusId,
+              );
+              if (idx >= 0) {
+                this.memoryBundles[idx] = item.bundle;
+              } else {
+                this.memoryBundles.push(item.bundle);
+              }
+            }
+            resolve(db);
+          };
+          getAllBundles.onerror = () => resolve(db);
+        } else {
           resolve(db);
-        };
+        }
       };
       request.onerror = () => reject(request.error);
     });
@@ -77,11 +104,31 @@ class StorageService {
     if (this.dbPromise) {
       try {
         const db = await this.dbPromise;
-        const tx = db.transaction("study_state", "readwrite");
-        const store = tx.objectStore("study_state");
-        store.put({ entryId, ...state });
+        if (db.objectStoreNames.contains("study_state")) {
+          const tx = db.transaction("study_state", "readwrite");
+          const store = tx.objectStore("study_state");
+          store.put({ entryId, ...state });
+        }
       } catch (err) {
         console.warn("Could not persist to IndexedDB:", err);
+      }
+    }
+  }
+
+  private async persistCorpusBundle(corpusId: string, bundle: CorpusBundle) {
+    if (this.dbPromise) {
+      try {
+        const db = await this.dbPromise;
+        if (db.objectStoreNames.contains("corpus_bundles")) {
+          const tx = db.transaction("corpus_bundles", "readwrite");
+          const store = tx.objectStore("corpus_bundles");
+          store.put({
+            corpusId,
+            bundle: JSON.parse(JSON.stringify(bundle)),
+          });
+        }
+      } catch (err) {
+        console.warn("Could not persist bundle to IndexedDB:", err);
       }
     }
   }
@@ -360,6 +407,7 @@ class StorageService {
     } else {
       this.memoryBundles.push(bundle);
     }
+    await this.persistCorpusBundle(bundle.corpus.id, bundle);
     return bundle.entries.length;
   }
 
@@ -413,6 +461,33 @@ class StorageService {
         .map((t) => t.trim())
         .filter(Boolean);
 
+      // Ensure volume is registered in bundle.volumes
+      if (!bundle.volumes.some((v) => v.id === vol)) {
+        const volNum = vol.replace(/^[a-zA-Z]+/, "");
+        const volTitle = vol.startsWith("hb")
+          ? `Hindi bolo ${volNum || vol}`
+          : `Band ${volNum || vol}`;
+        bundle.volumes.push({
+          id: vol,
+          corpus_id: targetCorpusId,
+          title: volTitle,
+          sort_order: bundle.volumes.length + 1,
+        });
+      }
+
+      // Ensure lesson is registered in bundle.lessons
+      const lessonId = `${vol}_l${les.padStart(2, "0")}`;
+      if (!bundle.lessons.some((l) => l.id === lessonId)) {
+        const lesNum = Number.parseInt(les, 10) || bundle.lessons.length + 1;
+        bundle.lessons.push({
+          id: lessonId,
+          volume_id: vol,
+          lesson_number: lesNum,
+          title: `Lektion ${les}`,
+          sort_order: lesNum,
+        });
+      }
+
       const existing = bundle.entries.find(
         (e) =>
           e.lemma_native.trim() === cleanNat && (e.volume_id === vol || !vol),
@@ -441,7 +516,7 @@ class StorageService {
           id,
           corpus_id: targetCorpusId,
           volume_id: vol,
-          lesson_id: `${vol}_l${les.padStart(2, "0")}`,
+          lesson_id: lessonId,
           lemma_native: cleanNat,
           lemma_translit: cleanTrn,
           pos: pos ? pos.trim() : undefined,
@@ -453,6 +528,7 @@ class StorageService {
       }
     }
 
+    await this.persistCorpusBundle(targetCorpusId, bundle);
     if (isTauriEnvironment()) {
       const { invoke } = await import("@tauri-apps/api/core");
       await invoke("import_corpus_bundle", { bundle });

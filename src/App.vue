@@ -969,8 +969,12 @@ async function handleFileUpload(e: Event) {
   importNotice.value = `${count} Vokabeln aus "${file.name}" erfolgreich importiert!`;
   volumesList.value = await storage.listVolumes(selectedCorpusId.value);
   lessonsList.value = await storage.listLessons(selectedCorpusId.value);
+  if (selectedVolumeIds.value.length === 0) {
+    selectedVolumeIds.value = volumesList.value.map((v) => v.id);
+  }
   await reloadQueue(false);
   await refreshStats();
+  target.value = "";
   setTimeout(() => {
     importNotice.value = "";
   }, 4000);
