@@ -121,14 +121,28 @@ Bei flektierenden Sprachen (Sanskrit, Hindi, Latein, Griechisch) ist das grammat
 
 ---
 
-## 7. Tastaturkürzel-Referenz
+## 7. Umkehrbare Lernrichtung (Hindi ⇄ Deutsch)
+
+Alexis unterstützt zwei Lernrichtungen, die jederzeit per Klick auf den Schalter **`⇄ Richtung`** im Trainer-Header oder über die Tastenkombination **`r`** gewechselt werden können:
+
+1. **Zielsprache ➔ Deutsch (z.B. Hindi ➔ DE)**:
+   - **Vorderseite**: Devanagari-Schriftbild (`दुकान`), Umschrift (IAST), Wortart und grammatisches Geschlecht.
+   - **Rückseite**: Deutsche Übersetzung mit Geschlechts-Pill (`f. Geschäft, Laden`) und Notizen.
+2. **Deutsch ➔ Zielsprache (z.B. DE ➔ Hindi)**:
+   - **Vorderseite**: Deutsche Bedeutung(en) in großer Serifschrift sowie Wortart (`Substantiv`) und Aufforderung zum Geschlechtsabruf (`Geschlecht: ?`).
+   - **Rückseite**: Das gesuchte Wort in Devanagari (`दुकान`), IAST-Umschrift (`dukān`), zwingende Geschlechtsauflösung (`f. (Femininum)`) und Referenzbedeutung.
+
+---
+
+## 8. Tastaturkürzel-Referenz
 
 | Taste | Kontext | Aktion |
 | :--- | :--- | :--- |
-| **`Leertaste`** oder **`Enter`** | Vorderseite | Bedeutung aufdecken |
+| **`Leertaste`** oder **`Enter`** | Vorderseite | Karte aufdecken |
 | **`Leertaste`** | Rückseite (aufgedeckt) | Schnellbewertung: **3 (Gut)** |
 | **`1`** | Rückseite (aufgedeckt) | Bewertung: **1 (Nochmal)** |
 | **`2`** | Rückseite (aufgedeckt) | Bewertung: **2 (Schwer)** |
 | **`3`** | Rückseite (aufgedeckt) | Bewertung: **3 (Gut)** |
 | **`4`** | Rückseite (aufgedeckt) | Bewertung: **4 (Einfach)** |
+| **`r`** | Immer | Lernrichtung umkehren (**Hindi ➔ DE** ⇄ **DE ➔ Hindi**) |
 | **`u`** oder **`t`** | Immer | Umschrift (IAST / Transliteration) ein-/ausblenden |

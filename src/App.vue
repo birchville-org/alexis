@@ -58,6 +58,14 @@
         <span class="embed-sub">{{ activeCorpusTitle }} · {{ selectedVolumesSummary }}</span>
       </div>
       <div class="embed-actions">
+        <button
+          class="direction-toggle-btn"
+          @click="toggleDirection"
+          :title="'Lernrichtung umschalten (Taste R). Aktuell: ' + directionLabel"
+        >
+          <span class="direction-swap-icon">⇄</span>
+          <span>{{ directionLabel }}</span>
+        </button>
         <button class="header-btn" @click="showHelpModal = true" title="Hilfe">❓ Hilfe</button>
         <button class="embed-switch-btn" @click="currentTab = currentTab === 'trainer' ? 'corpora' : 'trainer'">
           {{ currentTab === 'trainer' ? '⚙️ Filter / Gliederung' : '▶️ Zum Trainer' }}
@@ -78,8 +86,18 @@
             <span class="context-sep">/</span>
             <span class="context-volumes">{{ selectedVolumesSummary }}</span>
           </div>
-          <div class="trainer-counter" v-if="queue.length > 0">
-            Karte {{ currentIndex + 1 }} von {{ queue.length }}
+          <div class="trainer-controls">
+            <button
+              class="direction-toggle-btn"
+              @click="toggleDirection"
+              :title="'Lernrichtung umschalten (Taste R). Aktuell: ' + directionLabel"
+            >
+              <span class="direction-swap-icon">⇄</span>
+              <span class="direction-badge">{{ directionLabel }}</span>
+            </button>
+            <div class="trainer-counter" v-if="queue.length > 0">
+              Karte {{ currentIndex + 1 }} von {{ queue.length }}
+            </div>
           </div>
         </div>
 
@@ -91,39 +109,71 @@
               <span class="volume-badge">{{ currentCard.volume_title }}</span>
               <span v-if="currentCard.pos" class="pos-badge">{{ formatPos(currentCard.pos) }}</span>
               <span
-                v-if="currentCard.gender || currentCard.pos === 'noun'"
+                v-if="(studyDirection === 'target-to-de' || isFlipped) && (currentCard.gender || currentCard.pos === 'noun')"
                 :class="['gender-badge', `gender-${(currentCard.gender || 'unknown').replace('/', '-')}`]"
               >
                 {{ formatGender(currentCard.gender) }}
+              </span>
+              <span
+                v-else-if="studyDirection === 'de-to-target' && !isFlipped && (currentCard.gender || currentCard.pos === 'noun')"
+                class="gender-badge gender-prompt"
+                title="Geschlecht beim Aufdecken"
+              >
+                Geschlecht: ?
               </span>
             </div>
 
             <!-- Front Side -->
             <div class="card-front">
-              <div class="native-script script-deva">
-                {{ currentCard.lemma_native }}
-              </div>
+              <!-- Mode: Target -> DE -->
+              <template v-if="studyDirection === 'target-to-de'">
+                <div class="native-script script-deva">
+                  {{ currentCard.lemma_native }}
+                </div>
 
-              <div class="transliteration">
-                <span v-if="showTranslit">{{ currentCard.lemma_translit }}</span>
-                <button
-                  class="toggle-translit-btn"
-                  @click="showTranslit = !showTranslit"
-                >
-                  {{ showTranslit ? 'Umschrift verbergen' : 'Umschrift (IAST) anzeigen' }}
-                </button>
-              </div>
+                <div class="transliteration">
+                  <span v-if="showTranslit">{{ currentCard.lemma_translit }}</span>
+                  <button
+                    class="toggle-translit-btn"
+                    @click="showTranslit = !showTranslit"
+                  >
+                    {{ showTranslit ? 'Umschrift verbergen' : 'Umschrift (IAST) anzeigen' }}
+                  </button>
+                </div>
+              </template>
+
+              <!-- Mode: DE -> Target -->
+              <template v-else>
+                <div class="de-prompt">
+                  <div class="de-prompt-meanings">
+                    <div
+                      v-for="(def, idx) in currentCard.definitions"
+                      :key="idx"
+                      class="de-prompt-item"
+                    >
+                      {{ def.meaning }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="currentCard.definitions.some(d => d.notes)"
+                    class="de-prompt-notes"
+                  >
+                    {{ currentCard.definitions.filter(d => d.notes).map(d => d.notes).join(' · ') }}
+                  </div>
+                </div>
+              </template>
 
               <div v-if="!isFlipped" class="card-actions-reveal">
                 <button class="btn-reveal" @click="isFlipped = true">
-                  Bedeutung aufdecken (Leertaste)
+                  {{ studyDirection === 'target-to-de' ? 'Bedeutung aufdecken (Leertaste)' : `${targetLangLabel} aufdecken (Leertaste)` }}
                 </button>
               </div>
             </div>
 
             <!-- Back Side (Revealed) -->
             <div v-if="isFlipped" class="card-back">
-              <div class="definitions-list">
+              <!-- Mode: Target -> DE -->
+              <div v-if="studyDirection === 'target-to-de'" class="definitions-list">
                 <div
                   v-for="(def, idx) in currentCard.definitions"
                   :key="idx"
@@ -140,6 +190,36 @@
                     <span class="def-text">{{ def.meaning }}</span>
                   </div>
                   <div v-if="def.notes" class="def-notes">{{ def.notes }}</div>
+                </div>
+              </div>
+
+              <!-- Mode: DE -> Target -->
+              <div v-else class="target-reveal-wrap">
+                <div class="native-script script-deva">
+                  {{ currentCard.lemma_native }}
+                </div>
+
+                <div class="transliteration">
+                  <span v-if="showTranslit">{{ currentCard.lemma_translit }}</span>
+                  <button
+                    class="toggle-translit-btn"
+                    @click="showTranslit = !showTranslit"
+                  >
+                    {{ showTranslit ? 'Umschrift verbergen' : 'Umschrift (IAST) anzeigen' }}
+                  </button>
+                </div>
+
+                <div class="target-reveal-meta">
+                  <span
+                    v-if="currentCard.gender"
+                    :class="['def-gender-pill', `gender-${currentCard.gender.replace('/', '-')}`]"
+                    :title="formatGender(currentCard.gender)"
+                  >
+                    {{ formatGender(currentCard.gender) }}
+                  </span>
+                  <span class="target-reveal-de">
+                    {{ currentCard.definitions.map(d => d.meaning).join(' · ') }}
+                  </span>
                 </div>
               </div>
 
@@ -473,9 +553,14 @@
             Jedes Substantiv ist zwingend mit dem grammatischen Geschlecht gekennzeichnet (<strong>m.</strong> = Maskulinum, <strong>f.</strong> = Femininum, <strong>n.</strong> = Neutrum, <strong>m./f.</strong> = zweigeschlechtlich). Das Kürzel steht sowohl oben in der Statusleiste als auch direkt vor der deutschen Übersetzung auf der Rückseite.
           </p>
 
-          <h4>4. Tastaturkürzel</h4>
+          <h4>4. Umkehrbare Lernrichtung (Hindi ⇄ Deutsch)</h4>
           <p class="modal-text">
-            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
+            Mit dem Schalter <strong>⇄ Richtung</strong> (oder Taste <code>r</code>) kann jederzeit zwischen <strong>Hindi ➔ Deutsch</strong> (Abfrage des Sinns) und <strong>Deutsch ➔ Hindi</strong> (aktive Reproduktion des Hindi-Worts und des Geschlechts) gewechselt werden.
+          </p>
+
+          <h4>5. Tastaturkürzel</h4>
+          <p class="modal-text">
+            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
           </p>
         </div>
       </div>
@@ -579,6 +664,40 @@ const queue = ref<StudyCardItem[]>([]);
 const currentIndex = ref<number>(0);
 const isFlipped = ref<boolean>(false);
 const showTranslit = ref<boolean>(true);
+
+// Study Direction: target-to-de (Hindi -> DE) or de-to-target (DE -> Hindi)
+type StudyDirection = "target-to-de" | "de-to-target";
+const savedDirection =
+  typeof localStorage !== "undefined"
+    ? (localStorage.getItem("alexis_study_direction") as StudyDirection | null)
+    : null;
+const studyDirection = ref<StudyDirection>(
+  savedDirection === "de-to-target" ? "de-to-target" : "target-to-de",
+);
+
+const targetLangLabel = computed(() => {
+  const corp = corporaList.value.find((c) => c.id === selectedCorpusId.value);
+  if (!corp) return "Hindi";
+  if (corp.lang_code === "hi") return "Hindi";
+  if (corp.lang_code === "sa") return "Sanskrit";
+  return corp.title;
+});
+
+const directionLabel = computed(() => {
+  if (studyDirection.value === "target-to-de") {
+    return `${targetLangLabel.value} ➔ DE`;
+  }
+  return `DE ➔ ${targetLangLabel.value}`;
+});
+
+function toggleDirection() {
+  studyDirection.value =
+    studyDirection.value === "target-to-de" ? "de-to-target" : "target-to-de";
+  isFlipped.value = false;
+  try {
+    localStorage.setItem("alexis_study_direction", studyDirection.value);
+  } catch {}
+}
 
 // Dictionary State
 const dictProvider = new MonierWilliamsProvider();
@@ -728,6 +847,9 @@ function onKeydown(e: KeyboardEvent) {
 
   if (e.key === "u" || e.key === "U" || e.key === "t" || e.key === "T") {
     showTranslit.value = !showTranslit.value;
+  } else if (e.key === "r" || e.key === "R") {
+    e.preventDefault();
+    toggleDirection();
   }
 }
 
@@ -1070,6 +1192,41 @@ async function performDictSearch() {
   color: var(--text-muted);
 }
 
+.trainer-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.direction-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.direction-toggle-btn:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.direction-swap-icon {
+  font-size: 0.95rem;
+  color: var(--accent-gold);
+}
+
+.direction-badge {
+  letter-spacing: 0.02em;
+}
+
 /* Card */
 .study-card {
   background-color: var(--bg-surface-elevated);
@@ -1149,6 +1306,12 @@ async function performDictSearch() {
   border-color: var(--accent-gold);
 }
 
+.gender-badge.gender-prompt {
+  border-style: dashed;
+  color: var(--text-muted);
+  background-color: var(--bg-surface);
+}
+
 .native-script {
   font-size: 3.2rem;
   margin: 1rem 0;
@@ -1164,6 +1327,31 @@ async function performDictSearch() {
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
+}
+
+.de-prompt {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.de-prompt-meanings {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.de-prompt-item {
+  display: block;
+}
+
+.de-prompt-notes {
+  font-size: 0.92rem;
+  color: var(--text-muted);
 }
 
 .toggle-translit-btn {
@@ -1196,6 +1384,27 @@ async function performDictSearch() {
   border-top: 1px dashed var(--border-subtle);
   padding-top: 1.5rem;
   margin-top: 1rem;
+}
+
+.target-reveal-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.target-reveal-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.target-reveal-de {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-style: italic;
 }
 
 .def-meaning {
