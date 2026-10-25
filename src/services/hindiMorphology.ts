@@ -96,7 +96,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum markiert auf -ā (लड़का-Typ)",
         ruleExplanation:
-          "Endung -ā wechselt im Sg. Obliquus und im Pl. Direktus zu -e. Pl. Obliquus endet auf -oṁ.",
+          "Endung -ā wechselt im Sg. Obliquus und im Pl. Direktus zu -e (z.B. लड़के). Plural Obliquus endet auf -oṁ (-ओं, z.B. लड़कों).",
         postpositionNote,
         rows: [
           {
@@ -134,7 +134,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum Familie/Titel auf -ā (पिता/राजा-Typ)",
         ruleExplanation:
-          "Familienbezeichnungen auf -ā bleiben im Sg. Obliquus und Pl. Direktus unverändert. Pl. Obliquus auf -āoṁ.",
+          "Familienbezeichnungen und Titel auf -ā bleiben im Sg. Obliquus und Pl. Direktus unverändert (z.B. पिता). Plural Obliquus endet auf -āoṁ (-ओं, z.B. पिताओं).",
         postpositionNote,
         rows: [
           {
@@ -172,7 +172,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum unmarkiert auf -ī (आदमी-Typ)",
         ruleExplanation:
-          "Bleibt im Sg. Obliquus und Pl. Direktus unverändert. Im Pl. Obliquus wird -ī verkürzt zu -iyoṁ.",
+          "Bleibt im Sg. Obliquus und Pl. Direktus unverändert (z.B. आदमी). Im Plural Obliquus wird -ī verkürzt zu -iyoṁ (-यों, z.B. आदमियों).",
         postpositionNote,
         rows: [
           {
@@ -210,7 +210,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum unmarkiert auf -ū (चाकू-Typ)",
         ruleExplanation:
-          "Form bleibt im Sg. und Pl. Direktus gleich. Im Pl. Obliquus Verkürzung zu -uoṁ.",
+          "Form bleibt im Sg. und Pl. Direktus gleich (z.B. चाकू). Im Plural Obliquus Verkürzung zu -uoṁ (-ओं, z.B. चाकुओं).",
         postpositionNote,
         rows: [
           {
@@ -245,7 +245,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Maskulinum unmarkiert konsonantisch (घर/अध्यापक-Typ)",
       ruleExplanation:
-        "Sg. Direktus, Sg. Obliquus und Pl. Direktus sind identisch. Pl. Obliquus endet auf -oṁ.",
+        "Sg. Direktus, Sg. Obliquus und Pl. Direktus sind identisch (z.B. अध्यापक). Plural Obliquus endet auf -oṁ (-ओं, z.B. अध्यापकों, घरों).",
       postpositionNote,
       rows: [
         {
@@ -285,7 +285,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Femininum auf -iyā (चिड़िया-Typ)",
       ruleExplanation:
-        "Plural Direktus erhält Candrabindu (-iyā̃). Plural Obliquus auf -iyoṁ.",
+        "Plural Direktus erhält Vokalnasalierung mit Candrabindu: -iyā̃ (-इयाँ, z.B. चिड़ियाँ). Plural Obliquus endet auf -iyoṁ (-यों, z.B. चिड़ियों).",
       postpositionNote,
       rows: [
         {
@@ -323,7 +323,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Femininum auf -ī (लड़की-Typ)",
       ruleExplanation:
-        "Endung -ī verkürzt sich im Plural Direktus zu -iyā̃ und im Plural Obliquus zu -iyoṁ.",
+        "Endung -ī verkürzt sich im Plural Direktus zu -iyā̃ (-इयाँ mit Candrabindu, z.B. लड़कियाँ) und im Plural Obliquus zu -iyoṁ (-यों, z.B. लड़कियों).",
       postpositionNote,
       rows: [
         {
@@ -364,7 +364,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Femininum auf Vokal -ā/-u (भाषा/माता-Typ)",
       ruleExplanation:
-        "Plural Direktus erhält -ẽ (एँ), Plural Obliquus erhält -oṁ (ओं).",
+        "Plural Direktus erhält die Nasalendung -ẽ (-एँ mit Candrabindu, z.B. भाषाएँ, माताएँ). Plural Obliquus erhält -oṁ (-ओं, z.B. भाषाओं).",
       postpositionNote,
       rows: [
         {
@@ -399,7 +399,7 @@ export function getHindiNounDeclension(
   return {
     declensionType: "Femininum konsonantisch (किताब-Typ)",
     ruleExplanation:
-      "Plural Direktus endet auf -eṁ (ें), Plural Obliquus auf -oṁ (ों).",
+      "Plural Direktus endet auf nasaliertes -ẽ / -eṁ (-एं, z.B. किताबें, रातें). Plural Obliquus endet auf -oṁ (-ओं, z.B. किताबों, रातों).",
     postpositionNote,
     rows: [
       {
