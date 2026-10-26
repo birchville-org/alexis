@@ -18,6 +18,12 @@
           Trainer
         </button>
         <button
+          :class="['nav-btn', { active: currentTab === 'explorer' }]"
+          @click="currentTab = 'explorer'"
+        >
+          Vokabelliste
+        </button>
+        <button
           :class="['nav-btn', { active: currentTab === 'corpora' }]"
           @click="currentTab = 'corpora'"
         >
@@ -109,6 +115,14 @@
             >
               <span class="shuffle-icon">🔀</span>
               <span class="shuffle-badge">{{ isShuffle ? 'Zufall' : 'Alphabetisch' }}</span>
+            </button>
+            <button
+              class="explorer-jump-btn"
+              @click="currentTab = 'explorer'"
+              title="Vokabelliste dieser Auswahl öffnen"
+            >
+              <span class="explorer-jump-icon">📋</span>
+              <span class="explorer-jump-badge">Liste</span>
             </button>
             <div class="trainer-counter" v-if="queue.length > 0">
               Karte {{ currentIndex + 1 }} von {{ queue.length }}
@@ -388,6 +402,9 @@
             <button class="btn-primary" @click="reloadQueue(false)">
               Alle Karten erneut durchgehen (Lernmodus)
             </button>
+            <button class="btn-outline" @click="currentTab = 'explorer'">
+              📋 Vokabelliste durchsehen
+            </button>
             <button class="btn-outline" @click="currentTab = 'corpora'">
               Andere Glieder / Lektionen wählen
             </button>
@@ -395,7 +412,21 @@
         </div>
       </section>
 
-      <!-- 2. CORPORA & GLIEDERUNG TAB -->
+      <!-- 2. VOCABULARY EXPLORER TAB -->
+      <VocabularyExplorer
+        v-if="currentTab === 'explorer'"
+        :corpus-id="selectedCorpusId"
+        :corpus-title="activeCorpusTitle"
+        :is-hindi="isHindi"
+        :volumes-list="volumesList"
+        :lessons-list="lessonsList"
+        :selected-volume-ids="selectedVolumeIds"
+        :selected-lesson-ids="selectedLessonIds"
+        @practice-selection="startSessionWithItems"
+        @switch-tab="currentTab = $event as Tab"
+      />
+
+      <!-- 3. CORPORA & GLIEDERUNG TAB -->
       <section v-if="currentTab === 'corpora'" class="view-corpora">
         <div class="view-header">
           <h2>Korpora & Gliederungen</h2>
@@ -529,6 +560,13 @@
               @click="startSessionWithSelectedVolumes"
             >
               Lernkarten für ausgewählte Glieder starten ({{ selectedVolumeIds.length }} gewählt)
+            </button>
+            <button
+              class="btn-outline explorer-quick-btn"
+              :disabled="selectedVolumeIds.length === 0"
+              @click="currentTab = 'explorer'"
+            >
+              📋 Vokabelliste dieser Auswahl öffnen
             </button>
           </div>
         </div>
@@ -805,11 +843,11 @@
 
           <p class="modal-text">
             <strong>Geplante Ausbaustufen (Roadmap):</strong>
-            <br>• <strong>Phase 1: Vokabel-Explorer & Listenansicht</strong> — Gesamtschau aller Vokabeln der gewählten Lektionen mit Schnellsuche zum Durchblättern ohne Bewertungsdruck.
-            <br>• <strong>Phase 2: Native Sprachausgabe (TTS)</strong> — Audio-Aussprache 🔊 über die Web Speech API per Tastaturkürzel <code>v</code>.
-            <br>• <strong>Phase 3: Session-Recap</strong> — Am Ende einer Sitzung die Fehlkarten mit 1 Klick nochmals festigen.
-            <br>• <strong>Phase 4: Favoriten / Prüfungs-Merkliste (★)</strong> — Schwierige Vokabeln markieren und gezielt abfragen.
-            <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining</strong> — Zuschaltbarer Modus zum aktiven Eintippen.
+            <br>• <strong>✓ Phase 1: Vokabel-Explorer & Listenansicht (Live):</strong> Gesamtschau aller Vokabeln im Reiter „Vokabelliste“ mit Sofortsuche, Leitner-Box-Filtern, Wortart-Filter, morphologischen Paradigmen und 1-Klick-Lernstart.
+            <br>• <strong>Phase 2: Native Sprachausgabe (TTS):</strong> Audio-Aussprache 🔊 über die Web Speech API per Tastaturkürzel <code>v</code>.
+            <br>• <strong>Phase 3: Session-Recap:</strong> Am Ende einer Sitzung die Fehlkarten mit 1 Klick nochmals festigen.
+            <br>• <strong>Phase 4: Favoriten / Prüfungs-Merkliste (★):</strong> Schwierige Vokabeln markieren und gezielt abfragen.
+            <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining:</strong> Zuschaltbarer Modus zum aktiven Eintippen.
           </p>
           <p class="modal-text">
             <a href="https://github.com/birchville-org/alexis/blob/main/docs/ROADMAP.md" target="_blank" rel="noopener noreferrer" class="dict-link">
@@ -871,6 +909,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
+import VocabularyExplorer from "./components/VocabularyExplorer.vue";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
 import {
   type HindiNounDeclension,
@@ -894,7 +933,7 @@ const currentTheme = ref<"light" | "dark">("light");
 const isEmbedded = ref(false);
 
 // Navigation Tabs
-type Tab = "trainer" | "corpora" | "dictionary" | "stats";
+type Tab = "trainer" | "explorer" | "corpora" | "dictionary" | "stats";
 const currentTab = ref<Tab>("trainer");
 
 // Corpora & Gliederung State
@@ -992,14 +1031,14 @@ const activeCorpusTitle = computed(() => {
   return activeCorpus.value ? activeCorpus.value.title : selectedCorpusId.value;
 });
 
-const isHindi = computed(() => {
-  if (!currentCard.value) return false;
-  const cId = (currentCard.value.corpus_id || "").toLowerCase();
-  return (
-    cId.includes("hindi") ||
-    activeCorpus.value?.lang_code === "hi" ||
-    activeCorpus.value?.id.includes("hindi")
-  );
+const isHindi = computed<boolean>(() => {
+  if (currentCard.value) {
+    const cId = (currentCard.value.corpus_id || "").toLowerCase();
+    if (cId.includes("hindi")) return true;
+  }
+  const corp = activeCorpus.value;
+  if (!corp) return false;
+  return corp.lang_code === "hi" || corp.id.toLowerCase().includes("hindi");
 });
 
 const showGrammarDrawer = ref(
@@ -1356,6 +1395,13 @@ async function startSessionWithSelectedVolumes() {
   currentTab.value = "trainer";
 }
 
+function startSessionWithItems(items: StudyCardItem[]) {
+  queue.value = [...items];
+  currentIndex.value = 0;
+  isFlipped.value = false;
+  currentTab.value = "trainer";
+}
+
 async function reloadQueue(onlyDue: boolean) {
   currentIndex.value = 0;
   isFlipped.value = false;
@@ -1583,7 +1629,8 @@ async function performDictSearch() {
 }
 
 .direction-toggle-btn,
-.shuffle-toggle-btn {
+.shuffle-toggle-btn,
+.explorer-jump-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1603,9 +1650,19 @@ async function performDictSearch() {
 }
 
 .direction-toggle-btn:hover,
-.shuffle-toggle-btn:hover {
+.shuffle-toggle-btn:hover,
+.explorer-jump-btn:hover {
   border-color: var(--accent-gold);
   color: var(--accent-gold);
+}
+
+.explorer-jump-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.explorer-jump-badge {
+  letter-spacing: 0.02em;
 }
 
 .direction-swap-icon {
@@ -2372,6 +2429,25 @@ async function performDictSearch() {
   margin-top: 1.5rem;
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.explorer-quick-btn {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 6px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.explorer-quick-btn:hover:not(:disabled) {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
 }
 
 /* Dictionary */

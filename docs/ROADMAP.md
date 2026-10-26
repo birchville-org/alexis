@@ -38,12 +38,14 @@ Anki ist ein bewährtes, generisches Karteikartenprogramm, erzeugt jedoch im Ler
 
 ## 3. Ausbaustufen (Roadmap)
 
-### Phase 1: Vokabel-Explorer & Listenansicht (In Vorbereitung)
+### Phase 1: Vokabel-Explorer & Listenansicht (✓ Implementiert / Live)
 - **Problem**: Beim reinen Kartenlernen fehlt der Überblick über den Gesamtkontext einer Lektion.
-- **Lösung**: Ein übersichtlicher Reiter oder Slide-Over *Vokabelliste*:
-  - Tabellarische Gesamtschau aller Vokabeln der gewählten Lektionen (Devanagari, IAST, Genus, deutsche Bedeutung, Tags).
-  - Echtzeit-Filter und Volltextsuche.
-  - Ermöglicht das rasche Vorab-Durchlesen oder Wiederholen vor einer Prüfung ohne Bewertungszwang.
+- **Lösung**: Ein übersichtlicher Reiter *Vokabelliste* (Vokabel-Explorer):
+  - Tabellarische Gesamtschau aller Vokabeln der gewählten Lektionen oder des gesamten Korpus (Devanāgarī, IAST, Genus, deutsche Bedeutung, Tags, Leitner-Status).
+  - Echtzeit-Volltextsuche und Sofortfilter nach Umfang, Band, Lektion, Leitner-Box (1–5), Fälligkeit und Wortart (Substantive, Verben, Adjektive).
+  - Interaktives Detail-Panel mit vollständigen morphologischen Paradigmen (Hindi-Deklinationstabelle und Verb-Stämme mit Ergativ-Erklärung).
+  - 1-Klick-Aktion *„Diese Auswahl im Trainer üben“*: Startet sofort eine maßgeschneiderte Lerneinheit mit den gefilterten Vokabeln ohne Anki-Deck-Konfigurationsfrust.
+  - 1-Klick TSV-Export in die Zwischenablage für Prüfungsvorbereitung und analoges Lernen.
 
 ### Phase 2: Native Sprachausgabe (Web Speech API)
 - **Problem**: Aussprache von Hindi-Wörtern (z. B. Aspirationen, retroflexe Laute wie *ṭ/ḍ*) ist aus reinem Text schwer abrufbar. Externe Audiodateien erfordern viel Speicher und Setup.
