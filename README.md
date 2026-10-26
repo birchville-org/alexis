@@ -93,4 +93,8 @@ alexis/
 
 ## License
 
-MIT License. Copyright (c) 2026 Marco Demarmels. Birchville Scholarly Synthesis.
+Alexis is published under a **Dual-Licensing Model**:
+- **Software & Source Code**: [MIT License](LICENSE) (c) 2026 Marco Demarmels.
+- **Corpora & Linguistic Data** (`data/corpora/`): [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+  - Payer Sanskrit Course materials derived from Alois Payer & Simone Dünneisen.
+  - Curated and synthesized by Birchville Scholarly Synthesis.

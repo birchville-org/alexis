@@ -25,7 +25,7 @@
     "tauri"
   ],
   "author": "Marco Demarmels",
-  "license": "MIT",
+  "license": "MIT AND CC-BY-4.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/birchville-org/alexis.git"

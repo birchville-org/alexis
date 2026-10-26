@@ -1,3 +1,13 @@
+# Alexis Licensing Terms
+
+Alexis is published under a dual-licensing model, separating the software application and source code from its linguistic corpora and datasets.
+
+---
+
+## 1. Software & Source Code (MIT License)
+
+The source code, application logic, algorithms, user interface, and build scripts of Alexis (including all files in `src/`, `src-tauri/`, and `public/`) are licensed under the MIT License:
+
 MIT License
 
 Copyright (c) 2026 Marco Demarmels
@@ -19,3 +29,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## 2. Learning Corpora & Linguistic Data (Creative Commons CC BY 4.0)
+
+The learning corpora, vocabulary datasets, and TSV exports in `data/corpora/` are licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**:
+
+https://creativecommons.org/licenses/by/4.0/
+
+You are free to:
+- **Share** — copy and redistribute the material in any medium or format.
+- **Adapt** — remix, transform, and build upon the material for any purpose, even commercially.
+
+Under the following terms:
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+
+### Specific Dataset Attributions:
+- **Payer Sanskrit Course Corpus (`payer_sanskrit.json`, `payer_sanskrit_vol*.tsv`)**:
+  Derived and synthesized from the Sanskrit course by Alois Payer and the canonical vocabulary glossary compiled by Simone Dünneisen (http://www.payer.de). Curated and structured for Alexis by Marco Demarmels / Birchville Scholarly Synthesis.
+- **Hindi bolo! Vocabulary (`hindi_bolo.json`)**:
+  Curated vocabulary dataset for modern standard Hindi. Birchville Scholarly Synthesis.
