@@ -512,33 +512,50 @@
                 >
                   Zurücksetzen
                 </button>
+                <button
+                  class="btn-link highlight-action"
+                  @click="exportSelectedLessonsTSV"
+                  :disabled="selectedLessonIds.length === 0"
+                  title="Exportiert die ausgewählten Lektionen als TSV-Datei"
+                >
+                  📥 Gewählte als TSV exportieren
+                </button>
               </div>
             </div>
 
             <div class="lessons-grid">
-              <label
+              <div
                 v-for="les in filteredLessons"
                 :key="les.id"
                 :class="['lesson-checkbox-card', { checked: selectedLessonIds.includes(les.id) }]"
               >
-                <input
-                  type="checkbox"
-                  :value="les.id"
-                  v-model="selectedLessonIds"
-                />
-                <div class="les-info">
-                  <span class="les-title">
-                    {{
-                      selectedVolumeIds.length > 1
-                        ? `${getVolumeTitle(les.volume_id)} · ${les.title}`
-                        : les.title
-                    }}
-                  </span>
-                  <span v-if="les.entry_count !== undefined" class="les-count"
-                    >{{ les.entry_count }} Vokabeln</span
-                  >
-                </div>
-              </label>
+                <label class="les-checkbox-wrap">
+                  <input
+                    type="checkbox"
+                    :value="les.id"
+                    v-model="selectedLessonIds"
+                  />
+                  <div class="les-info">
+                    <span class="les-title">
+                      {{
+                        selectedVolumeIds.length > 1
+                          ? `${getVolumeTitle(les.volume_id)} · ${les.title}`
+                          : les.title
+                      }}
+                    </span>
+                    <span v-if="les.entry_count !== undefined" class="les-count"
+                      >{{ les.entry_count }} Vokabeln</span
+                    >
+                  </div>
+                </label>
+                <button
+                  class="btn-tsv-export"
+                  @click.stop="exportSingleLessonTSV(les)"
+                  title="Diese Lektion als TSV herunterladen"
+                >
+                  📥 TSV
+                </button>
+              </div>
             </div>
           </div>
 
@@ -897,6 +914,9 @@
             <button class="btn-outline download-btn" @click="downloadActiveCorpus">
               💾 Vokabeldatei herunterladen ({{ selectedCorpusId }}.json)
             </button>
+            <button class="btn-outline download-btn" @click="exportSelectedLessonsTSV">
+              📥 Aktuelle Auswahl als TSV exportieren (.tsv)
+            </button>
             <button class="btn-outline download-btn" @click="downloadStudyBackup">
               📊 Lernstand & Boxen als Backup sichern (.json)
             </button>
@@ -917,7 +937,7 @@ import {
   getHindiNounDeclension,
   getHindiVerbParadigm,
 } from "./services/hindiMorphology";
-import { isTauriEnvironment, storage } from "./services/storage";
+import { downloadTSV, isTauriEnvironment, storage } from "./services/storage";
 import type {
   CorpusMeta,
   DeckStats,
@@ -1309,6 +1329,35 @@ function downloadStudyBackup() {
     backup,
     `alexis_lernstand_backup_${new Date().toISOString().slice(0, 10)}.json`,
   );
+}
+
+async function exportSingleLessonTSV(les: LessonData) {
+  const content = await storage.exportSelectionTSV(
+    selectedCorpusId.value,
+    [les.volume_id],
+    [les.id],
+  );
+  const safeTitle = les.title.toLowerCase().replace(/\s+/g, "_");
+  const filename = `${selectedCorpusId.value}_${les.volume_id}_${safeTitle}.tsv`;
+  downloadTSV(content, filename);
+}
+
+async function exportSelectedLessonsTSV() {
+  const vIds =
+    selectedVolumeIds.value.length > 0 ? selectedVolumeIds.value : undefined;
+  const lIds =
+    selectedLessonIds.value.length > 0 ? selectedLessonIds.value : undefined;
+  const content = await storage.exportSelectionTSV(
+    selectedCorpusId.value,
+    vIds,
+    lIds,
+  );
+  const countDesc =
+    selectedLessonIds.value.length > 0
+      ? `${selectedLessonIds.value.length}lektionen`
+      : "auswahl";
+  const filename = `${selectedCorpusId.value}_${countDesc}_${new Date().toISOString().slice(0, 10)}.tsv`;
+  downloadTSV(content, filename);
 }
 
 // Lifecycle Init
@@ -2370,16 +2419,49 @@ async function performDictSearch() {
 .lesson-checkbox-card {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
-  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .lesson-checkbox-card.checked {
   border-color: var(--accent-gold);
+}
+
+.les-checkbox-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  flex: 1;
+}
+
+.btn-tsv-export {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-tsv-export:hover {
+  background: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+}
+
+.btn-link.highlight-action {
+  color: var(--accent-gold);
+  font-weight: 600;
 }
 
 .les-info {

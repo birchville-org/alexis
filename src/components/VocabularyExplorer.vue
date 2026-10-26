@@ -23,6 +23,14 @@
         <button
           class="btn-copy-tsv"
           :disabled="filteredEntries.length === 0"
+          @click="downloadFilteredTSV"
+          title="Lädt die gefilterte Liste als .tsv-Datei herunter"
+        >
+          📥 TSV herunterladen
+        </button>
+        <button
+          class="btn-copy-tsv"
+          :disabled="filteredEntries.length === 0"
           @click="copyAsTSV"
           title="Kopiert die aktuelle Liste tabellarisch in die Zwischenablage"
         >
@@ -39,10 +47,18 @@
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Suchen nach Devanagari, IAST, Deutsch, Wortart oder Tag…"
+          placeholder="Suchen nach Devanagari, IAST, Harvard-Kyoto (z.B. kRSNa), Deutsch…"
           class="search-input"
           autofocus
         />
+        <button
+          v-if="searchQuery"
+          class="translit-convert-btn"
+          @click="toggleSearchTransliteration"
+          title="Suchbegriff zwischen Devanagari und Umschrift (IAST/HK) konvertieren"
+        >
+          अ ⇄ a
+        </button>
         <button
           v-if="searchQuery"
           class="clear-search-btn"
@@ -425,7 +441,17 @@ import {
   getHindiNounDeclension,
   getHindiVerbParadigm,
 } from "../services/hindiMorphology";
-import { storage } from "../services/storage";
+import { downloadTSV, storage } from "../services/storage";
+import {
+  containsDevanagari,
+  devanagariToHk,
+  devanagariToIast,
+  hkToDevanagari,
+  hkToDevanagariSync,
+  hkToIast,
+  iastToDevanagari,
+  toggleTransliteration,
+} from "../services/transliteration";
 import type { LessonData, StudyCardItem, VolumeData } from "../types";
 
 const props = defineProps<{
@@ -623,12 +649,26 @@ const filteredEntries = computed(() => {
     });
   }
 
-  // 7. Full-text Search Query
+  // 7. Full-text Search Query (with automatic IAST/HK <-> Devanagari matching)
   if (searchQuery.value.trim()) {
-    const q = searchQuery.value.toLowerCase().trim();
+    const qRaw = searchQuery.value.trim();
+    const q = qRaw.toLowerCase();
+    const qDeva = hkToDevanagariSync(qRaw);
+    const qIast = hkToIast(qRaw).toLowerCase();
+
     list = list.filter((e) => {
-      if (e.lemma_native.toLowerCase().includes(q)) return true;
-      if (e.lemma_translit.toLowerCase().includes(q)) return true;
+      if (
+        e.lemma_native.toLowerCase().includes(q) ||
+        (qDeva && e.lemma_native.includes(qDeva))
+      ) {
+        return true;
+      }
+      if (
+        e.lemma_translit.toLowerCase().includes(q) ||
+        (qIast && e.lemma_translit.toLowerCase().includes(qIast))
+      ) {
+        return true;
+      }
       if (e.definitions.some((d) => d.meaning.toLowerCase().includes(q))) {
         return true;
       }
@@ -783,6 +823,37 @@ function practiceSingleEntry(item: StudyCardItem) {
   emit("practice-selection", [item]);
 }
 
+// Transliteration Search Toggle
+async function toggleSearchTransliteration() {
+  if (!searchQuery.value.trim()) return;
+  searchQuery.value = await toggleTransliteration(
+    searchQuery.value.trim(),
+    "iast",
+  );
+}
+
+// Download Filtered as TSV
+function downloadFilteredTSV() {
+  if (filteredEntries.value.length === 0) return;
+  const header =
+    "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags";
+  const rows = filteredEntries.value.map((e) => {
+    return [
+      e.volume_id,
+      e.lesson_id ? e.lesson_id.replace(/^.*_l0?/, "") : "1",
+      e.lemma_native,
+      e.lemma_translit,
+      e.pos || "",
+      e.gender || "-",
+      formatMeanings(e),
+      (e.tags || []).join(";"),
+    ].join("\t");
+  });
+  const tsvText = [header, ...rows].join("\n");
+  const filename = `${props.corpusId}_export_${filteredEntries.value.length}_vokabeln.tsv`;
+  downloadTSV(tsvText, filename);
+}
+
 // Copy as TSV
 async function copyAsTSV() {
   const header = "Devanagari\tIAST\tWortart\tGenus\tBedeutung\tGliederung\tBox";
@@ -935,6 +1006,25 @@ async function copyAsTSV() {
 
 .clear-search-btn:hover {
   color: var(--text-primary);
+}
+
+.translit-convert-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.translit-convert-btn:hover {
+  background: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
 }
 
 .filter-group {

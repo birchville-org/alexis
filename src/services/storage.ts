@@ -576,6 +576,51 @@ class StorageService {
     return text;
   }
 
+  async exportSelectionTSV(
+    corpusId: string,
+    volumeIds?: string[],
+    lessonIds?: string[],
+  ): Promise<string> {
+    await this.ensureInitialized();
+    const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
+    if (!bundle) return "";
+
+    let entries = bundle.entries;
+    if (volumeIds && volumeIds.length > 0) {
+      entries = entries.filter((e) => volumeIds.includes(e.volume_id));
+    }
+    if (lessonIds && lessonIds.length > 0) {
+      entries = entries.filter(
+        (e) => e.lesson_id && lessonIds.includes(e.lesson_id),
+      );
+    }
+
+    const header =
+      "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags";
+    const rows = entries.map((e) => {
+      const les = bundle.lessons.find((l) => l.id === e.lesson_id);
+      const lesNum = les
+        ? String(les.lesson_number)
+        : e.lesson_id
+          ? e.lesson_id.replace(/^.*_l0?/, "")
+          : "1";
+      const mean = e.definitions.map((d) => d.meaning).join("; ");
+      const tags = (e.tags || []).join(";");
+      return [
+        e.volume_id,
+        lesNum,
+        e.lemma_native,
+        e.lemma_translit,
+        e.pos || "",
+        e.gender || "-",
+        mean,
+        tags,
+      ].join("\t");
+    });
+
+    return [header, ...rows].join("\n");
+  }
+
   getCorpusBundle(corpusId: string): CorpusBundle | undefined {
     return this.memoryBundles.find((b) => b.corpus.id === corpusId);
   }
@@ -587,6 +632,20 @@ class StorageService {
     }
     return backup;
   }
+}
+
+export function downloadTSV(content: string, filename: string) {
+  const blob = new Blob([content], {
+    type: "text/tab-separated-values;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename.endsWith(".tsv") ? filename : `${filename}.tsv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 export const storage = new StorageService();
