@@ -1,6 +1,6 @@
 # Alexis (Ἀλέξις / Lexis)
 
-> Universal philological vocabulary trainer, corpus reader, and dictionary hub.
+> Universal vocabulary trainer, corpus reader, and dictionary hub.
 
 Alexis is an offline-capable, corpus-driven vocabulary learning platform designed for classical and philological languages (Sanskrit, Latin, Ancient Greek, Pali, etc.). It decouples curated learning corpora (such as the Alois Payer Sanskrit course) from static course materials and interfaces directly with authoritative digital lexicons (Monier-Williams, Cologne Sanskrit Dictionaries, Apte, Lewis & Short, LSJ).
 

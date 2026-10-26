@@ -1,7 +1,7 @@
 [package]
 name = "alexis"
 version = "0.2.0"
-description = "Universal philological vocabulary trainer, corpus reader, and dictionary hub"
+description = "Universal vocabulary trainer, corpus reader, and dictionary hub"
 authors = ["Marco Demarmels"]
 edition = "2021"
 

@@ -1,7 +1,7 @@
 {
-  "name": "Alexis — Philologischer Vokabeltrainer",
+  "name": "Alexis — Vokabeltrainer",
   "short_name": "Alexis",
-  "description": "Offline-fähiger philologischer Vokabeltrainer, Korpus-Reader und Wörterbuch-Hub",
+  "description": "Offline-fähiger Vokabeltrainer, Korpus-Reader und Wörterbuch-Hub",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#fcf9f2",

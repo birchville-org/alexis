@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Alexis — Philological Vocabulary & Corpus Hub",
+        "title": "Alexis — Vokabeltrainer",
         "width": 1100,
         "height": 780,
         "minWidth": 800,

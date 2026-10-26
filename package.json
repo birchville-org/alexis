@@ -2,7 +2,7 @@
   "name": "@birchville/alexis",
   "version": "0.2.0",
   "private": false,
-  "description": "Universal philological vocabulary trainer, corpus reader, and dictionary hub",
+  "description": "Universal vocabulary trainer, corpus reader, and dictionary hub",
   "type": "module",
   "scripts": {
     "dev": "vite",

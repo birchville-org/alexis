@@ -1,5 +1,5 @@
 # Methodik des 5-Fächer-Leitner-Systems & Spaced Repetition (SRS)
-*Alexis — Universal Philological Vocabulary Trainer & Corpus Hub*
+*Alexis — Universal Vocabulary Trainer & Corpus Hub*
 
 ---
 
