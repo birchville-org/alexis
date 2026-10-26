@@ -51,6 +51,7 @@ Alexis is an offline-capable, corpus-driven vocabulary learning platform designe
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical specifications and schema definitions.
+For our UX concept, Anki comparison, and phased milestones, see [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ---
 

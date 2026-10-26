@@ -614,7 +614,7 @@
     <div v-if="showHelpModal" class="modal-backdrop" @click.self="showHelpModal = false">
       <div class="modal-box help-modal">
         <div class="modal-header">
-          <h3>Methodik & Systematik des Leitner-Systems</h3>
+          <h3>Methodik, Systematik & Roadmap</h3>
           <button class="modal-close-btn" @click="showHelpModal = false">✕</button>
         </div>
         <div class="modal-body">
@@ -760,6 +760,61 @@
           <p class="modal-text">
             <strong>Musterzeile (Tab-getrennt):</strong><br>
             <code>hb1&#9;1&#9;किताब&#9;kitāb&#9;noun&#9;f&#9;Buch&#9;schule;a1</code>
+          </p>
+
+          <h4>8. Usability-Konzept & Roadmap (Vergleich mit Anki)</h4>
+          <p class="modal-text">
+            Alexis wurde entwickelt, um die didaktischen Stärken von Spaced Repetition (SRS) zu nutzen, ohne die typischen Usability-Hürden und Frustrationen klassischer Karteikarten-Tools (wie Anki) zu übernehmen:
+          </p>
+          <table class="help-table">
+            <thead>
+              <tr>
+                <th>Aspekt</th>
+                <th>Klassisch (z.B. Anki)</th>
+                <th>Alexis-Prinzip</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Bedienung & Setup</strong></td>
+                <td>Desktop-Installation, Account-Zwang, Dutzende Schwellenwerte und Optionen (Ease, Steps, Leech).</td>
+                <td><strong>Zero-Config Local-First:</strong> Sofort im Browser nutzbar, 100% offline-fähig, keine Registrierung.</td>
+              </tr>
+              <tr>
+                <td><strong>Lektionswahl</strong></td>
+                <td>Starre Deck-Hierarchien; Filtern erfordert komplexe Suchsyntax.</td>
+                <td><strong>Direkte Multi-Selektion:</strong> Beliebige Bände und Lektionen per Klick auswählen.</td>
+              </tr>
+              <tr>
+                <td><strong>Lernrichtung</strong></td>
+                <td>Erfordert separate Notiztypen und doppelte Kartendaten.</td>
+                <td><strong>Dynamische Inversion:</strong> Taste <code>r</code> wechselt die Richtung on-the-fly.</td>
+              </tr>
+              <tr>
+                <td><strong>Philologie & Grammatik</strong></td>
+                <td>Reiner Freitext; Tabellen müssen manuell gebaut werden.</td>
+                <td><strong>Automatisierte Paradigmen:</strong> Nativ integrierte Deklinationstabellen, Verbstämme und Ergativ-Regeln.</td>
+              </tr>
+              <tr>
+                <td><strong>Lernlogik</strong></td>
+                <td>Komplexe Algorithmen mit Gefahr der „Ease Hell“ und Kartenbergen.</td>
+                <td><strong>5-Boxen-Leitner:</strong> Transparente Intervalle (1, 3, 7, 14, 30 Tage) – stressfrei und berechenbar.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="modal-text">
+            <strong>Geplante Ausbaustufen (Roadmap):</strong>
+            <br>• <strong>Phase 1: Vokabel-Explorer & Listenansicht</strong> — Gesamtschau aller Vokabeln der gewählten Lektionen mit Schnellsuche zum Durchblättern ohne Bewertungsdruck.
+            <br>• <strong>Phase 2: Native Sprachausgabe (TTS)</strong> — Audio-Aussprache 🔊 über die Web Speech API per Tastaturkürzel <code>v</code>.
+            <br>• <strong>Phase 3: Session-Recap</strong> — Am Ende einer Sitzung die Fehlkarten mit 1 Klick nochmals festigen.
+            <br>• <strong>Phase 4: Favoriten / Prüfungs-Merkliste (★)</strong> — Schwierige Vokabeln markieren und gezielt abfragen.
+            <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining</strong> — Zuschaltbarer Modus zum aktiven Eintippen.
+          </p>
+          <p class="modal-text">
+            <a href="https://github.com/birchville-org/alexis/blob/main/docs/ROADMAP.md" target="_blank" rel="noopener noreferrer" class="dict-link">
+              ↗ Vollständiges Roadmap-Dokument im GitHub-Repository einsehen
+            </a>
           </p>
         </div>
       </div>
