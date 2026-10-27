@@ -163,8 +163,17 @@
             <div class="card-front">
               <!-- Mode: Target -> DE -->
               <template v-if="studyDirection === 'target-to-de'">
-                <div class="native-script script-deva">
-                  {{ currentCard.lemma_native }}
+                <div class="native-script-row">
+                  <div class="native-script script-deva">
+                    {{ currentCard.lemma_native }}
+                  </div>
+                  <button
+                    class="btn-audio-speak"
+                    @click.stop="speakCurrentCard"
+                    title="Aussprache anhören (Taste V)"
+                  >
+                    🔊
+                  </button>
                 </div>
 
                 <div class="transliteration">
@@ -231,8 +240,17 @@
 
               <!-- Mode: DE -> Target -->
               <div v-else class="target-reveal-wrap">
-                <div class="native-script script-deva">
-                  {{ currentCard.lemma_native }}
+                <div class="native-script-row">
+                  <div class="native-script script-deva">
+                    {{ currentCard.lemma_native }}
+                  </div>
+                  <button
+                    class="btn-audio-speak"
+                    @click.stop="speakCurrentCard"
+                    title="Aussprache anhören (Taste V)"
+                  >
+                    🔊
+                  </button>
                 </div>
 
                 <div class="transliteration">
@@ -745,7 +763,7 @@
 
           <h4>6. Tastaturkürzel</h4>
           <p class="modal-text">
-            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) · <code>g</code>: Grammatik / Deklination ein-/ausklappen · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
+            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken · <code>1</code>–<code>4</code>: Bewerten · <code>v</code>: Aussprache anhören (TTS) 🔊 · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) · <code>g</code>: Grammatik / Deklination ein-/ausklappen · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
           </p>
 
           <h4>7. Struktur importfähiger TSV-Dateien (Tab-Separated Values)</h4>
@@ -861,7 +879,7 @@
           <p class="modal-text">
             <strong>Geplante Ausbaustufen (Roadmap):</strong>
             <br>• <strong>✓ Phase 1: Vokabel-Explorer & Listenansicht (Live):</strong> Gesamtschau aller Vokabeln im Reiter „Vokabelliste“ mit Sofortsuche, Leitner-Box-Filtern, Wortart-Filter, morphologischen Paradigmen und 1-Klick-Lernstart.
-            <br>• <strong>Phase 2: Native Sprachausgabe (TTS):</strong> Audio-Aussprache 🔊 über die Web Speech API per Tastaturkürzel <code>v</code>.
+            <br>• <strong>✓ Phase 2: Native Sprachausgabe (TTS - Live):</strong> Audio-Aussprache 🔊 über die Web Speech API per Taste <code>v</code> sowie Audio-Buttons auf Lernkarten und im Vokabel-Explorer.
             <br>• <strong>Phase 3: Session-Recap:</strong> Am Ende einer Sitzung die Fehlkarten mit 1 Klick nochmals festigen.
             <br>• <strong>Phase 4: Favoriten / Prüfungs-Merkliste (★):</strong> Schwierige Vokabeln markieren und gezielt abfragen.
             <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining:</strong> Zuschaltbarer Modus zum aktiven Eintippen.
@@ -937,6 +955,7 @@ import {
   getHindiNounDeclension,
   getHindiVerbParadigm,
 } from "./services/hindiMorphology";
+import { speechService } from "./services/speech";
 import { downloadTSV, isTauriEnvironment, storage } from "./services/storage";
 import type {
   CorpusMeta,
@@ -1209,6 +1228,13 @@ function formatPos(pos?: string | null): string {
   }
 }
 
+// Speech Synthesis helper
+function speakCurrentCard() {
+  if (!currentCard.value) return;
+  const lang = activeCorpus.value?.lang_code || (isHindi.value ? "hi" : "sa");
+  speechService.speak(currentCard.value.lemma_native, lang);
+}
+
 // Theme Toggle
 function toggleTheme() {
   currentTheme.value = currentTheme.value === "light" ? "dark" : "light";
@@ -1260,6 +1286,9 @@ function onKeydown(e: KeyboardEvent) {
 
   if (e.key === "u" || e.key === "U" || e.key === "t" || e.key === "T") {
     showTranslit.value = !showTranslit.value;
+  } else if (e.key === "v" || e.key === "V") {
+    e.preventDefault();
+    speakCurrentCard();
   } else if (e.key === "r" || e.key === "R") {
     e.preventDefault();
     toggleDirection();
@@ -1829,11 +1858,41 @@ async function performDictSearch() {
   background-color: var(--bg-surface);
 }
 
+.native-script-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin: 0.5rem 0;
+}
+
 .native-script {
   font-size: 3.2rem;
-  margin: 1rem 0;
   color: var(--text-primary);
   line-height: 1.2;
+}
+
+.btn-audio-speak {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  color: var(--accent-gold);
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(3, 25, 46, 0.06);
+}
+
+.btn-audio-speak:hover {
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+  transform: scale(1.06);
 }
 
 .transliteration {

@@ -47,11 +47,13 @@ Anki ist ein bewährtes, generisches Karteikartenprogramm, erzeugt jedoch im Ler
   - 1-Klick-Aktion *„Diese Auswahl im Trainer üben“*: Startet sofort eine maßgeschneiderte Lerneinheit mit den gefilterten Vokabeln ohne Anki-Deck-Konfigurationsfrust.
   - 1-Klick TSV-Export in die Zwischenablage für Prüfungsvorbereitung und analoges Lernen.
 
-### Phase 2: Native Sprachausgabe (Web Speech API)
+### Phase 2: Native Sprachausgabe (✓ Implementiert / Live)
 - **Problem**: Aussprache von Hindi-Wörtern (z. B. Aspirationen, retroflexe Laute wie *ṭ/ḍ*) ist aus reinem Text schwer abrufbar. Externe Audiodateien erfordern viel Speicher und Setup.
-- **Lösung**: Audio-Button 🔊 auf der Karte und Tastaturkürzel `v`:
-  - Nutzt die moderne, offline verfügbare Browser-Sprachsynthese (`lang: "hi-IN"`).
-  - Keine externen MP3-Dateien oder Serverabrufe nötig.
+- **Lösung**: Audio-Button 🔊 auf der Karte, im Vokabel-Explorer und Tastaturkürzel `v`:
+  - Nutzt die native, offline verfügbare Browser-Sprachsynthese (Web Speech API mit `lang: "hi-IN"` und Phonetik-Fallback für Sanskrit).
+  - Gezielt verlangsamte Rate (0.88) für maximale phonetische Verständlichkeit bei der Ausspracheschulung.
+  - Tastaturkürzel `v` (Voice) im Trainer zum sofortigen Vorsprechen der aktuellen Karte.
+  - 100% offline-fähig ohne externe MP3-Audiodateien, Bandbreitenverbrauch oder Serverabrufe.
 
 ### Phase 3: Session-Recap (Fehlkarten sofort festigen)
 - **Problem**: Bei Anki werden Fehlkarten in sogenannte *Relearn Steps* gesteckt, die den Lernfluss unterbrechen.

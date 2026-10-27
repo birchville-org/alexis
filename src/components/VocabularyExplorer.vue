@@ -242,7 +242,16 @@
             >
               <td class="col-num">{{ idx + 1 }}</td>
               <td class="col-native script-deva">
-                <span class="lemma-highlight">{{ item.lemma_native }}</span>
+                <div class="native-lemma-row">
+                  <span class="lemma-highlight">{{ item.lemma_native }}</span>
+                  <button
+                    class="btn-table-speak"
+                    @click.stop="speakItem(item)"
+                    title="Aussprache anhören"
+                  >
+                    🔊
+                  </button>
+                </div>
               </td>
               <td class="col-translit">
                 <span class="translit-text">{{ item.lemma_translit }}</span>
@@ -303,6 +312,13 @@
           <div class="modal-lemma-block">
             <span class="modal-native script-deva">{{ selectedEntry.lemma_native }}</span>
             <span class="modal-translit">{{ selectedEntry.lemma_translit }}</span>
+            <button
+              class="btn-modal-speak"
+              @click.stop="speakItem(selectedEntry)"
+              title="Aussprache anhören"
+            >
+              🔊
+            </button>
           </div>
           <button class="modal-close-btn" @click="selectedEntry = null" title="Schließen">✕</button>
         </div>
@@ -441,6 +457,7 @@ import {
   getHindiNounDeclension,
   getHindiVerbParadigm,
 } from "../services/hindiMorphology";
+import { speechService } from "../services/speech";
 import { downloadTSV, storage } from "../services/storage";
 import {
   containsDevanagari,
@@ -813,6 +830,11 @@ const verbParadigm = computed<HindiVerbParadigm | null>(() => {
 });
 
 // Practice actions
+function speakItem(item: StudyCardItem) {
+  const lang = props.corpusId.includes("hindi") ? "hi" : "sa";
+  speechService.speak(item.lemma_native, lang);
+}
+
 function practiceFilteredSelection() {
   if (filteredEntries.value.length === 0) return;
   emit("practice-selection", filteredEntries.value);
@@ -1175,6 +1197,34 @@ async function copyAsTSV() {
   white-space: nowrap;
 }
 
+.native-lemma-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-table-speak {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: all 0.15s ease;
+}
+
+.btn-table-speak:hover {
+  opacity: 1;
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  transform: scale(1.1);
+}
+
 .lemma-highlight {
   font-size: 1.3rem;
   font-weight: 600;
@@ -1373,8 +1423,28 @@ async function copyAsTSV() {
 
 .modal-lemma-block {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1rem;
+}
+
+.btn-modal-speak {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-speak:hover {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  transform: scale(1.08);
 }
 
 .modal-native {
