@@ -50,7 +50,8 @@ Alexis is an offline-capable, corpus-driven vocabulary learning platform designe
     (48 langs)       (TEI/JSON)      (Cache)           (On-demand)
 ```
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical specifications and schema definitions.
+See [docs/BENUTZERHANDBUCH.md](docs/BENUTZERHANDBUCH.md) for the complete user manual, data sovereignty architecture, and TSV specifications.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical specifications and schema definitions.
 For our UX concept, Anki comparison, and phased milestones, see [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ---
@@ -78,7 +79,10 @@ alexis/
 ├── data/                  # Sample corpora and dictionary indices
 │   └── corpora/           # Standardized corpus manifests
 ├── docs/                  # Architecture, schemas, and design docs
-│   └── ARCHITECTURE.md
+│   ├── BENUTZERHANDBUCH.md# Vollständiges Benutzerhandbuch & Datensouveränität
+│   ├── ARCHITECTURE.md    # Domain models and provider interfaces
+│   ├── METHODIK_LEITNER_SRS.md # Spaced repetition algorithms
+│   └── ROADMAP.md         # Phased usability milestones
 ├── src/
 │   ├── adapters/          # Corpus import parsers
 │   ├── providers/         # Dictionary lookup providers

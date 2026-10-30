@@ -885,8 +885,12 @@
             <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining:</strong> Zuschaltbarer Modus zum aktiven Eintippen.
           </p>
           <p class="modal-text">
+            <a href="https://github.com/birchville-org/alexis/blob/main/docs/BENUTZERHANDBUCH.md" target="_blank" rel="noopener noreferrer" class="dict-link">
+              📖 Vollständiges Benutzerhandbuch & Datensouveränität (GitHub)
+            </a>
+            &nbsp;·&nbsp;
             <a href="https://github.com/birchville-org/alexis/blob/main/docs/ROADMAP.md" target="_blank" rel="noopener noreferrer" class="dict-link">
-              ↗ Vollständiges Roadmap-Dokument im GitHub-Repository einsehen
+              ↗ Roadmap & Anki-Vergleich
             </a>
           </p>
         </div>
