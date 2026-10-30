@@ -171,8 +171,13 @@
                     class="btn-audio-speak"
                     @click.stop="speakCurrentCard"
                     title="Aussprache anhören (Taste V)"
+                    aria-label="Aussprache anhören"
                   >
-                    🔊
+                    <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                    </svg>
                   </button>
                 </div>
 
@@ -248,8 +253,13 @@
                     class="btn-audio-speak"
                     @click.stop="speakCurrentCard"
                     title="Aussprache anhören (Taste V)"
+                    aria-label="Aussprache anhören"
                   >
-                    🔊
+                    <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                    </svg>
                   </button>
                 </div>
 
@@ -1879,17 +1889,22 @@ async function performDictSearch() {
 .btn-audio-speak {
   width: 42px;
   height: 42px;
+  padding: 0;
   border-radius: 50%;
   border: 1px solid var(--border-subtle);
   background-color: var(--bg-surface);
   color: var(--accent-gold);
-  font-size: 1.15rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
   box-shadow: 0 2px 6px rgba(3, 25, 46, 0.06);
+}
+
+.btn-audio-speak .speaker-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .btn-audio-speak:hover {

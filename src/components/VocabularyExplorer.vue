@@ -248,8 +248,13 @@
                     class="btn-table-speak"
                     @click.stop="speakItem(item)"
                     title="Aussprache anhören"
+                    aria-label="Aussprache anhören"
                   >
-                    🔊
+                    <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                    </svg>
                   </button>
                 </div>
               </td>
@@ -316,8 +321,13 @@
               class="btn-modal-speak"
               @click.stop="speakItem(selectedEntry)"
               title="Aussprache anhören"
+              aria-label="Aussprache anhören"
             >
-              🔊
+              <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
             </button>
           </div>
           <button class="modal-close-btn" @click="selectedEntry = null" title="Schließen">✕</button>
@@ -1211,23 +1221,30 @@ async function copyAsTSV() {
 }
 
 .btn-table-speak {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
   border-radius: 50%;
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface);
-  font-size: 0.75rem;
+  color: var(--accent-gold);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.7;
+  opacity: 0.85;
   transition: all 0.15s ease;
+}
+
+.btn-table-speak .speaker-icon {
+  width: 14px;
+  height: 14px;
 }
 
 .btn-table-speak:hover {
   opacity: 1;
   background: var(--accent-gold);
+  color: #ffffff;
   border-color: var(--accent-gold);
   transform: scale(1.1);
 }
@@ -1440,7 +1457,8 @@ async function copyAsTSV() {
   border-radius: 50%;
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface-elevated);
-  font-size: 1.1rem;
+  color: var(--accent-gold);
+  padding: 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -1448,8 +1466,14 @@ async function copyAsTSV() {
   transition: all 0.15s ease;
 }
 
+.btn-modal-speak .speaker-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .btn-modal-speak:hover {
   background: var(--accent-gold);
+  color: #ffffff;
   border-color: var(--accent-gold);
   transform: scale(1.08);
 }
