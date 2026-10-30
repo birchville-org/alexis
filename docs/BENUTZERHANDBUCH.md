@@ -55,6 +55,20 @@ Nach dem Aufdecken der Karte stehen 4 Bewertungen zur Verfügung:
 - **Grammatik-Schublade (Taste `g`):** Klappt bei flektierbaren Wörtern die Deklinationstabelle oder Verbstämme mit Hinweisen zur Ergativ-Syntax (*ne*) auf.
 - **Umschrift (Taste `u` oder `t`):** Blendet die wissenschaftliche IAST-Transliteration ein oder aus.
 
+### 2.1 Technische Architektur der Sprachausgabe (W3C Web Speech API)
+Für die Vertonung der Vokabeln (`src/services/speech.ts`) nutzt Alexis den **W3C Web Speech API Standard** (`window.speechSynthesis` / `SpeechSynthesisUtterance`):
+
+- **Kein externer Cloud-Dienst / kein API-Schlüssel:** Es werden keine Wörter an kostenpflichtige Drittanbieter-Server gesendet. Alexis greift direkt auf die im jeweiligen Betriebssystem bzw. Browser lokal installierten Text-to-Speech-Stimmen (TTS) zu und funktioniert damit auch offline.
+- **Verwendete Systemstimmen nach Plattform (Prioritätsreihenfolge):**
+  1. **macOS & iOS (Safari, Tauri Desktop, Chrome):** Apples Systemstimme **„Lekha"** (`hi-IN`). Für maximale Klangqualität kann in den macOS-/iOS-Systemeinstellungen unter *Bedienungshilfen ➔ Gesprochener Inhalt ➔ Systemstimme ➔ Stimme verwalten ➔ Hindi* das Paket **„Lekha (Erweitert)"** bzw. **„Lekha (Premium)"** kostenfrei nachgeladen werden.
+  2. **Desktop Google Chrome:** `Google हिन्दी` (`hi-IN`).
+  3. **Windows 10/11 (Edge, Chrome, Tauri Desktop):** Microsofts Systemstimmen **„Microsoft Swara"** oder **„Microsoft Hemant"** (`hi-IN`).
+  4. **Android:** **Google Speech Recognition & Synthesis** (`hi-IN` / `sa-IN`).
+- **Phonetische Artikulation & Sanskrit-Fallback:**
+  - Da Devanāgarī weitgehend phonematisch geschrieben wird, bildet die Übergabe des Original-Devanāgarī-Lemmas Aspiration (`ख`, `घ`, `छ`, `ध`, `फ`, `भ`), Retroflexe (`ट`, `ठ`, `ड`, `ढ`, `ण`) und Vokallängen zuverlässig ab.
+  - Das Sprechtempo ist standardmäßig leicht gedrosselt (`rate = 0.88`), damit Konsonantencluster und Aspiraten im Lernbetrieb klar unterscheidbar bleiben.
+  - Falls auf einem Endgerät keine dedizierte Sanskrit-Stimme (`sa-IN`) installiert ist, fällt Alexis automatisch und ohne Stummschaltung auf die installierte Hindi-Devanāgarī-Stimme (`hi-IN`) zurück.
+
 ---
 
 ## 3. Vokabelliste & Vokabel-Explorer
