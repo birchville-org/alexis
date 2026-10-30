@@ -567,15 +567,6 @@ class StorageService {
     return count;
   }
 
-  async transliterate(text: string, from: string, to: string): Promise<string> {
-    if (isTauriEnvironment()) {
-      const { invoke } = await import("@tauri-apps/api/core");
-      return invoke<string>("transliterate", { text, from, to });
-    }
-    // Simple basic fallback for web if rust isn't present
-    return text;
-  }
-
   async exportSelectionTSV(
     corpusId: string,
     volumeIds?: string[],
@@ -604,15 +595,20 @@ class StorageService {
         : e.lesson_id
           ? e.lesson_id.replace(/^.*_l0?/, "")
           : "1";
-      const mean = e.definitions.map((d) => d.meaning).join("; ");
-      const tags = (e.tags || []).join(";");
+      const mean = e.definitions
+        .map((d) => sanitizeTsvField(d.meaning))
+        .join("; ");
+      const tags = (e.tags || [])
+        .map((t) => sanitizeTsvField(t))
+        .filter(Boolean)
+        .join(";");
       return [
-        e.volume_id,
-        lesNum,
-        e.lemma_native,
-        e.lemma_translit,
-        e.pos || "",
-        e.gender || "-",
+        sanitizeTsvField(e.volume_id),
+        sanitizeTsvField(lesNum),
+        sanitizeTsvField(e.lemma_native),
+        sanitizeTsvField(e.lemma_translit),
+        sanitizeTsvField(e.pos || ""),
+        sanitizeTsvField(e.gender || "-"),
         mean,
         tags,
       ].join("\t");
@@ -632,6 +628,11 @@ class StorageService {
     }
     return backup;
   }
+}
+
+export function sanitizeTsvField(val: string | null | undefined): string {
+  if (!val) return "";
+  return val.replace(/[\r\n\t]+/g, " ").trim();
 }
 
 export function downloadTSV(content: string, filename: string) {

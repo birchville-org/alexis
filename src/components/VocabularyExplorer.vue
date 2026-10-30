@@ -458,15 +458,11 @@ import {
   getHindiVerbParadigm,
 } from "../services/hindiMorphology";
 import { speechService } from "../services/speech";
-import { downloadTSV, storage } from "../services/storage";
+import { downloadTSV, sanitizeTsvField, storage } from "../services/storage";
 import {
-  containsDevanagari,
-  devanagariToHk,
-  devanagariToIast,
-  hkToDevanagari,
   hkToDevanagariSync,
   hkToIast,
-  iastToDevanagari,
+  iastToDevanagariSync,
   toggleTransliteration,
 } from "../services/transliteration";
 import type { LessonData, StudyCardItem, VolumeData } from "../types";
@@ -670,13 +666,15 @@ const filteredEntries = computed(() => {
   if (searchQuery.value.trim()) {
     const qRaw = searchQuery.value.trim();
     const q = qRaw.toLowerCase();
-    const qDeva = hkToDevanagariSync(qRaw);
+    const qDevaHk = hkToDevanagariSync(qRaw);
+    const qDevaIast = iastToDevanagariSync(qRaw);
     const qIast = hkToIast(qRaw).toLowerCase();
 
     list = list.filter((e) => {
       if (
         e.lemma_native.toLowerCase().includes(q) ||
-        (qDeva && e.lemma_native.includes(qDeva))
+        (qDevaHk && e.lemma_native.includes(qDevaHk)) ||
+        (qDevaIast && e.lemma_native.includes(qDevaIast))
       ) {
         return true;
       }
@@ -854,43 +852,52 @@ async function toggleSearchTransliteration() {
   );
 }
 
+function buildFilteredTsvRows(includeCurriculumLabels: boolean): string {
+  const header = includeCurriculumLabels
+    ? "Devanagari\tIAST\tWortart\tGenus\tBedeutung\tGliederung\tBox"
+    : "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags";
+  const rows = filteredEntries.value.map((e) => {
+    const meanings = sanitizeTsvField(formatMeanings(e));
+    if (includeCurriculumLabels) {
+      return [
+        sanitizeTsvField(e.lemma_native),
+        sanitizeTsvField(e.lemma_translit),
+        sanitizeTsvField(e.pos || ""),
+        sanitizeTsvField(e.gender || ""),
+        meanings,
+        sanitizeTsvField(formatLessonLabel(e)),
+        `Box ${e.box_number}`,
+      ].join("\t");
+    }
+    const tags = (e.tags || [])
+      .map((t) => sanitizeTsvField(t))
+      .filter(Boolean)
+      .join(";");
+    return [
+      sanitizeTsvField(e.volume_id),
+      sanitizeTsvField(e.lesson_id ? e.lesson_id.replace(/^.*_l0?/, "") : "1"),
+      sanitizeTsvField(e.lemma_native),
+      sanitizeTsvField(e.lemma_translit),
+      sanitizeTsvField(e.pos || ""),
+      sanitizeTsvField(e.gender || "-"),
+      meanings,
+      tags,
+    ].join("\t");
+  });
+  return [header, ...rows].join("\n");
+}
+
 // Download Filtered as TSV
 function downloadFilteredTSV() {
   if (filteredEntries.value.length === 0) return;
-  const header =
-    "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags";
-  const rows = filteredEntries.value.map((e) => {
-    return [
-      e.volume_id,
-      e.lesson_id ? e.lesson_id.replace(/^.*_l0?/, "") : "1",
-      e.lemma_native,
-      e.lemma_translit,
-      e.pos || "",
-      e.gender || "-",
-      formatMeanings(e),
-      (e.tags || []).join(";"),
-    ].join("\t");
-  });
-  const tsvText = [header, ...rows].join("\n");
+  const tsvText = buildFilteredTsvRows(false);
   const filename = `${props.corpusId}_export_${filteredEntries.value.length}_vokabeln.tsv`;
   downloadTSV(tsvText, filename);
 }
 
 // Copy as TSV
 async function copyAsTSV() {
-  const header = "Devanagari\tIAST\tWortart\tGenus\tBedeutung\tGliederung\tBox";
-  const rows = filteredEntries.value.map((e) => {
-    return [
-      e.lemma_native,
-      e.lemma_translit,
-      e.pos || "",
-      e.gender || "",
-      formatMeanings(e),
-      formatLessonLabel(e),
-      `Box ${e.box_number}`,
-    ].join("\t");
-  });
-  const tsvText = [header, ...rows].join("\n");
+  const tsvText = buildFilteredTsvRows(true);
   try {
     await navigator.clipboard.writeText(tsvText);
     copyStatus.value = true;

@@ -111,21 +111,19 @@ class SpeechService {
 
       const utterance = new SpeechSynthesisUtterance(text.trim());
 
-      // Target language
-      const targetLang =
-        langCode === "hi"
-          ? "hi-IN"
-          : langCode === "sa"
-            ? "sa-IN"
-            : langCode === "de"
-              ? "de-DE"
-              : langCode;
-      utterance.lang = targetLang;
-
-      // Select voice if available
+      // Select voice if available and align utterance.lang with voice.lang
+      // so WebKit/Safari does not discard fallback voices (e.g. hi-IN for sa).
       const voice = this.getBestVoice(langCode);
       if (voice) {
         utterance.voice = voice;
+        utterance.lang = voice.lang;
+      } else {
+        utterance.lang =
+          langCode === "hi" || langCode === "sa"
+            ? "hi-IN"
+            : langCode === "de"
+              ? "de-DE"
+              : langCode;
       }
 
       // Slightly relaxed rate (0.88) provides clearer phonetic articulation

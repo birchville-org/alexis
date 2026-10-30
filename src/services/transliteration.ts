@@ -271,30 +271,48 @@ function romanToDevanagari(text: string, mapping: ScriptMapping): string {
   return result;
 }
 
-/**
- * Transliterates Devanagari into Roman (IAST / HK).
- */
-function devanagariToRoman(text: string, mapping: ScriptMapping): string {
-  // Invert mappings
+interface InvertedScriptMapping {
+  devToCons: Record<string, string>;
+  devToMatra: Record<string, string>;
+  devToVowel: Record<string, string>;
+  devToMod: Record<string, string>;
+}
+
+function buildInvertedMapping(mapping: ScriptMapping): InvertedScriptMapping {
   const devToCons: Record<string, string> = {};
   for (const [rom, dev] of mapping.consonants) {
-    devToCons[dev] = rom;
+    if (!(dev in devToCons)) devToCons[dev] = rom;
   }
 
   const devToMatra: Record<string, string> = {};
   for (const [rom, dev] of mapping.matras) {
-    devToMatra[dev] = rom;
+    if (!(dev in devToMatra)) devToMatra[dev] = rom;
   }
 
   const devToVowel: Record<string, string> = {};
   for (const [rom, dev] of mapping.vowels) {
-    devToVowel[dev] = rom;
+    if (!(dev in devToVowel)) devToVowel[dev] = rom;
   }
 
   const devToMod: Record<string, string> = {};
   for (const [rom, dev] of mapping.modifiers) {
-    devToMod[dev] = rom;
+    if (!(dev in devToMod)) devToMod[dev] = rom;
   }
+
+  return { devToCons, devToMatra, devToVowel, devToMod };
+}
+
+const IAST_INVERTED = buildInvertedMapping(IAST_MAP);
+const HK_INVERTED = buildInvertedMapping(HK_MAP);
+
+/**
+ * Transliterates Devanagari into Roman (IAST / HK).
+ */
+function devanagariToRoman(
+  text: string,
+  inverted: InvertedScriptMapping,
+): string {
+  const { devToCons, devToMatra, devToVowel, devToMod } = inverted;
 
   let result = "";
   const chars = Array.from(text);
@@ -361,7 +379,7 @@ export function hkToDevanagariSync(text: string): string {
 
 export function devanagariToHkSync(text: string): string {
   if (!text) return "";
-  return devanagariToRoman(text, HK_MAP);
+  return devanagariToRoman(text, HK_INVERTED);
 }
 
 export function iastToDevanagariSync(text: string): string {
@@ -371,7 +389,7 @@ export function iastToDevanagariSync(text: string): string {
 
 export function devanagariToIastSync(text: string): string {
   if (!text) return "";
-  return devanagariToRoman(text, IAST_MAP);
+  return devanagariToRoman(text, IAST_INVERTED);
 }
 
 /**
@@ -411,7 +429,7 @@ export async function devanagariToIast(text: string): Promise<string> {
       // fallback to JS
     }
   }
-  return devanagariToRoman(text, IAST_MAP);
+  return devanagariToRoman(text, IAST_INVERTED);
 }
 
 /**
@@ -451,7 +469,7 @@ export async function devanagariToHk(text: string): Promise<string> {
       // fallback to JS
     }
   }
-  return devanagariToRoman(text, HK_MAP);
+  return devanagariToRoman(text, HK_INVERTED);
 }
 
 /**
@@ -459,7 +477,7 @@ export async function devanagariToHk(text: string): Promise<string> {
  */
 export function iastToHk(text: string): string {
   const deva = romanToDevanagari(text, IAST_MAP);
-  return devanagariToRoman(deva, HK_MAP);
+  return devanagariToRoman(deva, HK_INVERTED);
 }
 
 /**
@@ -467,7 +485,7 @@ export function iastToHk(text: string): string {
  */
 export function hkToIast(text: string): string {
   const deva = romanToDevanagari(text, HK_MAP);
-  return devanagariToRoman(deva, IAST_MAP);
+  return devanagariToRoman(deva, IAST_INVERTED);
 }
 
 /**
