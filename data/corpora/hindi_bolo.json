@@ -69,7 +69,7 @@
           "meaning": "1. gut; 2. aha!, ach so!; (nun) gut"
         }
       ],
-      "tags": ["adjektive", "begruessung", "a1\r"]
+      "tags": ["adjektive", "begruessung", "a1"]
     },
     {
       "id": "hb1_l01_002",
@@ -86,7 +86,7 @@
           "meaning": "Lehrer"
         }
       ],
-      "tags": ["beruf", "personen", "a1\r"]
+      "tags": ["beruf", "personen", "a1"]
     },
     {
       "id": "hb1_l01_003",
@@ -103,7 +103,7 @@
           "meaning": "Lehrerin"
         }
       ],
-      "tags": ["beruf", "personen", "a1\r"]
+      "tags": ["beruf", "personen", "a1"]
     },
     {
       "id": "hb1_l01_004",
@@ -120,7 +120,7 @@
           "meaning": "Alka (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_005",
@@ -137,7 +137,7 @@
           "meaning": "Schrank"
         }
       ],
-      "tags": ["haus", "moebel", "a1\r"]
+      "tags": ["haus", "moebel", "a1"]
     },
     {
       "id": "hb1_l01_006",
@@ -154,7 +154,7 @@
           "meaning": "heute"
         }
       ],
-      "tags": ["zeit", "a1\r"]
+      "tags": ["zeit", "a1"]
     },
     {
       "id": "hb1_l01_007",
@@ -171,7 +171,7 @@
           "meaning": "Mann"
         }
       ],
-      "tags": ["personen", "a1\r"]
+      "tags": ["personen", "a1"]
     },
     {
       "id": "hb1_l01_008",
@@ -188,7 +188,7 @@
           "meaning": "Sie (2. Pers. Pl., höflich)"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_009",
@@ -209,7 +209,7 @@
           "meaning": "Ihr"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r", "a1"]
+      "tags": ["grammatik", "pronomen", "a1", "a1"]
     },
     {
       "id": "hb1_l01_010",
@@ -226,7 +226,7 @@
           "meaning": "Mango"
         }
       ],
-      "tags": ["essen", "a1\r"]
+      "tags": ["essen", "a1"]
     },
     {
       "id": "hb1_l01_011",
@@ -243,7 +243,7 @@
           "meaning": "bequem"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_012",
@@ -260,7 +260,7 @@
           "meaning": "Kartoffel"
         }
       ],
-      "tags": ["essen", "a1\r"]
+      "tags": ["essen", "a1"]
     },
     {
       "id": "hb1_l01_013",
@@ -277,7 +277,7 @@
           "meaning": "Österreicher/in"
         }
       ],
-      "tags": ["personen", "herkunft", "a1\r"]
+      "tags": ["personen", "herkunft", "a1"]
     },
     {
       "id": "hb1_l01_014",
@@ -294,7 +294,7 @@
           "meaning": "hier, hierher"
         }
       ],
-      "tags": ["ort", "a1\r"]
+      "tags": ["ort", "a1"]
     },
     {
       "id": "hb1_l01_015",
@@ -311,7 +311,7 @@
           "meaning": "ach!"
         }
       ],
-      "tags": ["ausruf", "a1\r"]
+      "tags": ["ausruf", "a1"]
     },
     {
       "id": "hb1_l01_016",
@@ -328,7 +328,7 @@
           "meaning": "Umesh (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_017",
@@ -345,7 +345,7 @@
           "meaning": "hoch, hoher"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_018",
@@ -362,7 +362,7 @@
           "meaning": "ein, eins"
         }
       ],
-      "tags": ["zahlen", "a1\r"]
+      "tags": ["zahlen", "a1"]
     },
     {
       "id": "hb1_l01_019",
@@ -379,7 +379,7 @@
           "meaning": "Klimaanlage (air condition)"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_020",
@@ -400,7 +400,7 @@
           "meaning": "und; noch (mehr)"
         }
       ],
-      "tags": ["grammatik", "a1\r", "verbindung", "a1"]
+      "tags": ["grammatik", "a1", "verbindung", "a1"]
     },
     {
       "id": "hb1_l01_021",
@@ -417,7 +417,7 @@
           "meaning": "Zimmer"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_022",
@@ -434,7 +434,7 @@
           "meaning": "Kamal (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_023",
@@ -451,7 +451,7 @@
           "meaning": "Hemd"
         }
       ],
-      "tags": ["kleidung", "a1\r"]
+      "tags": ["kleidung", "a1"]
     },
     {
       "id": "hb1_l01_024",
@@ -468,7 +468,7 @@
           "meaning": "ziemlich"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_025",
@@ -485,7 +485,7 @@
           "meaning": "schwarz"
         }
       ],
-      "tags": ["farben", "adjektive", "a1\r"]
+      "tags": ["farben", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_026",
@@ -502,7 +502,7 @@
           "meaning": "Teppich"
         }
       ],
-      "tags": ["haus", "moebel", "a1\r"]
+      "tags": ["haus", "moebel", "a1"]
     },
     {
       "id": "hb1_l01_027",
@@ -519,7 +519,7 @@
           "meaning": "Buch"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_028",
@@ -536,7 +536,7 @@
           "meaning": "Stuhl"
         }
       ],
-      "tags": ["haus", "moebel", "a1\r"]
+      "tags": ["haus", "moebel", "a1"]
     },
     {
       "id": "hb1_l01_029",
@@ -553,7 +553,7 @@
           "meaning": "leitet Entscheidungsfragen ein; was"
         }
       ],
-      "tags": ["grammatik", "fragen", "a1\r"]
+      "tags": ["grammatik", "fragen", "a1"]
     },
     {
       "id": "hb1_l01_030",
@@ -570,7 +570,7 @@
           "meaning": "wütend"
         }
       ],
-      "tags": ["gefuehle", "adjektive", "a1\r"]
+      "tags": ["gefuehle", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_031",
@@ -587,7 +587,7 @@
           "meaning": "defekt; schlecht"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_032",
@@ -604,7 +604,7 @@
           "meaning": "Fenster"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_033",
@@ -621,7 +621,7 @@
           "meaning": "schmutzig"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_034",
@@ -638,7 +638,7 @@
           "meaning": "minderwertig"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_035",
@@ -655,7 +655,7 @@
           "meaning": "Haus"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_036",
@@ -672,7 +672,7 @@
           "meaning": "Onkel (jüngerer Bruder des Vaters)"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_037",
@@ -689,7 +689,7 @@
           "meaning": "Vogel"
         }
       ],
-      "tags": ["tiere", "a1\r"]
+      "tags": ["tiere", "a1"]
     },
     {
       "id": "hb1_l01_038",
@@ -706,7 +706,7 @@
           "meaning": "Sache, Ding, Gegenstand"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_039",
@@ -723,7 +723,7 @@
           "meaning": "klein, kurz"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_040",
@@ -740,7 +740,7 @@
           "meaning": "Deutsche/r; deutsch; Deutsch (Sprache)"
         }
       ],
-      "tags": ["herkunft", "sprachen", "a1\r"]
+      "tags": ["herkunft", "sprachen", "a1"]
     },
     {
       "id": "hb1_l01_041",
@@ -757,7 +757,7 @@
           "meaning": "Jindal (Familienname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_042",
@@ -774,7 +774,7 @@
           "meaning": "lebend(ig)"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_043",
@@ -795,7 +795,7 @@
           "meaning": "ja (höflich)"
         }
       ],
-      "tags": ["hoeflichkeit", "begruessung", "a1\r"]
+      "tags": ["hoeflichkeit", "begruessung", "a1"]
     },
     {
       "id": "hb1_l01_045",
@@ -812,7 +812,7 @@
           "meaning": "nein (höflich)"
         }
       ],
-      "tags": ["hoeflichkeit", "begruessung", "a1\r"]
+      "tags": ["hoeflichkeit", "begruessung", "a1"]
     },
     {
       "id": "hb1_l01_046",
@@ -829,7 +829,7 @@
           "meaning": "ja (höflich)"
         }
       ],
-      "tags": ["hoeflichkeit", "begruessung", "a1\r"]
+      "tags": ["hoeflichkeit", "begruessung", "a1"]
     },
     {
       "id": "hb1_l01_047",
@@ -846,7 +846,7 @@
           "meaning": "zu viel(e), zu (sehr)"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_048",
@@ -863,7 +863,7 @@
           "meaning": "in Ordnung, richtig; wohlauf"
         }
       ],
-      "tags": ["adjektive", "begruessung", "a1\r"]
+      "tags": ["adjektive", "begruessung", "a1"]
     },
     {
       "id": "hb1_l01_049",
@@ -880,7 +880,7 @@
           "meaning": "Tafel"
         }
       ],
-      "tags": ["schule", "gegenstand", "a1\r"]
+      "tags": ["schule", "gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_050",
@@ -897,7 +897,7 @@
           "meaning": "frisch"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_051",
@@ -914,7 +914,7 @@
           "meaning": "drei"
         }
       ],
-      "tags": ["zahlen", "a1\r"]
+      "tags": ["zahlen", "a1"]
     },
     {
       "id": "hb1_l01_052",
@@ -931,7 +931,7 @@
           "meaning": "du, ihr (2. Pers. Pl.)"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_053",
@@ -948,7 +948,7 @@
           "meaning": "du (2. Pers. Sg.)"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_054",
@@ -965,7 +965,7 @@
           "meaning": "Tür"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_055",
@@ -982,7 +982,7 @@
           "meaning": "dünn, schlank; mager"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_056",
@@ -999,7 +999,7 @@
           "meaning": "zwei"
         }
       ],
-      "tags": ["zahlen", "a1\r"]
+      "tags": ["zahlen", "a1"]
     },
     {
       "id": "hb1_l01_057",
@@ -1016,7 +1016,7 @@
           "meaning": "Wäscherin; Frau eines Wäschers"
         }
       ],
-      "tags": ["beruf", "personen", "a1\r"]
+      "tags": ["beruf", "personen", "a1"]
     },
     {
       "id": "hb1_l01_058",
@@ -1033,7 +1033,7 @@
           "meaning": "Wäscher"
         }
       ],
-      "tags": ["beruf", "personen", "a1\r"]
+      "tags": ["beruf", "personen", "a1"]
     },
     {
       "id": "hb1_l01_059",
@@ -1050,7 +1050,7 @@
           "meaning": "weder ... noch"
         }
       ],
-      "tags": ["grammatik", "a1\r"]
+      "tags": ["grammatik", "a1"]
     },
     {
       "id": "hb1_l01_060",
@@ -1067,7 +1067,7 @@
           "meaning": "Neu Delhi (Hauptstadt der Indischen Union)"
         }
       ],
-      "tags": ["geografie", "a1\r"]
+      "tags": ["geografie", "a1"]
     },
     {
       "id": "hb1_l01_061",
@@ -1084,7 +1084,7 @@
           "meaning": "Gruß: sei(en Sie) gegrüßt!, guten Morgen/Tag/Abend!, auf Wiedersehen!"
         }
       ],
-      "tags": ["begruessung", "a1\r"]
+      "tags": ["begruessung", "a1"]
     },
     {
       "id": "hb1_l01_062",
@@ -1101,7 +1101,7 @@
           "meaning": "neu"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_063",
@@ -1118,7 +1118,7 @@
           "meaning": "Neu Delhi (Hauptstadt der Indischen Union)"
         }
       ],
-      "tags": ["geografie", "a1\r"]
+      "tags": ["geografie", "a1"]
     },
     {
       "id": "hb1_l01_064",
@@ -1135,7 +1135,7 @@
           "meaning": "nein, nicht"
         }
       ],
-      "tags": ["grammatik", "a1\r"]
+      "tags": ["grammatik", "a1"]
     },
     {
       "id": "hb1_l01_065",
@@ -1152,7 +1152,7 @@
           "meaning": "Name"
         }
       ],
-      "tags": ["grundwortschatz", "a1\r"]
+      "tags": ["grundwortschatz", "a1"]
     },
     {
       "id": "hb1_l01_066",
@@ -1169,7 +1169,7 @@
           "meaning": "Ventilator"
         }
       ],
-      "tags": ["haus", "gegenstand", "a1\r"]
+      "tags": ["haus", "gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_067",
@@ -1186,7 +1186,7 @@
           "meaning": "fünfzig"
         }
       ],
-      "tags": ["zahlen", "a1\r"]
+      "tags": ["zahlen", "a1"]
     },
     {
       "id": "hb1_l01_068",
@@ -1203,7 +1203,7 @@
           "meaning": "Nachbar"
         }
       ],
-      "tags": ["personen", "a1\r"]
+      "tags": ["personen", "a1"]
     },
     {
       "id": "hb1_l01_069",
@@ -1220,7 +1220,7 @@
           "meaning": "Stein"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_070",
@@ -1237,7 +1237,7 @@
           "meaning": "Papaya"
         }
       ],
-      "tags": ["essen", "a1\r"]
+      "tags": ["essen", "a1"]
     },
     {
       "id": "hb1_l01_071",
@@ -1254,7 +1254,7 @@
           "meaning": "Vorhang, Gardine"
         }
       ],
-      "tags": ["haus", "moebel", "a1\r"]
+      "tags": ["haus", "moebel", "a1"]
     },
     {
       "id": "hb1_l01_072",
@@ -1271,7 +1271,7 @@
           "meaning": "Pakistani"
         }
       ],
-      "tags": ["personen", "herkunft", "a1\r"]
+      "tags": ["personen", "herkunft", "a1"]
     },
     {
       "id": "hb1_l01_073",
@@ -1288,7 +1288,7 @@
           "meaning": "gelb"
         }
       ],
-      "tags": ["farben", "adjektive", "a1\r"]
+      "tags": ["farben", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_074",
@@ -1305,7 +1305,7 @@
           "meaning": "alt (Gegenstände)"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_075",
@@ -1322,7 +1322,7 @@
           "meaning": "wieder, erneut"
         }
       ],
-      "tags": ["zeit", "a1\r"]
+      "tags": ["zeit", "a1"]
     },
     {
       "id": "hb1_l01_076",
@@ -1339,7 +1339,7 @@
           "meaning": "1. Telefon(apparat), 2. Telefongespräch"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_077",
@@ -1356,7 +1356,7 @@
           "meaning": "groß"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_078",
@@ -1377,7 +1377,7 @@
           "meaning": "ausgezeichnet, hervorragend"
         }
       ],
-      "tags": ["adjektive", "a1\r", "a1"]
+      "tags": ["adjektive", "a1", "a1"]
     },
     {
       "id": "hb1_l01_079",
@@ -1398,7 +1398,7 @@
           "meaning": "Bus"
         }
       ],
-      "tags": ["ausruf", "a1\r", "verkehr", "a1"]
+      "tags": ["ausruf", "a1", "verkehr", "a1"]
     },
     {
       "id": "hb1_l01_080",
@@ -1415,7 +1415,7 @@
           "meaning": "viele; sehr"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_081",
@@ -1432,7 +1432,7 @@
           "meaning": "Schwiegertochter"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_082",
@@ -1449,7 +1449,7 @@
           "meaning": "übrig, restlich"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_083",
@@ -1470,7 +1470,7 @@
           "meaning": "Sache, Angelegenheit; Wort"
         }
       ],
-      "tags": ["grundwortschatz", "a1\r", "sprache", "a1"]
+      "tags": ["grundwortschatz", "a1", "sprache", "a1"]
     },
     {
       "id": "hb1_l01_084",
@@ -1487,7 +1487,7 @@
           "meaning": "Sohn"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_085",
@@ -1504,7 +1504,7 @@
           "meaning": "Tochter"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_086",
@@ -1521,7 +1521,7 @@
           "meaning": "Wohnzimmer"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_087",
@@ -1538,7 +1538,7 @@
           "meaning": "Schlafzimmer"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_088",
@@ -1555,7 +1555,7 @@
           "meaning": "Bruder"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_089",
@@ -1572,7 +1572,7 @@
           "meaning": "auch, ebenso; sogar"
         }
       ],
-      "tags": ["grammatik", "a1\r"]
+      "tags": ["grammatik", "a1"]
     },
     {
       "id": "hb1_l01_090",
@@ -1589,7 +1589,7 @@
           "meaning": "Haus"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_091",
@@ -1606,7 +1606,7 @@
           "meaning": "Madan (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_092",
@@ -1623,7 +1623,7 @@
           "meaning": "verboten"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_093",
@@ -1640,7 +1640,7 @@
           "meaning": "Mutter"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_094",
@@ -1657,7 +1657,7 @@
           "meaning": "Mathur (Familienname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_095",
@@ -1674,7 +1674,7 @@
           "meaning": "Onkel (Bruder der Mutter)"
         }
       ],
-      "tags": ["familie", "personen", "a1\r"]
+      "tags": ["familie", "personen", "a1"]
     },
     {
       "id": "hb1_l01_096",
@@ -1691,7 +1691,7 @@
           "meaning": "tot"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_097",
@@ -1708,7 +1708,7 @@
           "meaning": "Statue"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_098",
@@ -1725,7 +1725,7 @@
           "meaning": "Tisch"
         }
       ],
-      "tags": ["haus", "moebel", "a1\r"]
+      "tags": ["haus", "moebel", "a1"]
     },
     {
       "id": "hb1_l01_099",
@@ -1742,7 +1742,7 @@
           "meaning": "mein"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_100",
@@ -1759,7 +1759,7 @@
           "meaning": "ich (1. Pers. Sg.)"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_101",
@@ -1776,7 +1776,7 @@
           "meaning": "Monika (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_102",
@@ -1793,7 +1793,7 @@
           "meaning": "Mohan (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_103",
@@ -1810,7 +1810,7 @@
           "meaning": "er, sie, es (3. Pers. Sg.) / dieser, diese, dieses"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_104",
@@ -1827,7 +1827,7 @@
           "meaning": "hier"
         }
       ],
-      "tags": ["ort", "a1\r"]
+      "tags": ["ort", "a1"]
     },
     {
       "id": "hb1_l01_105",
@@ -1844,7 +1844,7 @@
           "meaning": "sie (3. Pers. Pl.) / diese"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_106",
@@ -1861,7 +1861,7 @@
           "meaning": "Küche"
         }
       ],
-      "tags": ["haus", "a1\r"]
+      "tags": ["haus", "a1"]
     },
     {
       "id": "hb1_l01_107",
@@ -1878,7 +1878,7 @@
           "meaning": "König"
         }
       ],
-      "tags": ["personen", "a1\r"]
+      "tags": ["personen", "a1"]
     },
     {
       "id": "hb1_l01_108",
@@ -1895,7 +1895,7 @@
           "meaning": "Ram (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_109",
@@ -1912,7 +1912,7 @@
           "meaning": "Rohit (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_110",
@@ -1929,7 +1929,7 @@
           "meaning": "lang; groß, hochgewachsen (Körpergröße)"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_111",
@@ -1946,7 +1946,7 @@
           "meaning": "Junge"
         }
       ],
-      "tags": ["personen", "a1\r"]
+      "tags": ["personen", "a1"]
     },
     {
       "id": "hb1_l01_112",
@@ -1963,7 +1963,7 @@
           "meaning": "Mädchen"
         }
       ],
-      "tags": ["personen", "a1\r"]
+      "tags": ["personen", "a1"]
     },
     {
       "id": "hb1_l01_113",
@@ -1980,7 +1980,7 @@
           "meaning": "rot"
         }
       ],
-      "tags": ["farben", "adjektive", "a1\r"]
+      "tags": ["farben", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_114",
@@ -1997,7 +1997,7 @@
           "meaning": "aber"
         }
       ],
-      "tags": ["grammatik", "a1\r"]
+      "tags": ["grammatik", "a1"]
     },
     {
       "id": "hb1_l01_115",
@@ -2014,7 +2014,7 @@
           "meaning": "Leute; Pluralmarker"
         }
       ],
-      "tags": ["personen", "a1\r"]
+      "tags": ["personen", "a1"]
     },
     {
       "id": "hb1_l01_116",
@@ -2031,7 +2031,7 @@
           "meaning": "er, sie, es (3. Pers. Sg.) / jener, jene, jenes"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_117",
@@ -2048,7 +2048,7 @@
           "meaning": "Student/in"
         }
       ],
-      "tags": ["schule", "personen", "a1\r"]
+      "tags": ["schule", "personen", "a1"]
     },
     {
       "id": "hb1_l01_118",
@@ -2065,7 +2065,7 @@
           "meaning": "sie (3. Pers. Pl.) / jene"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_119",
@@ -2086,7 +2086,7 @@
           "meaning": "vegetarisch"
         }
       ],
-      "tags": ["personen", "essen", "a1\r", "adjektive", "a1"]
+      "tags": ["personen", "essen", "a1", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_120",
@@ -2103,7 +2103,7 @@
           "meaning": "verheiratet"
         }
       ],
-      "tags": ["adjektive", "personen", "a1\r"]
+      "tags": ["adjektive", "personen", "a1"]
     },
     {
       "id": "hb1_l01_121",
@@ -2120,7 +2120,7 @@
           "meaning": "Straße"
         }
       ],
-      "tags": ["ort", "a1\r"]
+      "tags": ["ort", "a1"]
     },
     {
       "id": "hb1_l01_122",
@@ -2137,7 +2137,7 @@
           "meaning": "weiß"
         }
       ],
-      "tags": ["farben", "adjektive", "a1\r"]
+      "tags": ["farben", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_123",
@@ -2154,7 +2154,7 @@
           "meaning": "Samosa"
         }
       ],
-      "tags": ["essen", "a1\r"]
+      "tags": ["essen", "a1"]
     },
     {
       "id": "hb1_l01_124",
@@ -2171,7 +2171,7 @@
           "meaning": "Fahrrad"
         }
       ],
-      "tags": ["verkehr", "a1\r"]
+      "tags": ["verkehr", "a1"]
     },
     {
       "id": "hb1_l01_125",
@@ -2188,7 +2188,7 @@
           "meaning": "sauber, rein"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_126",
@@ -2205,7 +2205,7 @@
           "meaning": "Gepäck(stück); Sachen, Waren"
         }
       ],
-      "tags": ["gegenstand", "a1\r"]
+      "tags": ["gegenstand", "a1"]
     },
     {
       "id": "hb1_l01_127",
@@ -2222,7 +2222,7 @@
           "meaning": "Herr (respektvolle Anredeform)"
         }
       ],
-      "tags": ["hoeflichkeit", "personen", "a1\r", "anrede", "a1"]
+      "tags": ["hoeflichkeit", "personen", "a1", "anrede", "a1"]
     },
     {
       "id": "hb1_l01_128",
@@ -2239,7 +2239,7 @@
           "meaning": "all(e); ganz, gesamt"
         }
       ],
-      "tags": ["adjektive", "a1\r"]
+      "tags": ["adjektive", "a1"]
     },
     {
       "id": "hb1_l01_129",
@@ -2256,7 +2256,7 @@
           "meaning": "Jahr"
         }
       ],
-      "tags": ["zeit", "a1\r"]
+      "tags": ["zeit", "a1"]
     },
     {
       "id": "hb1_l01_130",
@@ -2273,7 +2273,7 @@
           "meaning": "nur, bloß"
         }
       ],
-      "tags": ["grammatik", "a1\r"]
+      "tags": ["grammatik", "a1"]
     },
     {
       "id": "hb1_l01_131",
@@ -2290,7 +2290,7 @@
           "meaning": "Sita (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_132",
@@ -2307,7 +2307,7 @@
           "meaning": "Seema (Vorname)"
         }
       ],
-      "tags": ["namen", "a1\r"]
+      "tags": ["namen", "a1"]
     },
     {
       "id": "hb1_l01_133",
@@ -2324,7 +2324,7 @@
           "meaning": "Sofa"
         }
       ],
-      "tags": ["haus", "moebel", "a1\r"]
+      "tags": ["haus", "moebel", "a1"]
     },
     {
       "id": "hb1_l01_134",
@@ -2341,7 +2341,7 @@
           "meaning": "Schweizer/in"
         }
       ],
-      "tags": ["personen", "herkunft", "a1\r"]
+      "tags": ["personen", "herkunft", "a1"]
     },
     {
       "id": "hb1_l01_135",
@@ -2358,7 +2358,7 @@
           "meaning": "wir (1. Pers. Pl.)"
         }
       ],
-      "tags": ["grammatik", "pronomen", "a1\r"]
+      "tags": ["grammatik", "pronomen", "a1"]
     },
     {
       "id": "hb1_l01_136",
@@ -2375,7 +2375,7 @@
           "meaning": "grün"
         }
       ],
-      "tags": ["farben", "adjektive", "a1\r"]
+      "tags": ["farben", "adjektive", "a1"]
     },
     {
       "id": "hb1_l01_137",
@@ -2392,7 +2392,7 @@
           "meaning": "ja"
         }
       ],
-      "tags": ["begruessung", "a1\r"]
+      "tags": ["begruessung", "a1"]
     },
     {
       "id": "hb1_l01_138",
@@ -2409,7 +2409,7 @@
           "meaning": "Hand"
         }
       ],
-      "tags": ["koerper", "a1\r"]
+      "tags": ["koerper", "a1"]
     },
     {
       "id": "hb1_l01_139",
@@ -2426,7 +2426,7 @@
           "meaning": "Inder/in"
         }
       ],
-      "tags": ["personen", "herkunft", "a1\r"]
+      "tags": ["personen", "herkunft", "a1"]
     },
     {
       "id": "hb1_l01_140",
@@ -2443,7 +2443,7 @@
           "meaning": "sein, werden"
         }
       ],
-      "tags": ["verben", "a1\r"]
+      "tags": ["verben", "a1"]
     },
     {
       "id": "hb1_l01_141",

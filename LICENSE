@@ -46,7 +46,7 @@ Under the following terms:
 - **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
 
 ### Specific Dataset Attributions:
-- **Payer Sanskrit Course Corpus (`payer_sanskrit.json`, `payer_sanskrit_vol*.tsv`)**:
+- **Payer Sanskrit Course Corpus (`payer_sanskrit.json`)**:
   Derived and synthesized from the Sanskrit course by Alois Payer and the canonical vocabulary glossary compiled by Simone Dünneisen (http://www.payer.de). Curated and structured for Alexis by Marco Demarmels / Birchville Scholarly Synthesis.
 - **Hindi bolo! Vocabulary (`hindi_bolo.json`)**:
   Curated vocabulary dataset for modern standard Hindi. Birchville Scholarly Synthesis.

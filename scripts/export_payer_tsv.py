@@ -17,7 +17,6 @@ import re
 from pathlib import Path
 
 PAYER_DOCS = Path("/Volumes/SanDisk1TB/proj/Payer/docs/lektionen")
-ALEXIS_OUT = Path("/Volumes/SanDisk1TB/proj/Alexis/data/corpora/payer")
 PAYER_OUT = Path("/Volumes/SanDisk1TB/proj/Payer/dist_exports")
 ALEXIS_JSON = Path("/Volumes/SanDisk1TB/proj/Alexis/data/corpora/payer_sanskrit.json")
 
@@ -376,15 +375,10 @@ def main():
             lines.append(row)
 
         content = "".join(lines)
-        alexis_file = ALEXIS_OUT / filename
-        payer_file = PAYER_OUT / filename
-
-        alexis_file.write_text(content, encoding="utf-8")
-        payer_file.write_text(content, encoding="utf-8")
-
-        print(f"✅ {desc} -> {len(item_list)} Vokabeln exportiert nach:")
-        print(f"   - {alexis_file}")
-        print(f"   - {payer_file}")
+        if PAYER_OUT.exists():
+            payer_file = PAYER_OUT / filename
+            payer_file.write_text(content, encoding="utf-8")
+            print(f"✅ {desc} -> {len(item_list)} Vokabeln exportiert nach: {payer_file}")
 
     # Build full JSON bundle for Alexis
     unique_lessons = sorted(list(set(int(e['lesson']) for e in all_entries)))
