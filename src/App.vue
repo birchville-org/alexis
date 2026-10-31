@@ -693,238 +693,339 @@
       </section>
     </main>
 
-    <!-- HILFE MODAL (Vollständiges Offline-Benutzerhandbuch) -->
+    <!-- HILFE MODAL (Vollständiges Offline-Benutzerhandbuch mit VitePress-Layout) -->
     <div v-if="showHelpModal" class="modal-backdrop" @click.self="showHelpModal = false">
-      <div class="modal-box help-modal">
-        <div class="modal-header">
-          <h3>Benutzerhandbuch, Architektur & Methodik</h3>
-          <button class="modal-close-btn" @click="showHelpModal = false">✕</button>
+      <div class="modal-box help-modal-doc">
+        <div class="doc-header">
+          <div class="doc-header-title">
+            <span class="doc-badge">DOCS</span>
+            <h3>Benutzerhandbuch & Systematik</h3>
+          </div>
+          <button class="modal-close-btn" @click="showHelpModal = false" title="Schließen (Esc)">✕</button>
         </div>
-        <div class="modal-body">
-          <!-- Kompakt-Inhaltsverzeichnis (Offline-Sprungmarken) -->
-          <nav class="help-toc" aria-label="Inhaltsverzeichnis">
-            <span class="help-toc-title">Inhaltsverzeichnis:</span>
-            <div class="help-toc-links">
-              <a href="#help-sec-1">1. Datensouveränität & Architektur</a>
-              <a href="#help-sec-2">2. Leitner-System & 4 Tasten</a>
-              <a href="#help-sec-3">3. Sprachausgabe (Web Speech API)</a>
-              <a href="#help-sec-4">4. Vokabel-Explorer & Umschrift</a>
-              <a href="#help-sec-5">5. Geschlechter, Richtung & Shuffle</a>
-              <a href="#help-sec-6">6. Tastaturkürzel</a>
-              <a href="#help-sec-7">7. TSV-Spezifikation</a>
-              <a href="#help-sec-8">8. Anki-Vergleich & Roadmap</a>
+
+        <div class="doc-layout">
+          <!-- Linke VitePress-Seitenleiste -->
+          <aside class="doc-sidebar" aria-label="Handbuch-Navigation">
+            <div class="doc-sidebar-group">
+              <span class="doc-group-title">Inhaltsverzeichnis</span>
+              <ul class="doc-nav-list">
+                <li
+                  v-for="sec in helpSections"
+                  :key="sec.id"
+                  :class="['doc-nav-item', { active: activeHelpSection === sec.id }]"
+                >
+                  <button
+                    class="doc-nav-btn"
+                    type="button"
+                    @click="selectHelpSection(sec.id)"
+                  >
+                    <span class="doc-nav-num">{{ sec.num }}</span>
+                    <span class="doc-nav-label">{{ sec.title.replace(/^\d+\.\s*/, '') }}</span>
+                  </button>
+                </li>
+              </ul>
             </div>
-          </nav>
+            <div class="doc-sidebar-footer">
+              <span class="doc-version-tag">Alexis v0.3.0 · Local-First</span>
+            </div>
+          </aside>
 
-          <h4 id="help-sec-1">1. Philosophie & Architektur: Datensouveränität (Local-First)</h4>
-          <p class="modal-text">
-            Alexis folgt dem Prinzip <strong>Zero-Config Local-First</strong> und trennt strikt zwischen dem schreibgeschützten Server und Ihrem privaten Gerätespeicher:
-          </p>
-          <ul class="help-list">
-            <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Offizielle Korpora können ausschließlich vom Repository-Inhaber per <code>git push</code> eingespielt werden.</li>
-            <li><strong>100 % lokale Datenhaltung:</strong> Eigene TSV-Importe, Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
-            <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und die Basis-Korpora. Ihre lokalen Lernfortschritte und eigenen Vokabelverzeichnisse bleiben davon unberührt erhalten.</li>
-            <li><strong>Souveränes Teilen eigener Wörterverzeichnisse:</strong> Da selbsterstellte Wortlisten häufig auf urheberrechtlich geschützten Lehrbüchern basieren, werden sie nicht automatisch öffentlich synchronisiert. Sie entscheiden selbst, welche Lektionen Sie über <em>„📥 TSV exportieren“</em> als Datei weitergeben.</li>
-          </ul>
+          <!-- Rechter Lesebereich -->
+          <article class="doc-content" role="region" aria-label="Kapitelinhalt">
+            <!-- Kapitel 1 -->
+            <section v-show="activeHelpSection === 'sec-1'" class="doc-section">
+              <div class="doc-crumb">Kapitel 1 · Architektur</div>
+              <h4>1. Philosophie & Architektur: Datensouveränität (Local-First)</h4>
+              <p class="modal-text">
+                Alexis folgt dem Prinzip <strong>Zero-Config Local-First</strong> und trennt strikt zwischen dem schreibgeschützten Server und Ihrem privaten Gerätespeicher:
+              </p>
+              <div class="doc-callout">
+                <strong>Zentrales Sicherheits- und Architekturversprechen:</strong>
+                Kein Lernender benötigt einen Account, und keine persönlichen Lernstatistiken verlassen jemals Ihr Gerät.
+              </div>
+              <ul class="help-list">
+                <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Offizielle Korpora können ausschließlich vom Repository-Inhaber per <code>git push</code> eingespielt werden.</li>
+                <li><strong>100 % lokale Datenhaltung:</strong> Eigene TSV-Importe, Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
+                <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und die Basis-Korpora. Ihre lokalen Lernfortschritte und eigenen Vokabelverzeichnisse bleiben davon unberührt erhalten.</li>
+                <li><strong>Souveränes Teilen eigener Wörterverzeichnisse:</strong> Da selbsterstellte Wortlisten häufig auf urheberrechtlich geschützten Lehrbüchern basieren, werden sie nicht automatisch öffentlich synchronisiert. Sie entscheiden selbst, welche Lektionen Sie über <em>„📥 TSV exportieren“</em> als Datei weitergeben.</li>
+              </ul>
+            </section>
 
-          <h4 id="help-sec-2">2. Das 5-Fächer-Leitner-Prinzip & die 4 Bewertungstasten</h4>
-          <p class="modal-text">
-            Jede neue Vokabel startet in Box 1 und wandert bei Lernerfolg schrittweise in höhere Boxen mit festen, berechenbaren Zeitintervallen:
-          </p>
-          <table class="help-table">
-            <thead>
-              <tr>
-                <th>Box</th>
-                <th>Status</th>
-                <th>Wiederholung</th>
-                <th>Funktion</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Box 1</strong></td>
-                <td>Neu / Nochmal</td>
-                <td><strong>1 Tag</strong></td>
-                <td>Täglich üben, bis der Abruf sitzt.</td>
-              </tr>
-              <tr>
-                <td><strong>Box 2</strong></td>
-                <td>Erster Lernerfolg</td>
-                <td><strong>3 Tage</strong></td>
-                <td>Mindestens einmal richtig gewusst.</td>
-              </tr>
-              <tr>
-                <td><strong>Box 3</strong></td>
-                <td>Festigung</td>
-                <td><strong>7 Tage</strong></td>
-                <td>Übergang ins mittelfristige Gedächtnis.</td>
-              </tr>
-              <tr>
-                <td><strong>Box 4</strong></td>
-                <td>Vertiefung</td>
-                <td><strong>14 Tage</strong></td>
-                <td>Hohe Abrufsicherheit.</td>
-              </tr>
-              <tr>
-                <td><strong>Box 5</strong></td>
-                <td>Langzeitgedächtnis</td>
-                <td><strong>30 Tage</strong></td>
-                <td>Dauerhaft verankert.</td>
-              </tr>
-            </tbody>
-          </table>
+            <!-- Kapitel 2 -->
+            <section v-show="activeHelpSection === 'sec-2'" class="doc-section">
+              <div class="doc-crumb">Kapitel 2 · Didaktik</div>
+              <h4>2. Das 5-Fächer-Leitner-Prinzip & die 4 Bewertungstasten</h4>
+              <p class="modal-text">
+                Jede neue Vokabel startet in Box 1 und wandert bei Lernerfolg schrittweise in höhere Boxen mit festen, berechenbaren Zeitintervallen:
+              </p>
+              <table class="help-table">
+                <thead>
+                  <tr>
+                    <th>Box</th>
+                    <th>Status</th>
+                    <th>Wiederholung</th>
+                    <th>Funktion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Box 1</strong></td>
+                    <td>Neu / Nochmal</td>
+                    <td><strong>1 Tag</strong></td>
+                    <td>Täglich üben, bis der Abruf sitzt.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Box 2</strong></td>
+                    <td>Erster Lernerfolg</td>
+                    <td><strong>3 Tage</strong></td>
+                    <td>Mindestens einmal richtig gewusst.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Box 3</strong></td>
+                    <td>Festigung</td>
+                    <td><strong>7 Tage</strong></td>
+                    <td>Übergang ins mittelfristige Gedächtnis.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Box 4</strong></td>
+                    <td>Vertiefung</td>
+                    <td><strong>14 Tage</strong></td>
+                    <td>Hohe Abrufsicherheit.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Box 5</strong></td>
+                    <td>Langzeitgedächtnis</td>
+                    <td><strong>30 Tage</strong></td>
+                    <td>Dauerhaft verankert.</td>
+                  </tr>
+                </tbody>
+              </table>
 
-          <ul class="help-list">
-            <li><strong>Taste 1 (Nochmal):</strong> Die Karte fällt sofort auf <strong>Box 1</strong> zurück (Intervall: 1 Tag).</li>
-            <li><strong>Taste 2 (Schwer):</strong> Die Karte bleibt in der aktuellen Box (Intervall: 1 Tag).</li>
-            <li><strong>Taste 3 (Gut / 2x Leertaste):</strong> Die Karte steigt um <strong>+1 Box auf</strong> (z.B. Box 1 ➔ Box 2: 3 Tage).</li>
-            <li><strong>Taste 4 (Einfach):</strong> Die Karte steigt um <strong>+1 Box auf mit Bonussprung</strong> (z.B. Box 1 ➔ Box 2: 5 Tage).</li>
-          </ul>
+              <ul class="help-list">
+                <li><strong>Taste 1 (Nochmal):</strong> Die Karte fällt sofort auf <strong>Box 1</strong> zurück (Intervall: 1 Tag).</li>
+                <li><strong>Taste 2 (Schwer):</strong> Die Karte bleibt in der aktuellen Box (Intervall: 1 Tag).</li>
+                <li><strong>Taste 3 (Gut / 2x Leertaste):</strong> Die Karte steigt um <strong>+1 Box auf</strong> (z.B. Box 1 ➔ Box 2: 3 Tage).</li>
+                <li><strong>Taste 4 (Einfach):</strong> Die Karte steigt um <strong>+1 Box auf mit Bonussprung</strong> (z.B. Box 1 ➔ Box 2: 5 Tage).</li>
+              </ul>
+            </section>
 
-          <h4 id="help-sec-3">3. Technische Architektur der Sprachausgabe (W3C Web Speech API)</h4>
-          <p class="modal-text">
-            Für die Vertonung der Vokabeln über das Lautsprecher-Symbol oder die Taste <code>v</code> nutzt Alexis den <strong>W3C Web Speech API Standard</strong> (<code>window.speechSynthesis</code> / <code>SpeechSynthesisUtterance</code>):
-          </p>
-          <ul class="help-list">
-            <li><strong>Kein externer Cloud-Dienst / kein API-Schlüssel:</strong> Es werden keine Wörter an kostenpflichtige Drittanbieter-Server gesendet. Alexis greift direkt auf die im Betriebssystem bzw. Browser lokal installierten Text-to-Speech-Stimmen (TTS) zu und funktioniert damit auch offline.</li>
-            <li><strong>macOS & iOS (Safari, Tauri Desktop, Chrome):</strong> Nutzt Apples Systemstimme <strong>„Lekha“</strong> (<code>hi-IN</code>). Für maximale Klangqualität kann in den Systemeinstellungen unter <em>Bedienungshilfen ➔ Gesprochener Inhalt ➔ Systemstimme ➔ Stimme verwalten ➔ Hindi</em> das Paket <strong>„Lekha (Erweitert / Premium)“</strong> kostenfrei nachgeladen werden.</li>
-            <li><strong>Windows, Chrome & Android:</strong> Nutzt unter Desktop-Chrome <code>Google हिन्दी</code> (<code>hi-IN</code>), unter Windows 10/11 <strong>„Microsoft Swara“</strong> bzw. <strong>„Microsoft Hemant“</strong> und unter Android die <strong>Google Speech Synthesis</strong>.</li>
-            <li><strong>Phonetische Treue & Sanskrit-Fallback:</strong> Da Devanāgarī phonematisch exakt ist, werden Aspiration, Retroflexe und Vokallängen direkt aus der Originalschrift synthetisiert. Das Sprechtempo ist leicht gedrosselt (<code>rate = 0.88</code>). Fehlt eine dedizierte <code>sa-IN</code>-Stimme für Sanskrit, fällt Alexis automatisch auf die installierte <code>hi-IN</code>-Devanāgarī-Stimme zurück.</li>
-          </ul>
+            <!-- Kapitel 3 -->
+            <section v-show="activeHelpSection === 'sec-3'" class="doc-section">
+              <div class="doc-crumb">Kapitel 3 · Audio & Phonetik</div>
+              <h4>3. Technische Architektur der Sprachausgabe (W3C Web Speech API)</h4>
+              <p class="modal-text">
+                Für die Vertonung der Vokabeln über das Lautsprecher-Symbol oder die Taste <code>v</code> nutzt Alexis den <strong>W3C Web Speech API Standard</strong> (<code>window.speechSynthesis</code> / <code>SpeechSynthesisUtterance</code>):
+              </p>
+              <ul class="help-list">
+                <li><strong>Kein externer Cloud-Dienst / kein API-Schlüssel:</strong> Es werden keine Wörter an kostenpflichtige Drittanbieter-Server gesendet. Alexis greift direkt auf die im Betriebssystem bzw. Browser lokal installierten Text-to-Speech-Stimmen (TTS) zu und funktioniert damit auch offline.</li>
+                <li><strong>macOS & iOS (Safari, Tauri Desktop, Chrome):</strong> Nutzt Apples Systemstimme <strong>„Lekha“</strong> (<code>hi-IN</code>). Für maximale Klangqualität kann in den Systemeinstellungen unter <em>Bedienungshilfen ➔ Gesprochener Inhalt ➔ Systemstimme ➔ Stimme verwalten ➔ Hindi</em> das Paket <strong>„Lekha (Erweitert / Premium)“</strong> kostenfrei nachgeladen werden.</li>
+                <li><strong>Windows, Chrome & Android:</strong> Nutzt unter Desktop-Chrome <code>Google हिन्दी</code> (<code>hi-IN</code>), unter Windows 10/11 <strong>„Microsoft Swara“</strong> bzw. <strong>„Microsoft Hemant“</strong> und unter Android die <strong>Google Speech Synthesis</strong>.</li>
+                <li><strong>Phonetische Treue & Sanskrit-Fallback:</strong> Da Devanāgarī phonematisch exakt ist, werden Aspiration, Retroflexe und Vokallängen direkt aus der Originalschrift synthetisiert. Das Sprechtempo ist leicht gedrosselt (<code>rate = 0.88</code>). Fehlt eine dedizierte <code>sa-IN</code>-Stimme für Sanskrit, fällt Alexis automatisch auf die installierte <code>hi-IN</code>-Devanāgarī-Stimme zurück.</li>
+              </ul>
+            </section>
 
-          <h4 id="help-sec-4">4. Vokabel-Explorer & Bidirektionale Umschrift (IAST / HK ⇄ Devanāgarī)</h4>
-          <ul class="help-list">
-            <li><strong>Vokabelliste:</strong> Im Reiter <em>Vokabelliste</em> lässt sich der gesamte Wortschatz nach Band, Lektion, Leitner-Box, Fälligkeit und Wortart filtern, inspizieren (inkl. Deklinations- und Verb-Paradigmen) und per Klick (<em>„▶️ Auswahl üben“</em>) direkt an den Trainer übergeben.</li>
-            <li><strong>Automatische Transliterations-Suche:</strong> Das Suchfeld erkennt Eingaben in Devanāgarī, wissenschaftlicher IAST-Umschrift (<code>kṛṣṇa</code>) und ASCII-basierter Harvard-Kyoto-Notation (<code>kRSNa</code>) gleichzeitig. Über die Schaltfläche <code>अ ⇄ a</code> lässt sich der Suchbegriff direkt zwischen Lateinschrift und Devanāgarī umwandeln.</li>
-          </ul>
+            <!-- Kapitel 4 -->
+            <section v-show="activeHelpSection === 'sec-4'" class="doc-section">
+              <div class="doc-crumb">Kapitel 4 · Arbeitsbereich</div>
+              <h4>4. Vokabel-Explorer & Bidirektionale Umschrift (IAST / HK ⇄ Devanāgarī)</h4>
+              <ul class="help-list">
+                <li><strong>Vokabelliste:</strong> Im Reiter <em>Vokabelliste</em> lässt sich der gesamte Wortschatz nach Band, Lektion, Leitner-Box, Fälligkeit und Wortart filtern, inspizieren (inkl. Deklinations- und Verb-Paradigmen) und per Klick (<em>„▶️ Auswahl üben“</em>) direkt an den Trainer übergeben.</li>
+                <li><strong>Automatische Transliterations-Suche:</strong> Das Suchfeld erkennt Eingaben in Devanāgarī, wissenschaftlicher IAST-Umschrift (<code>kṛṣṇa</code>) und ASCII-basierter Harvard-Kyoto-Notation (<code>kRSNa</code>) gleichzeitig. Über die Schaltfläche <code>अ ⇄ a</code> lässt sich der Suchbegriff direkt zwischen Lateinschrift und Devanāgarī umwandeln.</li>
+              </ul>
+            </section>
 
-          <h4 id="help-sec-5">5. Pflicht-Geschlechter, Lernrichtung & Sortierung</h4>
-          <p class="modal-text">
-            • <strong>Pflicht-Geschlechter bei Substantiven:</strong> Jedes Substantiv ist mit dem grammatischen Geschlecht gekennzeichnet (<strong>m.</strong> = Maskulinum, <strong>f.</strong> = Femininum, <strong>n.</strong> = Neutrum, <strong>m./f.</strong> = zweigeschlechtlich).<br>
-            • <strong>Umkehrbare Lernrichtung (⇄ / Taste <code>r</code>):</strong> Wechselt jederzeit on-the-fly zwischen <em>Zielsprache ➔ Deutsch</em> und <em>Deutsch ➔ Zielsprache</em>, ohne doppelte Kartensätze anzulegen.<br>
-            • <strong>Sortierung (🔀 / Taste <code>s</code>):</strong> Schaltet zwischen Lehrbuch-Reihenfolge und Zufallsmischung (Shuffle) um.
-          </p>
+            <!-- Kapitel 5 -->
+            <section v-show="activeHelpSection === 'sec-5'" class="doc-section">
+              <div class="doc-crumb">Kapitel 5 · Steuerung</div>
+              <h4>5. Pflicht-Geschlechter, Lernrichtung & Sortierung</h4>
+              <p class="modal-text">
+                • <strong>Pflicht-Geschlechter bei Substantiven:</strong> Jedes Substantiv ist mit dem grammatischen Geschlecht gekennzeichnet (<strong>m.</strong> = Maskulinum, <strong>f.</strong> = Femininum, <strong>n.</strong> = Neutrum, <strong>m./f.</strong> = zweigeschlechtlich).<br>
+                • <strong>Umkehrbare Lernrichtung (⇄ / Taste <code>r</code>):</strong> Wechselt jederzeit on-the-fly zwischen <em>Zielsprache ➔ Deutsch</em> und <em>Deutsch ➔ Zielsprache</em>, ohne doppelte Kartensätze anzulegen.<br>
+                • <strong>Sortierung (🔀 / Taste <code>s</code>):</strong> Schaltet zwischen Lehrbuch-Reihenfolge und Zufallsmischung (Shuffle) um.
+              </p>
+            </section>
 
-          <h4 id="help-sec-6">6. Tastaturkürzel-Referenz</h4>
-          <p class="modal-text">
-            <code>Leertaste</code> / <code>Enter</code>: Karte aufdecken (aufgedeckt: „Gut“ +1 Box) · <code>1</code>–<code>4</code>: Bewerten · <code>v</code>: Aussprache anhören (TTS) · <code>r</code>: Lernrichtung umkehren · <code>s</code>: Zufallswiedergabe (Shuffle) · <code>g</code>: Grammatik / Deklination ein-/ausklappen · <code>u</code> / <code>t</code>: Umschrift (IAST) umschalten.
-          </p>
+            <!-- Kapitel 6 -->
+            <section v-show="activeHelpSection === 'sec-6'" class="doc-section">
+              <div class="doc-crumb">Kapitel 6 · Schnellbedienung</div>
+              <h4>6. Tastaturkürzel-Referenz</h4>
+              <table class="help-table">
+                <thead>
+                  <tr>
+                    <th>Taste</th>
+                    <th>Aktion im Trainer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>Leertaste</code> / <code>Enter</code></td>
+                    <td>Karte aufdecken (nach Aufdecken: Schnellbewertung „Gut“ +1 Box)</td>
+                  </tr>
+                  <tr>
+                    <td><code>1</code></td>
+                    <td>Bewertung: <strong>Nochmal</strong> (Rückfall auf Box 1)</td>
+                  </tr>
+                  <tr>
+                    <td><code>2</code></td>
+                    <td>Bewertung: <strong>Schwer</strong> (In aktueller Box belassen)</td>
+                  </tr>
+                  <tr>
+                    <td><code>3</code></td>
+                    <td>Bewertung: <strong>Gut</strong> (+1 Box)</td>
+                  </tr>
+                  <tr>
+                    <td><code>4</code></td>
+                    <td>Bewertung: <strong>Einfach</strong> (+1 Box mit Bonussprung)</td>
+                  </tr>
+                  <tr>
+                    <td><code>v</code></td>
+                    <td><strong>Aussprache anhören</strong> (Web Speech TTS)</td>
+                  </tr>
+                  <tr>
+                    <td><code>r</code></td>
+                    <td><strong>Lernrichtung umkehren</strong> (Zielsprache ⇄ Deutsch)</td>
+                  </tr>
+                  <tr>
+                    <td><code>s</code></td>
+                    <td><strong>Zufall / Shuffle</strong> umschalten</td>
+                  </tr>
+                  <tr>
+                    <td><code>g</code></td>
+                    <td><strong>Grammatik-Drawer</strong> (Deklination/Verben) ein-/ausklappen</td>
+                  </tr>
+                  <tr>
+                    <td><code>u</code> / <code>t</code></td>
+                    <td><strong>Umschrift (IAST)</strong> ein-/ausblenden</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
 
-          <h4 id="help-sec-7">7. Struktur importfähiger TSV-Dateien (Tab-Separated Values)</h4>
-          <p class="modal-text">
-            Über die Schaltfläche <em>„📥 TSV importieren“</em> im Reiter <em>Korpora & Gliederung</em> können eigene Wortschatzlisten im TSV-Format (UTF-8, Tabstopp-getrennt) hochgeladen und ebenso pro Lektion oder Auswahl wieder als <code>.tsv</code> exportiert werden:
-          </p>
-          <table class="help-table">
-            <thead>
-              <tr>
-                <th>Spaltenname</th>
-                <th>Status</th>
-                <th>Beispiel</th>
-                <th>Bedeutung / Funktion</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>volume</code></td>
-                <td>Optional</td>
-                <td><code>hb1</code></td>
-                <td>Band-Kennung (z.B. <code>hb1</code>, <code>hb2</code>). Legt bei neuen Werten automatisch einen neuen Band an. Default: <code>hb1</code>.</td>
-              </tr>
-              <tr>
-                <td><code>lesson</code></td>
-                <td>Optional</td>
-                <td><code>1</code></td>
-                <td>Lektionsnummer als Ganzzahl (z.B. <code>1</code>, <code>2</code>). Legt bei neuen Werten eine neue Lektion an. Default: <code>1</code>.</td>
-              </tr>
-              <tr>
-                <td><code>native</code></td>
-                <td><strong>Pflicht</strong></td>
-                <td><code>किताब</code></td>
-                <td>Wort in Nativschrift (Devanāgarī). Dient als Primärschlüssel zur automatischen Duplikaterkennung und Bedeutungsverschmelzung.</td>
-              </tr>
-              <tr>
-                <td><code>transliteration</code></td>
-                <td>Empfohlen</td>
-                <td><code>kitāb</code></td>
-                <td>Wissenschaftliche Umschrift (IAST).</td>
-              </tr>
-              <tr>
-                <td><code>pos</code></td>
-                <td>Empfohlen</td>
-                <td><code>noun</code></td>
-                <td>Wortart (z.B. <code>noun</code> für Substantiv, <code>verb</code>, <code>adj</code>, <code>adv</code>, <code>postp</code>, <code>pron</code>).</td>
-              </tr>
-              <tr>
-                <td><code>gender</code></td>
-                <td><strong>Pflicht für Nomen</strong></td>
-                <td><code>f</code></td>
-                <td>Grammatisches Geschlecht: <code>m</code> (Maskulinum), <code>f</code> (Femininum), <code>n</code> (Neutrum), <code>m/f</code> oder <code>-</code> (nicht anwendbar).</td>
-              </tr>
-              <tr>
-                <td><code>meaning_de</code></td>
-                <td><strong>Pflicht</strong></td>
-                <td><code>Buch</code></td>
-                <td>Deutsche Bedeutung bzw. Übersetzung. (Jede Spalte, deren Name <code>meaning</code> enthält, wird akzeptiert).</td>
-              </tr>
-              <tr>
-                <td><code>tags</code></td>
-                <td>Optional</td>
-                <td><code>schule;a1</code></td>
-                <td>Semikolon-getrennte Schlagwörter (<code>tag1;tag2</code>) für Filter und thematische Gruppen.</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="modal-text">
-            <strong>Musterzeile (Tab-getrennt):</strong><br>
-            <code>hb1&#9;1&#9;किताब&#9;kitāb&#9;noun&#9;f&#9;Buch&#9;schule;a1</code>
-          </p>
+            <!-- Kapitel 7 -->
+            <section v-show="activeHelpSection === 'sec-7'" class="doc-section">
+              <div class="doc-crumb">Kapitel 7 · Datenformate</div>
+              <h4>7. Struktur importfähiger TSV-Dateien (Tab-Separated Values)</h4>
+              <p class="modal-text">
+                Über die Schaltfläche <em>„📥 TSV importieren“</em> im Reiter <em>Korpora & Gliederung</em> können eigene Wortschatzlisten im TSV-Format (UTF-8, Tabstopp-getrennt) hochgeladen und ebenso pro Lektion oder Auswahl wieder als <code>.tsv</code> exportiert werden:
+              </p>
+              <table class="help-table">
+                <thead>
+                  <tr>
+                    <th>Spaltenname</th>
+                    <th>Status</th>
+                    <th>Beispiel</th>
+                    <th>Bedeutung / Funktion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>volume</code></td>
+                    <td>Optional</td>
+                    <td><code>hb1</code></td>
+                    <td>Band-Kennung (z.B. <code>hb1</code>, <code>hb2</code>). Legt bei neuen Werten automatisch einen neuen Band an. Default: <code>hb1</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>lesson</code></td>
+                    <td>Optional</td>
+                    <td><code>1</code></td>
+                    <td>Lektionsnummer als Ganzzahl (z.B. <code>1</code>, <code>2</code>). Legt bei neuen Werten eine neue Lektion an. Default: <code>1</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>native</code></td>
+                    <td><strong>Pflicht</strong></td>
+                    <td><code>किताब</code></td>
+                    <td>Wort in Nativschrift (Devanāgarī). Dient als Primärschlüssel zur automatischen Duplikaterkennung und Bedeutungsverschmelzung.</td>
+                  </tr>
+                  <tr>
+                    <td><code>transliteration</code></td>
+                    <td>Empfohlen</td>
+                    <td><code>kitāb</code></td>
+                    <td>Wissenschaftliche Umschrift (IAST).</td>
+                  </tr>
+                  <tr>
+                    <td><code>pos</code></td>
+                    <td>Empfohlen</td>
+                    <td><code>noun</code></td>
+                    <td>Wortart (z.B. <code>noun</code> für Substantiv, <code>verb</code>, <code>adj</code>, <code>adv</code>, <code>postp</code>, <code>pron</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><code>gender</code></td>
+                    <td><strong>Pflicht für Nomen</strong></td>
+                    <td><code>f</code></td>
+                    <td>Grammatisches Geschlecht: <code>m</code> (Maskulinum), <code>f</code> (Femininum), <code>n</code> (Neutrum), <code>m/f</code> oder <code>-</code> (nicht anwendbar).</td>
+                  </tr>
+                  <tr>
+                    <td><code>meaning_de</code></td>
+                    <td><strong>Pflicht</strong></td>
+                    <td><code>Buch</code></td>
+                    <td>Deutsche Bedeutung bzw. Übersetzung. (Jede Spalte, deren Name <code>meaning</code> enthält, wird akzeptiert).</td>
+                  </tr>
+                  <tr>
+                    <td><code>tags</code></td>
+                    <td>Optional</td>
+                    <td><code>schule;a1</code></td>
+                    <td>Semikolon-getrennte Schlagwörter (<code>tag1;tag2</code>) für Filter und thematische Gruppen.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="modal-text">
+                <strong>Musterzeile (Tab-getrennt):</strong><br>
+                <code>hb1&#9;1&#9;किताब&#9;kitāb&#9;noun&#9;f&#9;Buch&#9;schule;a1</code>
+              </p>
+            </section>
 
-          <h4 id="help-sec-8">8. Usability-Konzept & Roadmap (Vergleich mit Anki)</h4>
-          <table class="help-table">
-            <thead>
-              <tr>
-                <th>Aspekt</th>
-                <th>Klassisch (z.B. Anki)</th>
-                <th>Alexis-Prinzip</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Bedienung & Setup</strong></td>
-                <td>Desktop-Installation, Account-Zwang, Dutzende Schwellenwerte und Optionen (Ease, Steps, Leech).</td>
-                <td><strong>Zero-Config Local-First:</strong> Sofort im Browser nutzbar, 100% offline-fähig, keine Registrierung.</td>
-              </tr>
-              <tr>
-                <td><strong>Lektionswahl</strong></td>
-                <td>Starre Deck-Hierarchien; Filtern erfordert komplexe Suchsyntax.</td>
-                <td><strong>Direkte Multi-Selektion:</strong> Beliebige Bände und Lektionen per Klick auswählen.</td>
-              </tr>
-              <tr>
-                <td><strong>Lernrichtung</strong></td>
-                <td>Erfordert separate Notiztypen und doppelte Kartendaten.</td>
-                <td><strong>Dynamische Inversion:</strong> Taste <code>r</code> wechselt die Richtung on-the-fly.</td>
-              </tr>
-              <tr>
-                <td><strong>Philologie & Grammatik</strong></td>
-                <td>Reiner Freitext; Tabellen müssen manuell gebaut werden.</td>
-                <td><strong>Automatisierte Paradigmen:</strong> Nativ integrierte Deklinationstabellen, Verbstämme und Ergativ-Regeln.</td>
-              </tr>
-              <tr>
-                <td><strong>Lernlogik</strong></td>
-                <td>Komplexe Algorithmen mit Gefahr der „Ease Hell“ und Kartenbergen.</td>
-                <td><strong>5-Boxen-Leitner:</strong> Transparente Intervalle (1, 3, 7, 14, 30 Tage) – stressfrei und berechenbar.</td>
-              </tr>
-            </tbody>
-          </table>
+            <!-- Kapitel 8 -->
+            <section v-show="activeHelpSection === 'sec-8'" class="doc-section">
+              <div class="doc-crumb">Kapitel 8 · Ausblick</div>
+              <h4>8. Usability-Konzept & Roadmap (Vergleich mit Anki)</h4>
+              <table class="help-table">
+                <thead>
+                  <tr>
+                    <th>Aspekt</th>
+                    <th>Klassisch (z.B. Anki)</th>
+                    <th>Alexis-Prinzip</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Bedienung & Setup</strong></td>
+                    <td>Desktop-Installation, Account-Zwang, Dutzende Schwellenwerte und Optionen (Ease, Steps, Leech).</td>
+                    <td><strong>Zero-Config Local-First:</strong> Sofort im Browser nutzbar, 100% offline-fähig, keine Registrierung.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lektionswahl</strong></td>
+                    <td>Starre Deck-Hierarchien; Filtern erfordert komplexe Suchsyntax.</td>
+                    <td><strong>Direkte Multi-Selektion:</strong> Beliebige Bände und Lektionen per Klick auswählen.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lernrichtung</strong></td>
+                    <td>Erfordert separate Notiztypen und doppelte Kartendaten.</td>
+                    <td><strong>Dynamische Inversion:</strong> Taste <code>r</code> wechselt die Richtung on-the-fly.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Philologie & Grammatik</strong></td>
+                    <td>Reiner Freitext; Tabellen müssen manuell gebaut werden.</td>
+                    <td><strong>Automatisierte Paradigmen:</strong> Nativ integrierte Deklinationstabellen, Verbstämme und Ergativ-Regeln.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lernlogik</strong></td>
+                    <td>Komplexe Algorithmen mit Gefahr der „Ease Hell“ und Kartenbergen.</td>
+                    <td><strong>5-Boxen-Leitner:</strong> Transparente Intervalle (1, 3, 7, 14, 30 Tage) – stressfrei und berechenbar.</td>
+                  </tr>
+                </tbody>
+              </table>
 
-          <p class="modal-text">
-            <strong>Ausbaustufen (Roadmap):</strong>
-            <br>• <strong>✓ Phase 1: Vokabel-Explorer & Listenansicht (Live):</strong> Gesamtschau aller Vokabeln im Reiter „Vokabelliste“ mit Sofortsuche, Leitner-Box-Filtern, Wortart-Filter, morphologischen Paradigmen und 1-Klick-Lernstart.
-            <br>• <strong>✓ Phase 2: Native Sprachausgabe (TTS - Live):</strong> Audio-Aussprache über die Web Speech API per Taste <code>v</code> sowie Lautsprecher-Buttons auf Lernkarten und im Vokabel-Explorer.
-            <br>• <strong>Phase 3: Session-Recap:</strong> Am Ende einer Sitzung die Fehlkarten mit 1 Klick nochmals festigen.
-            <br>• <strong>Phase 4: Favoriten / Prüfungs-Merkliste (★):</strong> Schwierige Vokabeln markieren und gezielt abfragen.
-            <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining:</strong> Zuschaltbarer Modus zum aktiven Eintippen.
-          </p>
+              <p class="modal-text">
+                <strong>Ausbaustufen (Roadmap):</strong>
+                <br>• <strong>✓ Phase 1: Vokabel-Explorer & Listenansicht (Live):</strong> Gesamtschau aller Vokabeln im Reiter „Vokabelliste“ mit Sofortsuche, Leitner-Box-Filtern, Wortart-Filter, morphologischen Paradigmen und 1-Klick-Lernstart.
+                <br>• <strong>✓ Phase 2: Native Sprachausgabe (TTS - Live):</strong> Audio-Aussprache über die Web Speech API per Taste <code>v</code> sowie Lautsprecher-Buttons auf Lernkarten und im Vokabel-Explorer.
+                <br>• <strong>Phase 3: Session-Recap:</strong> Am Ende einer Sitzung die Fehlkarten mit 1 Klick nochmals festigen.
+                <br>• <strong>Phase 4: Favoriten / Prüfungs-Merkliste (★):</strong> Schwierige Vokabeln markieren und gezielt abfragen.
+                <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining:</strong> Zuschaltbarer Modus zum aktiven Eintippen.
+              </p>
+            </section>
+          </article>
         </div>
       </div>
     </div>
@@ -1345,6 +1446,23 @@ function onKeydown(e: KeyboardEvent) {
 
 // Modal States
 const showHelpModal = ref(false);
+
+// Help Modal Section State
+const activeHelpSection = ref<string>("sec-1");
+const helpSections = [
+  { id: "sec-1", title: "1. Datensouveränität & Architektur", num: "1" },
+  { id: "sec-2", title: "2. Leitner-System & 4 Tasten", num: "2" },
+  { id: "sec-3", title: "3. Sprachausgabe (TTS)", num: "3" },
+  { id: "sec-4", title: "4. Vokabel-Explorer & Umschrift", num: "4" },
+  { id: "sec-5", title: "5. Grammatik, Richtung & Shuffle", num: "5" },
+  { id: "sec-6", title: "6. Tastaturkürzel-Referenz", num: "6" },
+  { id: "sec-7", title: "7. TSV-Spezifikation", num: "7" },
+  { id: "sec-8", title: "8. Anki-Vergleich & Roadmap", num: "8" },
+];
+
+function selectHelpSection(id: string) {
+  activeHelpSection.value = id;
+}
 const showInstallModal = ref(false);
 const deferredInstallPrompt = ref<any>(null);
 
@@ -2768,7 +2886,7 @@ async function performDictSearch() {
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  max-width: 780px;
+  max-width: 680px;
   width: 100%;
   max-height: 88vh;
   display: flex;
@@ -2777,39 +2895,212 @@ async function performDictSearch() {
   overflow: hidden;
 }
 
-.help-toc {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+/* VitePress-Style Help Modal Layout */
+.modal-box.help-modal-doc {
+  max-width: 1060px;
+  width: 95vw;
+  height: 86vh;
+  max-height: 86vh;
 }
 
-.help-toc-title {
-  font-size: 0.78rem;
-  font-weight: 600;
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  flex-shrink: 0;
+}
+
+.doc-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.doc-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  background-color: var(--accent-gold);
+  color: #ffffff;
+}
+
+.doc-header-title h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.doc-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Linke VitePress-Seitenleiste */
+.doc-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
+.doc-sidebar-group {
+  padding: 1rem 0.75rem;
+}
+
+.doc-group-title {
+  font-size: 0.74rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 0 0.5rem 0.65rem;
+  display: block;
+}
+
+.doc-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.doc-nav-item {
+  border-radius: 6px;
+}
+
+.doc-nav-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.35;
+  transition: all 0.15s ease;
+}
+
+.doc-nav-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.doc-nav-label {
+  flex: 1;
+}
+
+.doc-nav-btn:hover {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+}
+
+.doc-nav-item.active .doc-nav-btn {
+  background-color: var(--bg-surface-elevated);
+  color: var(--accent-gold);
+  border-color: var(--border-subtle);
+  font-weight: 600;
+}
+
+.doc-nav-item.active .doc-nav-num {
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+}
+
+.doc-sidebar-footer {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.doc-version-tag {
+  font-size: 0.74rem;
   color: var(--text-muted);
 }
 
-.help-toc-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.85rem;
+/* Rechter VitePress-Lesebereich */
+.doc-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 1.75rem 2.25rem;
+  background-color: var(--bg-surface-elevated);
 }
 
-.help-toc-links a {
-  font-size: 0.84rem;
+.doc-section {
+  max-width: 54rem;
+  margin: 0 auto;
+}
+
+.doc-crumb {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--accent-gold);
-  text-decoration: none;
-  font-weight: 500;
+  margin-bottom: 0.4rem;
 }
 
-.help-toc-links a:hover {
-  text-decoration: underline;
+.doc-section h4 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  line-height: 1.3;
+}
+
+.doc-callout {
+  background-color: var(--bg-surface);
+  border-left: 3px solid var(--accent-gold);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .doc-layout {
+    flex-direction: column;
+  }
+  .doc-sidebar {
+    width: 100%;
+    max-height: 160px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .doc-content {
+    padding: 1.25rem;
+  }
 }
 
 .modal-header {
