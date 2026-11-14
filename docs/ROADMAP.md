@@ -32,7 +32,7 @@ Anki ist ein bewährtes, generisches Karteikartenprogramm, erzeugt jedoch im Ler
 | **Reihenfolge** | In Deck-Einstellungen vergraben. | **Direktwahl**: Umschalter `🔀 Zufall / Alphabetisch` (Taste `s`) jederzeit verfügbar. |
 | **Grammatik & Morphologie** | Reiner Freitext. | **Automatisierte Paradigmen**: Generiert vollständige Deklinationstabellen, Verbstämme, Ergativ-Regeln und Umschrift. |
 | **Spaced Repetition** | SM-2 / FSRS mit Dutzenden Variablen. | **5-Boxen-Leitner-System**: Transparente, feste Intervalle (1, 3, 7, 14, 30 Tage) mit 4 Tasten (1–4) – berechenbar und stressfrei. |
-| **Datenimport** | Komplexes CSV-Feld-Mapping. | **1-Klick TSV-Import**: Automatische Spalten-, Band- und Lektionserkennung per Drag & Drop. |
+| **Daten-Kuration & Export** | Komplexes CSV-Feld-Mapping. | **Redaktions-Pipeline & 1-Klick-Export**: Kuratierte, geprüfte Referenz-Korpora online (Read-Only) plus 1-Klick TSV-Export pro Lektion. |
 
 ---
 

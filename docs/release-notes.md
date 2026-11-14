@@ -1,5 +1,20 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.3.1 (2026-11-14)
+
+### Datenintegrität & Kernfunktionen
+- **Redaktions- & Validierungs-Pipeline (`scripts/validate_and_import_hindi.py`)**: Lokales CLI-Werkzeug zur Massenprüfung via Free Dictionary API, Genus-/Wortart-Abgleich via Lexicala API mit SQLite-Cache (`scripts/.cache/hindi_lexicon.sqlite`), IAST-Prüfung auf Hindi-Schwa-Tilgung und Nukta-Konsistenz (inkl. optionalem LLM-Check) sowie kontrolliertem `--apply`-Import in `data/corpora/hindi_bolo.json`.
+- **Nukta-Bereinigung (`hindi_bolo.json`)**: 8 IAST-Umschriften mit Devanāgarī-Nuktas (`क़`, `ग़`) auf kanonisches `q` / `ġ` korrigiert (`qamīz`, `qālīn`, `bāqī`, `qarīb`, `ġaltī se`, `vaqt`, `vāqaī`, `śauq se`).
+- **Dokumentation (`REDAKTIONSWORKFLOW.md`, `CHEATSHEET_REDAKTION.md`, `BENUTZERHANDBUCH.md`)**: Vollständige Dokumentation der Redaktions-Pipeline sowie Aktualisierung des eingebetteten VitePress-Hilfe-Overlays.
+
+### Sicherheit & Sandbox
+- **Online-TSV-Import gesperrt (`src/App.vue`)**: Das Einlesen neuer TSV-Wortschätze ist in der öffentlichen Web-App / PWA deaktiviert (`canImportCorpora`), sodass ausschließlich kuratierte, über Git eingespielte Referenz-Korpora online ausgeliefert werden. Die persönlichen Leitner-Boxen (1–5) bleiben lokal im Browser vollständig aktiv.
+
+### Plattform- & Backend-Stabilität
+- **`.gitignore`-Härtung**: Lokale SQLite-Caches (`scripts/.cache/`, `*.sqlite`, `*.db`) vom Git-Tracking ausgeschlossen.
+
+---
+
 ## v0.3.0 (2026-10-30)
 
 ### Datenintegrität & Kernfunktionen

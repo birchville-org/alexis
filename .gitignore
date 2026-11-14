@@ -51,3 +51,8 @@ src-tauri/gen/
 
 # Agent review and release status
 .agents/
+
+# Local editorial API caches & databases
+scripts/.cache/
+*.sqlite
+*.db

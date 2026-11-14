@@ -485,7 +485,7 @@
           <div class="panel-header">
             <h3>Gliederungen für "{{ activeCorpusTitle }}"</h3>
             <div class="panel-header-actions">
-              <label class="btn-link upload-label">
+              <label v-if="canImportCorpora" class="btn-link upload-label">
                 <input
                   type="file"
                   accept=".tsv,.txt,.csv"
@@ -727,7 +727,7 @@
               </ul>
             </div>
             <div class="doc-sidebar-footer">
-              <span class="doc-version-tag">Alexis v0.3.0 · Local-First</span>
+              <span class="doc-version-tag">Alexis v0.3.1 · Local-First</span>
             </div>
           </aside>
 
@@ -745,10 +745,10 @@
                 Kein Lernender benötigt einen Account, und keine persönlichen Lernstatistiken verlassen jemals Ihr Gerät.
               </div>
               <ul class="help-list">
-                <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Offizielle Korpora können ausschließlich vom Repository-Inhaber per <code>git push</code> eingespielt werden.</li>
-                <li><strong>100 % lokale Datenhaltung:</strong> Eigene TSV-Importe, Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
-                <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und die Basis-Korpora. Ihre lokalen Lernfortschritte und eigenen Vokabelverzeichnisse bleiben davon unberührt erhalten.</li>
-                <li><strong>Souveränes Teilen eigener Wörterverzeichnisse:</strong> Da selbsterstellte Wortlisten häufig auf urheberrechtlich geschützten Lehrbüchern basieren, werden sie nicht automatisch öffentlich synchronisiert. Sie entscheiden selbst, welche Lektionen Sie über <em>„📥 TSV exportieren“</em> als Datei weitergeben.</li>
+                <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Das Einlesen neuer Wörter ist online blockiert; offizielle Korpora werden ausschließlich über die lokale Redaktions-Pipeline validiert und vom Repository-Inhaber per <code>git push</code> eingespielt.</li>
+                <li><strong>100 % lokale Datenhaltung:</strong> Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
+                <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und neue Lektionen der Basis-Korpora. Ihre lokalen Lernfortschritte bleiben davon unberührt erhalten.</li>
+                <li><strong>Souveräner Export:</strong> Sie können einzelne Lektionen oder gefilterte Auswahlen jederzeit über <em>„📥 TSV exportieren“</em> als saubere Textdatei für eigene Notizen oder zur Weitergabe sichern.</li>
               </ul>
             </section>
 
@@ -905,9 +905,9 @@
             <!-- Kapitel 7 -->
             <section v-show="activeHelpSection === 'sec-7'" class="doc-section">
               <div class="doc-crumb">Kapitel 7 · Datenformate</div>
-              <h4>7. Struktur importfähiger TSV-Dateien (Tab-Separated Values)</h4>
+              <h4>7. Struktur der TSV-Dateien & Redaktions-Pipeline</h4>
               <p class="modal-text">
-                Über die Schaltfläche <em>„📥 TSV importieren“</em> im Reiter <em>Korpora & Gliederung</em> können eigene Wortschatzlisten im TSV-Format (UTF-8, Tabstopp-getrennt) hochgeladen und ebenso pro Lektion oder Auswahl wieder als <code>.tsv</code> exportiert werden:
+                Das Einlesen neuer Wörter ist in der Online-Web-App / PWA deaktiviert, um die Konsistenz der Referenz-Wörterbücher zu sichern. Neue Lektionen werden lokal durch den Redaktor validiert (Free Dictionary API, Lexicala-Cache, IAST-Schwa-Tilgungs-Check) und per Git eingespielt. Der Export pro Lektion oder Auswahl als <code>.tsv</code> steht jederzeit zur Verfügung:
               </p>
               <table class="help-table">
                 <thead>
@@ -1105,6 +1105,11 @@ import type {
 
 // Theme & Environment
 const isTauri = ref(isTauriEnvironment());
+const isLocalHost =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1");
+const canImportCorpora = computed(() => isTauri.value || isLocalHost);
 const currentTheme = ref<"light" | "dark">("light");
 const isEmbedded = ref(false);
 
@@ -1598,6 +1603,7 @@ async function selectCorpus(corpusId: string) {
 const importNotice = ref<string>("");
 
 async function handleFileUpload(e: Event) {
+  if (!canImportCorpora.value) return;
   const target = e.target as HTMLInputElement;
   if (!target.files || target.files.length === 0) return;
   const file = target.files[0];

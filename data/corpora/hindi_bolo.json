@@ -442,7 +442,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l01",
       "lemma_native": "क़मीज़",
-      "lemma_translit": "kamīz",
+      "lemma_translit": "qamīz",
       "pos": "noun",
       "gender": "f",
       "definitions": [
@@ -493,7 +493,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l01",
       "lemma_native": "क़ालीन",
-      "lemma_translit": "kālīn",
+      "lemma_translit": "qālīn",
       "pos": "noun",
       "gender": "m",
       "definitions": [
@@ -1440,7 +1440,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l01",
       "lemma_native": "बाक़ी",
-      "lemma_translit": "bākī",
+      "lemma_translit": "bāqī",
       "pos": "adj",
       "gender": null,
       "definitions": [
@@ -5090,7 +5090,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "क़रीब",
-      "lemma_translit": "karīb",
+      "lemma_translit": "qarīb",
       "pos": "adv",
       "gender": null,
       "definitions": [
@@ -5294,7 +5294,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "ग़लती से",
-      "lemma_translit": "galtī se",
+      "lemma_translit": "ġaltī se",
       "pos": "adv",
       "gender": null,
       "definitions": [
@@ -6569,7 +6569,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "वक़्त",
-      "lemma_translit": "vakt",
+      "lemma_translit": "vaqt",
       "pos": "noun",
       "gender": "m",
       "definitions": [
@@ -6603,7 +6603,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "वाक़ई",
-      "lemma_translit": "vākai",
+      "lemma_translit": "vāqaī",
       "pos": "adv",
       "gender": null,
       "definitions": [
@@ -6654,7 +6654,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "शौक़ से",
-      "lemma_translit": "śauk se",
+      "lemma_translit": "śauq se",
       "pos": "adv",
       "gender": null,
       "definitions": [

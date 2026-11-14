@@ -10,8 +10,8 @@ Alexis unterscheidet sich grundlegend von herkömmlichen Vokabel-Cloud-Diensten 
 
 ### 1.1 Der Server als schreibgeschützte Basis (Read-Only)
 - **Kanonischer Datenbestand**: Die auf GitHub Pages bereitgestellte Web-App dient als statische Verteilungsbasis. Sie liefert den Programmcode und die verifizierten Kern-Wörterbücher (*Hindi bolo*, *Sanskritkurs Alois Payer*).
-- **Strikter Schreibschutz**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. Ein Browser-Client oder eine PWA besitzt technisch keinerlei Möglichkeit, Dateien auf dem Server zu überschreiben, zu löschen oder zu verändern.
-- **Inhaber-Kuration**: Neue offizielle Wörterbücher oder Korrekturen am Lehrwerk können ausschließlich vom Inhaber des Git-Repositories über authentifizierte Commits (`git push`) eingespielt werden.
+- **Strikter Schreibschutz & blockierter Online-Import**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. Zudem ist das Einlesen neuer Wörterbücher in der Online-Web-App / PWA bewusst deaktiviert, damit die Referenz-Wörterbücher konsistent bleiben.
+- **Inhaber-Kuration (Redaktions-Pipeline)**: Neue offizielle Wörterbücher oder Lektionen werden ausschließlich lokal durch den Redaktor validiert (siehe [REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und über authentifizierte Git-Commits (`git push`) eingespielt.
 
 ### 1.2 Lokale Datenspeicherung & Datenschutz
 - **100 % lokal auf dem Endgerät**: Wenn Sie in Alexis eigene TSV-Dateien importieren, Vokabeln lernen oder Notizen anlegen, werden diese Daten ausschließlich in der internen Datenbank Ihres Browsers (`IndexedDB`) bzw. bei der Desktop-App in einer lokalen SQLite-Datei gespeichert.
@@ -98,7 +98,7 @@ Im Reiter **Korpora & Gliederung** bestimmen Sie, welche Lehrwerke und Lektionen
 - **Multi-Selektion:** Wählen Sie durch einfaches Anhaken einzelne oder mehrere Bände und Lektionen aus.
 - **Lektions-Export (`📥 TSV`):** Jede Lektion verfügt über einen separaten Export-Button, um den Wortschatz als strukturierte Textdatei zu sichern.
 - **Sammel-Export:** Über *„📥 Gewählte als TSV exportieren“* können mehrere markierte Lektionen in einer Datei zusammengefasst heruntergeladen werden.
-- **Eigene TSV-Dateien importieren:** Laden Sie eigene Wortschatzlisten per Drag & Drop oder Dateidialog hoch.
+- **Redaktionelle Pflege:** Das Einlesen neuer Lektionen erfolgt ausschließlich durch Redaktoren über die lokale Validierungs-Pipeline ([REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und steht in der Online-PWA nicht zur Verfügung.
 
 ---
 
