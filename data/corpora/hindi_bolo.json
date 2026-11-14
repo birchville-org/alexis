@@ -388,7 +388,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "और",
       "lemma_translit": "aur",
-      "pos": "konj",
+      "pos": "conj",
       "gender": null,
       "definitions": [
         {
@@ -545,7 +545,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "क्या",
       "lemma_translit": "kyā",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -783,7 +783,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "जी",
       "lemma_translit": "jī",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -804,7 +804,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "जी नहीं",
       "lemma_translit": "jī nahī̃",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -821,7 +821,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "जी हाँ",
       "lemma_translit": "jī hā̃",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -1042,7 +1042,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "न (और) न",
       "lemma_translit": "na (aur) na",
-      "pos": "konj",
+      "pos": "conj",
       "gender": null,
       "definitions": [
         {
@@ -1127,7 +1127,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "नहीं",
       "lemma_translit": "nahī̃",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -1564,7 +1564,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "भी",
       "lemma_translit": "bhī",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -1989,7 +1989,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "लेकिन",
       "lemma_translit": "lekin",
-      "pos": "konj",
+      "pos": "conj",
       "gender": null,
       "definitions": [
         {
@@ -2384,7 +2384,7 @@
       "lesson_id": "hb1_l01",
       "lemma_native": "हाँ",
       "lemma_translit": "hā̃",
-      "pos": "ptk",
+      "pos": "part",
       "gender": null,
       "definitions": [
         {
@@ -5804,7 +5804,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "दीवार",
-      "lemma_translit": "divār",
+      "lemma_translit": "dīvār",
       "pos": "noun",
       "gender": "f",
       "definitions": [
@@ -6195,7 +6195,7 @@
       "volume_id": "hb1",
       "lesson_id": "hb1_l03",
       "lemma_native": "बगूला",
-      "lemma_translit": "bagulā",
+      "lemma_translit": "bagūlā",
       "pos": "noun",
       "gender": "m",
       "definitions": [

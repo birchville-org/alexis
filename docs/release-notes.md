@@ -1,5 +1,14 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.3.2 (2026-11-14)
+
+### Datenintegrität & Kernfunktionen
+- **Qualitätsbereinigung `hindi_bolo.json`**: 2 fehlende IAST-Makrons ergänzt (`dīvār`, `bagūlā`) und 10 deutschsprachige POS-Kürzel (`konj`, `ptk`) auf kanonische Codes (`conj`, `part`) normalisiert; Korpus-Audit schließt mit 0 Fehlern und 0 Hinweisen ab.
+- **Qualitätsbereinigung `payer_sanskrit.json`**: 12 nachgestellte Genus-Marker (`m.`/`f.`/`n.`) aus `lemma_translit` in das Feld `gender` verschoben, 14 fehlklassifizierte `noun`-Einträge korrigiert (13 Indeklinabilia auf `ind`, `पा` auf `verb`) sowie Markdown-Formatierungen (`**…**`, `\*`) aus 18 Bedeutungsfeldern entfernt.
+- **Wortart-Anzeige (`VocabularyExplorer.vue`)**: `formatPosShort` und `formatPosFull` um deutsche Bezeichnungen für `num`, `interj`, `conj`/`konj`, `part`/`ptk` und `ind` ergänzt.
+
+---
+
 ## v0.3.1 (2026-11-14)
 
 ### Datenintegrität & Kernfunktionen

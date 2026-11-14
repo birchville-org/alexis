@@ -748,7 +748,12 @@ function formatPosShort(pos?: string | null): string {
   if (p.includes("adj")) return "Adj.";
   if (p.includes("adv")) return "Adv.";
   if (p.includes("pron")) return "Pron.";
+  if (p.includes("num")) return "Num.";
+  if (p.includes("interj")) return "Interj.";
+  if (p.includes("conj") || p.includes("konj")) return "Konj.";
+  if (p.includes("part") || p.includes("ptk")) return "Part.";
   if (p.includes("postp")) return "Postp.";
+  if (p.includes("ind")) return "Indekl.";
   return pos;
 }
 
@@ -760,7 +765,12 @@ function formatPosFull(pos?: string | null): string {
   if (p.includes("adj")) return "Adjektiv";
   if (p.includes("adv")) return "Adverb";
   if (p.includes("pron")) return "Pronomen";
+  if (p.includes("num")) return "Zahlwort";
+  if (p.includes("interj")) return "Interjektion";
+  if (p.includes("conj") || p.includes("konj")) return "Konjunktion";
+  if (p.includes("part") || p.includes("ptk")) return "Partikel";
   if (p.includes("postp")) return "Postposition";
+  if (p.includes("ind")) return "Indeklinabile";
   return pos;
 }
 

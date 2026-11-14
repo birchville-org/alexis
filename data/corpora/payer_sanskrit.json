@@ -558,7 +558,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "\"Ich-bin-heit\", d.h. der (falsche) Glaube: Ich bin es, der sieht usw; \"Ich-bin-heit\", d.h. der (falsche) Glaube: **Ich** bin es, der sieht usw",
+          "meaning": "\"Ich-bin-heit\", d.h. der (falsche) Glaube: Ich bin es, der sieht usw; \"Ich-bin-heit\", d.h. der (falsche) Glaube: Ich bin es, der sieht usw",
           "notes": "Glossar-Eintrag (Genus: f)"
         }
       ],
@@ -858,7 +858,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Vergegenwärtigung, Erinnerung, meditative Vergegenwärtigung = Achtsamkeit, Überlieferung (Gegenbegriff zu śruti). Umfass; Vergegenwärtigung, Erinnerung, meditative Vergegenwärtigung = Achtsamkeit, Überlieferung (Gegenbegriff zu **śruti**). Umfasst:",
+          "meaning": "Vergegenwärtigung, Erinnerung, meditative Vergegenwärtigung = Achtsamkeit, Überlieferung (Gegenbegriff zu śruti). Umfass; Vergegenwärtigung, Erinnerung, meditative Vergegenwärtigung = Achtsamkeit, Überlieferung (Gegenbegriff zu śruti). Umfasst:",
           "notes": "Glossar-Eintrag (Genus: f)"
         }
       ],
@@ -1050,7 +1050,7 @@
       "lesson_id": "payer_l05",
       "lemma_native": "च",
       "lemma_translit": "ca",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -1468,7 +1468,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Glied des Körpers, Bestandteil; auch = **vedāṅga** = ⟪वेदाङ्ग⟫"
+          "meaning": "Glied des Körpers, Bestandteil; auch = vedāṅga = ⟪वेदाङ्ग⟫"
         }
       ],
       "tags": ["lektion07"]
@@ -1485,7 +1485,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "gehen (Gehört nach der einheimischen Verbklassifikation zur Präsensklasse 1, ist aber in Wirklichkeit eine Bildung mit einem Präsensstammbildungssuffix **-ccha-**: **gam** » Tiefstufe (**gm** ») **ga-ccha-ti**)",
+          "meaning": "gehen (Gehört nach der einheimischen Verbklassifikation zur Präsensklasse 1, ist aber in Wirklichkeit eine Bildung mit einem Präsensstammbildungssuffix -ccha-: gam » Tiefstufe (gm ») ga-ccha-ti)",
           "notes": "Wurzel ⟪गम्⟫ (gam), Klasse 1 P"
         }
       ],
@@ -1557,7 +1557,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Hölle (nach einer Hinduauffassung hat das Universum die Form eines Eis (**Brahmāṇḍa** m.n. = ⟪ब्रह्माण्ड⟫ = \"Ei Brahmās\"): oberhalb der Erde sind sechs Himmel mit ansteigender Glückseligkeit, unterhalb der Erde sind sieben sog. **pātāla** n. = ⟪पाताल⟫, Wohnstätten der **nāga** m. = ⟪नाग⟫ (Schlangen) und anderer mythischer Wesen, darunter kommen 7 Höllen mit steigenden Qualen)"
+          "meaning": "Hölle (nach einer Hinduauffassung hat das Universum die Form eines Eis (Brahmāṇḍa m.n. = ⟪ब्रह्माण्ड⟫ = \"Ei Brahmās\"): oberhalb der Erde sind sechs Himmel mit ansteigender Glückseligkeit, unterhalb der Erde sind sieben sog. pātāla n. = ⟪पाताल⟫, Wohnstätten der nāga m. = ⟪नाग⟫ (Schlangen) und anderer mythischer Wesen, darunter kommen 7 Höllen mit steigenden Qualen)"
         }
       ],
       "tags": ["lektion07"]
@@ -1871,7 +1871,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "sehen, erblicken (wird als Präsensstamm statt der Wurzel **dṛś** 0 \"sehen, erblicken\" verwendet)",
+          "meaning": "sehen, erblicken (wird als Präsensstamm statt der Wurzel dṛś 0 \"sehen, erblicken\" verwendet)",
           "notes": "Wurzel ⟪पश्⟫ (paś), Klasse 4 P"
         }
       ],
@@ -1954,7 +1954,7 @@
       "lesson_id": "payer_l08",
       "lemma_native": "तु",
       "lemma_translit": "tu",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -2028,7 +2028,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Opfer (aus \\*yj » ij + Suffix **yā**)"
+          "meaning": "Opfer (aus *yj » ij + Suffix yā)"
         }
       ],
       "tags": ["lektion09"]
@@ -2285,7 +2285,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Unwahrheit, Lüge (Gegensatz zu **satya**)"
+          "meaning": "Unwahrheit, Lüge (Gegensatz zu satya)"
         }
       ],
       "tags": ["lektion10"]
@@ -2388,7 +2388,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Übeltat, Böses (Gegensatz zu **puṇya**)"
+          "meaning": "Übeltat, Böses (Gegensatz zu puṇya)"
         }
       ],
       "tags": ["lektion10"]
@@ -2400,7 +2400,7 @@
       "lesson_id": "payer_l10",
       "lemma_native": "सह",
       "lemma_translit": "saha",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -2491,7 +2491,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Unrecht (Gegensatz zu **dharma**)"
+          "meaning": "Unrecht (Gegensatz zu dharma)"
         }
       ],
       "tags": ["lektion11"]
@@ -2503,12 +2503,12 @@
       "lesson_id": "payer_l11",
       "lemma_native": "एवम्",
       "lemma_translit": "evam",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
           "lang": "de",
-          "meaning": "so (adverbiell, z.B. **evaṃ jayati** \"so siegt er\")"
+          "meaning": "so (adverbiell, z.B. evaṃ jayati \"so siegt er\")"
         }
       ],
       "tags": ["lektion11"]
@@ -2520,7 +2520,7 @@
       "lesson_id": "payer_l11",
       "lemma_native": "इति",
       "lemma_translit": "iti",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -2542,7 +2542,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "wünschen (**iṣ-ccha-ti**)",
+          "meaning": "wünschen (iṣ-ccha-ti)",
           "notes": "Wurzel ⟪इष्⟫ (iṣ), Klasse 6 P"
         }
       ],
@@ -2560,7 +2560,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Wunsch (**iṣ** + **-ti**)"
+          "meaning": "Wunsch (iṣ + -ti)"
         }
       ],
       "tags": ["lektion11"]
@@ -2572,7 +2572,7 @@
       "lesson_id": "payer_l11",
       "lemma_native": "न",
       "lemma_translit": "na",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -2611,7 +2611,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "Frage (Suffix **-na** wie in **yaj-ña**)"
+          "meaning": "Frage (Suffix -na wie in yaj-ña)"
         }
       ],
       "tags": ["lektion11"]
@@ -2674,7 +2674,7 @@
       "lesson_id": "payer_l12",
       "lemma_native": "अपि",
       "lemma_translit": "api",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -2863,7 +2863,7 @@
       "lesson_id": "payer_l13",
       "lemma_native": "पा",
       "lemma_translit": "pā",
-      "pos": "noun",
+      "pos": "verb",
       "gender": null,
       "definitions": [
         {
@@ -2897,9 +2897,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "बल",
-      "lemma_translit": "bala n.",
+      "lemma_translit": "bala",
       "pos": "noun",
-      "gender": null,
+      "gender": "n",
       "definitions": [
         {
           "lang": "de",
@@ -2914,9 +2914,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "भूषण",
-      "lemma_translit": "bhūṣ-aṇa n",
+      "lemma_translit": "bhūṣ-aṇa",
       "pos": "noun",
-      "gender": null,
+      "gender": "n",
       "definitions": [
         {
           "lang": "de",
@@ -2948,9 +2948,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "बाला",
-      "lemma_translit": "bālā f.",
+      "lemma_translit": "bālā",
       "pos": "noun",
-      "gender": null,
+      "gender": "f",
       "definitions": [
         {
           "lang": "de",
@@ -2965,9 +2965,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "दीप",
-      "lemma_translit": "dīpa m.",
+      "lemma_translit": "dīpa",
       "pos": "noun",
-      "gender": null,
+      "gender": "m",
       "definitions": [
         {
           "lang": "de",
@@ -2982,9 +2982,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "जल",
-      "lemma_translit": "jala n.",
+      "lemma_translit": "jala",
       "pos": "noun",
-      "gender": null,
+      "gender": "n",
       "definitions": [
         {
           "lang": "de",
@@ -2999,9 +2999,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "जन",
-      "lemma_translit": "jan-a m.",
+      "lemma_translit": "jan-a",
       "pos": "noun",
-      "gender": null,
+      "gender": "m",
       "definitions": [
         {
           "lang": "de",
@@ -3016,9 +3016,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "लोक",
-      "lemma_translit": "loka m.",
+      "lemma_translit": "loka",
       "pos": "noun",
-      "gender": null,
+      "gender": "m",
       "definitions": [
         {
           "lang": "de",
@@ -3033,9 +3033,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "नर",
-      "lemma_translit": "nara m.",
+      "lemma_translit": "nara",
       "pos": "noun",
-      "gender": null,
+      "gender": "m",
       "definitions": [
         {
           "lang": "de",
@@ -3050,9 +3050,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "उक्ति",
-      "lemma_translit": "uk-ti f.",
+      "lemma_translit": "uk-ti",
       "pos": "noun",
-      "gender": null,
+      "gender": "f",
       "definitions": [
         {
           "lang": "de",
@@ -3067,9 +3067,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "वचन",
-      "lemma_translit": "vac-ana n.",
+      "lemma_translit": "vac-ana",
       "pos": "noun",
-      "gender": null,
+      "gender": "n",
       "definitions": [
         {
           "lang": "de",
@@ -3084,9 +3084,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "वाक्य",
-      "lemma_translit": "vāk-ya n.",
+      "lemma_translit": "vāk-ya",
       "pos": "noun",
-      "gender": null,
+      "gender": "n",
       "definitions": [
         {
           "lang": "de",
@@ -3101,9 +3101,9 @@
       "volume_id": "payer_vol1",
       "lesson_id": "payer_l14",
       "lemma_native": "शत्रु",
-      "lemma_translit": "śatru m.",
+      "lemma_translit": "śatru",
       "pos": "noun",
-      "gender": null,
+      "gender": "m",
       "definitions": [
         {
           "lang": "de",
@@ -3226,7 +3226,7 @@
       "lesson_id": "payer_l15",
       "lemma_native": "एव",
       "lemma_translit": "eva",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -6127,7 +6127,7 @@
       "lesson_id": "payer_l25",
       "lemma_native": "विना",
       "lemma_translit": "vinā",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -6257,7 +6257,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "br Pass.: :br PPP: :br Inf; br **Pass.:** ⟪उष्यते⟫:br **PPP:** ⟪उषित⟫:br **Inf.:** ⟪वस्तुम्⟫"
+          "meaning": "br Pass.: :br PPP: :br Inf; br Pass.: ⟪उष्यते⟫:br PPP: ⟪उषित⟫:br Inf.: ⟪वस्तुम्⟫"
         }
       ],
       "tags": ["glossar", "lektion27"]
@@ -6274,7 +6274,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "br PPP: :br Inf; br **PPP:** ⟪वसित⟫:br **Inf.:** ⟪वसितुम्⟫"
+          "meaning": "br PPP: :br Inf; br PPP: ⟪वसित⟫:br Inf.: ⟪वसितुम्⟫"
         }
       ],
       "tags": ["glossar", "lektion27"]
@@ -6291,7 +6291,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "br Pass.: :br PPP: :br Inf; br **Pass.:** ⟪ह्रियते⟫:br **PPP:** ⟪हृत⟫:br **Inf.:** ⟪हर्तुम्⟫"
+          "meaning": "br Pass.: :br PPP: :br Inf; br Pass.: ⟪ह्रियते⟫:br PPP: ⟪हृत⟫:br Inf.: ⟪हर्तुम्⟫"
         }
       ],
       "tags": ["glossar", "lektion27"]
@@ -7178,7 +7178,7 @@
       "lesson_id": "payer_l30",
       "lemma_native": "पुनर्",
       "lemma_translit": "punar",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -8454,7 +8454,7 @@
       "lesson_id": "payer_l33",
       "lemma_native": "मा",
       "lemma_translit": "mā",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -12110,7 +12110,7 @@
       "definitions": [
         {
           "lang": "de",
-          "meaning": "liegen. Diese Wurzel hat in allen Formen des Präsensstamms **Hochstufe:** 1.sg.Ind.Präs.Ā :sig[⟪शेये⟫] (śe + e). Folgende Formen sind besonders zu beachten: 3.pl.Ind.Präs.Ā :sig[⟪शेरते⟫], 3.pl.Imperf.Ā :sig[⟪अशेरत⟫]",
+          "meaning": "liegen. Diese Wurzel hat in allen Formen des Präsensstamms Hochstufe: 1.sg.Ind.Präs.Ā :sig[⟪शेये⟫] (śe + e). Folgende Formen sind besonders zu beachten: 3.pl.Ind.Präs.Ā :sig[⟪शेरते⟫], 3.pl.Imperf.Ā :sig[⟪अशेरत⟫]",
           "notes": "Wurzel ⟪शी⟫ (śī), Klasse 2Ā; Fut: शयिष्यते (śayiṣyate); Kaus: शापयति (śāpayati); PPP: शयित (śayita); Inf: शयितुम् (śayitum)"
         }
       ],
@@ -12828,7 +12828,7 @@
       "lesson_id": "payer_l48",
       "lemma_native": "अद्य",
       "lemma_translit": "adya",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
@@ -15511,7 +15511,7 @@
       "lesson_id": "payer_l52",
       "lemma_native": "प्रति",
       "lemma_translit": "prati",
-      "pos": "noun",
+      "pos": "ind",
       "gender": null,
       "definitions": [
         {
