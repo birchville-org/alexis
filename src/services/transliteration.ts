@@ -9,6 +9,27 @@ export function containsDevanagari(text: string): boolean {
   return /[\u0900-\u097F]/.test(text);
 }
 
+const IAST_DIACRITICS_RE = /[āīūṛṝḷḹṃṁḥṅñṭḍṇśṣqġ]/i;
+const HK_UPPERCASE_RE = /[AIURLMHGJTDNS]/;
+
+/**
+ * Heuristically detects Harvard-Kyoto input without misclassifying
+ * capitalized IAST words (e.g. "Agni", "Dharma") or Hindi "z".
+ */
+export function isHarvardKyotoInput(
+  text: string,
+  allowLowercaseZ = true,
+): boolean {
+  const clean = text.trim();
+  if (!clean || IAST_DIACRITICS_RE.test(clean)) {
+    return false;
+  }
+  if (HK_UPPERCASE_RE.test(clean.slice(1))) {
+    return true;
+  }
+  return allowLowercaseZ && clean.includes("z");
+}
+
 // ---------------------------------------------------------------------------
 // Pure TypeScript Transliteration Engine (Browser / Fallback)
 // ---------------------------------------------------------------------------

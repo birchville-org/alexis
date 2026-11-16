@@ -100,6 +100,11 @@ export interface DeckStats {
   due_today: number;
 }
 
+export interface DictionaryLink {
+  label: string;
+  url: string;
+}
+
 export interface DictionaryResult {
   source: string;
   headword: string;
@@ -108,6 +113,8 @@ export interface DictionaryResult {
   definitions: string[];
   etymology?: string;
   externalUrl?: string;
+  externalLabel?: string;
+  externalLinks?: DictionaryLink[];
 }
 
 export interface DictionaryProvider {

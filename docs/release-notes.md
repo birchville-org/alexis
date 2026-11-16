@@ -1,5 +1,17 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.4.0 (2026-11-16)
+
+### Datenintegrität & Kernfunktionen
+- **Hindi-Wörterbuch (`src/providers/hindiDictionary.ts`)**: Neuer Provider mit Inline-Definitionen über die Wiktionary REST API (inkl. automatischer Schwa-Tilgung bei IAST-Eingaben wie `kitāb` -> `किताब`) sowie Direktlinks auf **McGregor (Oxford Hindi-English)**, **Platts (Classical Hindi & Urdu)** (DSAL Chicago) und **Wiktionary**.
+- **Erweiterter Sanskrit-Wörterbuch-Hub (`src/providers/monierWilliams.ts`)**: Parallele Abfrage von **Monier-Williams (1899, EN)** und **Böhtlingk Petersburger Wörterbuch (DE)** über den aktiven `csl-apidev/getword.php`-Endpunkt (inkl. IAST-/HK-/Devanāgarī-zu-SLP1-Konvertierung) sowie Direktlinks zu **DCS** und **NWS Halle**.
+- **Wörterbuch-Tab (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`)**: Sprachumschalter zwischen Sanskrit und Hindi (automatisch vorbelegt nach aktivem Korpus), Race-Condition-Schutz (`dictSearchSeq`) und aktualisiertes Benutzerhandbuch.
+
+### Plattform- & Backend-Stabilität
+- **PWA Service Worker (`public/sw.js`, `src/main.ts`)**: Cache auf `alexis-cache-v2` erhöht, `localhost`/`127.0.0.1` vom Caching ausgenommen und Online-PWA auf Network-First mit Offline-Fallback umgestellt, damit neue Releases ohne manuelles Cache-Leeren erscheinen.
+
+---
+
 ## v0.3.2 (2026-11-14)
 
 ### Datenintegrität & Kernfunktionen

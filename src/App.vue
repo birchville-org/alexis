@@ -31,9 +31,9 @@
         </button>
         <button
           :class="['nav-btn', { active: currentTab === 'dictionary' }]"
-          @click="currentTab = 'dictionary'"
+          @click="openDictionaryTab"
         >
-          Wörterbuch (MW)
+          Wörterbuch
         </button>
         <button
           :class="['nav-btn', { active: currentTab === 'stats' }]"
@@ -620,17 +620,46 @@
       <!-- 3. DICTIONARY TAB -->
       <section v-if="currentTab === 'dictionary'" class="view-dictionary">
         <div class="view-header">
-          <h2>Wörterbuch-Hub (Monier-Williams)</h2>
+          <h2>
+            {{
+              dictLang === "hi"
+                ? "Wörterbuch-Hub (Hindi: Wiktionary & DSAL)"
+                : "Wörterbuch-Hub (Sanskrit: MW, PW, DCS & NWS)"
+            }}
+          </h2>
           <p class="view-desc">
-            Sanskrit- und philologische Lexikonsuche via Cologne Sanskrit Lexicon REST API.
+            {{
+              dictLang === "hi"
+                ? "Hindi-Lexikonsuche via Wiktionary REST API mit Direktlinks zu McGregor & Platts (DSAL Chicago)."
+                : "Sanskrit-Lexikonsuche via Cologne Sanskrit Lexicon (MW & Petersburger Wörterbuch) mit Direktlinks zu DCS & NWS Halle."
+            }}
           </p>
+        </div>
+
+        <div class="dict-provider-switch" role="tablist" aria-label="Wörterbuch-Auswahl">
+          <button
+            :class="['dict-provider-btn', { active: dictLang === 'sa' }]"
+            @click="selectDictLang('sa')"
+          >
+            Sanskrit (MW / PW / DCS / NWS)
+          </button>
+          <button
+            :class="['dict-provider-btn', { active: dictLang === 'hi' }]"
+            @click="selectDictLang('hi')"
+          >
+            Hindi (Wiktionary / McGregor / Platts)
+          </button>
         </div>
 
         <div class="dict-search-box">
           <input
             type="text"
             v-model="dictQuery"
-            placeholder="Suchbegriff in IAST oder Devanāgarī (z.B. deva, agni, dharma)..."
+            :placeholder="
+              dictLang === 'hi'
+                ? 'Suchbegriff in Devanāgarī, IAST oder HK (z.B. किताब, kitāb, namaste)...'
+                : 'Suchbegriff in IAST oder Devanāgarī (z.B. deva, agni, dharma)...'
+            "
             @keyup.enter="performDictSearch"
             class="dict-input"
           />
@@ -642,7 +671,10 @@
         <div v-if="dictResults.length" class="dict-results">
           <div v-for="(res, idx) in dictResults" :key="idx" class="dict-card">
             <div class="dict-head">
-              <h3>{{ res.headword }}</h3>
+              <h3>
+                {{ res.headword }}
+                <span v-if="res.transliteration" class="dict-translit">({{ res.transliteration }})</span>
+              </h3>
               <span class="dict-source">{{ res.source }}</span>
             </div>
             <div class="dict-body">
@@ -650,9 +682,21 @@
                 {{ def }}
               </p>
             </div>
-            <div v-if="res.externalUrl" class="dict-foot">
+            <div v-if="res.externalLinks?.length" class="dict-foot">
+              <a
+                v-for="(link, lIdx) in res.externalLinks"
+                :key="lIdx"
+                :href="link.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="dict-link"
+              >
+                {{ link.label }}
+              </a>
+            </div>
+            <div v-else-if="res.externalUrl" class="dict-foot">
               <a :href="res.externalUrl" target="_blank" rel="noopener noreferrer" class="dict-link">
-                ↗ Im Cologne Digital Sanskrit Lexicon öffnen
+                {{ res.externalLabel || "↗ Im Online-Wörterbuch öffnen" }}
               </a>
             </div>
           </div>
@@ -1085,6 +1129,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import VocabularyExplorer from "./components/VocabularyExplorer.vue";
+import { HindiDictionaryProvider } from "./providers/hindiDictionary";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
 import {
   type HindiNounDeclension,
@@ -1195,7 +1240,9 @@ function toggleShuffle() {
 }
 
 // Dictionary State
-const dictProvider = new MonierWilliamsProvider();
+const mwProvider = new MonierWilliamsProvider();
+const hindiDictProvider = new HindiDictionaryProvider();
+const dictLang = ref<"sa" | "hi">("hi");
 const dictQuery = ref("");
 const dictLoading = ref(false);
 const dictResults = ref<DictionaryResult[]>([]);
@@ -1673,13 +1720,36 @@ async function refreshStats() {
 }
 
 // Dictionary Action
+let dictSearchSeq = 0;
+
+function openDictionaryTab() {
+  if (dictResults.value.length === 0 && !dictQuery.value.trim()) {
+    dictLang.value = activeCorpus.value?.lang_code === "hi" ? "hi" : "sa";
+  }
+  currentTab.value = "dictionary";
+}
+
+function selectDictLang(lang: "sa" | "hi") {
+  dictSearchSeq += 1;
+  dictLang.value = lang;
+  dictLoading.value = false;
+  dictResults.value = [];
+}
+
 async function performDictSearch() {
-  if (!dictQuery.value.trim()) return;
+  const query = dictQuery.value.trim();
+  if (!query) return;
+  const seq = ++dictSearchSeq;
   dictLoading.value = true;
   try {
-    dictResults.value = await dictProvider.lookup(dictQuery.value.trim());
+    const provider = dictLang.value === "hi" ? hindiDictProvider : mwProvider;
+    const results = await provider.lookup(query);
+    if (seq !== dictSearchSeq) return;
+    dictResults.value = results;
   } finally {
-    dictLoading.value = false;
+    if (seq === dictSearchSeq) {
+      dictLoading.value = false;
+    }
   }
 }
 </script>
@@ -2757,6 +2827,29 @@ async function performDictSearch() {
 }
 
 /* Dictionary */
+.dict-provider-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.dict-provider-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.dict-provider-btn.active {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
 .dict-search-box {
   display: flex;
   gap: 0.75rem;
@@ -2787,9 +2880,24 @@ async function performDictSearch() {
   margin-bottom: 0.5rem;
 }
 
+.dict-translit {
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
 .dict-source {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.dict-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .dict-link {

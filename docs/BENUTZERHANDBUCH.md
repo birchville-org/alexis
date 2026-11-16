@@ -102,11 +102,11 @@ Im Reiter **Korpora & Gliederung** bestimmen Sie, welche Lehrwerke und Lektionen
 
 ---
 
-## 5. Wörterbuch-Hub (Monier-Williams)
+## 5. Wörterbuch-Hub
 
-Der Reiter **Wörterbuch (MW)** bindet das maßgebliche *Monier-Williams Sanskrit-English Dictionary* an:
-- Direkte Volltext- und Stichwortsuche über die REST-Schnittstelle der *Cologne Digital Sanskrit Dictionaries*.
-- Automatische Erkennung und Normalisierung von IAST, Harvard-Kyoto und Devanāgarī.
+Der Reiter **Wörterbuch** bündelt Online-Wörterbücher für beide Korpussprachen und wählt standardmäßig die Sprache des aktiven Lehrwerks:
+- **Hindi (Wiktionary & DSAL)**: Inline-Definitionen über die Wiktionary REST API (inkl. automatischer Schwa-Tilgung bei IAST-Eingaben wie `kitāb` -> `किताब`) sowie Direktlinks zu *McGregor (Oxford Hindi-English Dictionary)* und *Platts (Classical Hindi & Urdu)* auf DSAL Chicago.
+- **Sanskrit (MW, PW, DCS & NWS)**: Parallele Inline-Abfrage von *Monier-Williams (EN)* und *Böhtlingk Petersburger Wörterbuch (DE)* über das *Cologne Sanskrit Lexicon* (inkl. IAST-/HK-/Devanāgarī-zu-SLP1-Normalisierung) sowie Direktlinks zum *Digital Corpus of Sanskrit (DCS)* und zum *Nachtragswörterbuch des Sanskrit (NWS Halle)*.
 
 ---
 
