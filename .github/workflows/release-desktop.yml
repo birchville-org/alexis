@@ -1,0 +1,149 @@
+name: Build & Release Desktop App (Tauri)
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-tauri:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: "--target universal-apple-darwin"
+          - platform: ubuntu-22.04
+            args: ""
+          - platform: windows-latest
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev xdg-utils
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Prepare signing key
+        env:
+          RAW_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          CLEAN_KEY=$(echo "$RAW_KEY" | tr -d '\r\n')
+          echo "TAURI_SIGNING_PRIVATE_KEY=${CLEAN_KEY}" >> "$GITHUB_ENV"
+
+      - name: Build and attach Tauri desktop bundles
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Alexis ${{ github.ref_name }}"
+          releaseBody: "Desktop-Installer für macOS (Universal .dmg), Windows (.msi/.exe) und Linux (.AppImage/.deb)."
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          args: ${{ matrix.args }}
+
+  manifest:
+    needs: publish-tauri
+    if: success() && startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate and upload consolidated updater manifest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ github.ref_name }}"
+          CLEAN_VER="${TAG_NAME#v}"
+          REPO="${{ github.repository }}"
+
+          gh release download "${TAG_NAME}" --pattern "*.sig" || true
+
+          DARWIN_SIG=$(ls Alexis*.app.tar.gz.sig 2>/dev/null | head -n 1)
+          WIN_SIG=$(ls Alexis_*x64-setup.exe.sig 2>/dev/null | head -n 1)
+          LINUX_SIG=$(ls Alexis_*amd64.AppImage.sig 2>/dev/null | head -n 1)
+
+          SIG_DARWIN=$([ -n "$DARWIN_SIG" ] && cat "$DARWIN_SIG" || echo "")
+          SIG_WIN=$([ -n "$WIN_SIG" ] && cat "$WIN_SIG" || echo "")
+          SIG_LINUX=$([ -n "$LINUX_SIG" ] && cat "$LINUX_SIG" || echo "")
+
+          if [ -z "$SIG_DARWIN" ] || [ -z "$SIG_WIN" ] || [ -z "$SIG_LINUX" ]; then
+            echo "Error: Missing required signature files (darwin=$DARWIN_SIG win=$WIN_SIG linux=$LINUX_SIG)."
+            exit 1
+          fi
+
+          DARWIN_FILE="${DARWIN_SIG%.sig}"
+          WIN_FILE="${WIN_SIG%.sig}"
+          LINUX_FILE="${LINUX_SIG%.sig}"
+
+          node -e '
+            const fs = require("fs");
+            const [tag, repo, darwinFile, sigDarwin, winFile, sigWin, linuxFile, sigLinux] = process.argv.slice(1);
+            const manifest = {
+              version: tag,
+              notes: `Alexis ${tag} Desktop-Release`,
+              pub_date: new Date().toISOString(),
+              platforms: {
+                "darwin-aarch64": {
+                  signature: sigDarwin,
+                  url: `https://github.com/${repo}/releases/download/${tag}/${darwinFile}`
+                },
+                "darwin-x86_64": {
+                  signature: sigDarwin,
+                  url: `https://github.com/${repo}/releases/download/${tag}/${darwinFile}`
+                },
+                "windows-x86_64": {
+                  signature: sigWin,
+                  url: `https://github.com/${repo}/releases/download/${tag}/${winFile}`
+                },
+                "windows-x86_64-nsis": {
+                  signature: sigWin,
+                  url: `https://github.com/${repo}/releases/download/${tag}/${winFile}`
+                },
+                "linux-x86_64": {
+                  signature: sigLinux,
+                  url: `https://github.com/${repo}/releases/download/${tag}/${linuxFile}`
+                }
+              }
+            };
+            fs.writeFileSync("latest.json", JSON.stringify(manifest, null, 2));
+          ' "${TAG_NAME}" "${REPO}" "${DARWIN_FILE}" "${SIG_DARWIN}" "${WIN_FILE}" "${SIG_WIN}" "${LINUX_FILE}" "${SIG_LINUX}"
+
+          gh release upload "${TAG_NAME}" latest.json --clobber

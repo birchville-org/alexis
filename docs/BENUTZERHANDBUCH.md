@@ -13,16 +13,22 @@ Alexis unterscheidet sich grundlegend von herkömmlichen Vokabel-Cloud-Diensten 
 - **Strikter Schreibschutz & blockierter Online-Import**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. Zudem ist das Einlesen neuer Wörterbücher in der Online-Web-App / PWA bewusst deaktiviert, damit die Referenz-Wörterbücher konsistent bleiben.
 - **Inhaber-Kuration (Redaktions-Pipeline)**: Neue offizielle Wörterbücher oder Lektionen werden ausschließlich lokal durch den Redaktor validiert (siehe [REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und über authentifizierte Git-Commits (`git push`) eingespielt.
 
-### 1.2 Lokale Datenspeicherung & Datenschutz
-- **100 % lokal auf dem Endgerät**: Wenn Sie in Alexis eigene TSV-Dateien importieren, Vokabeln lernen oder Notizen anlegen, werden diese Daten ausschließlich in der internen Datenbank Ihres Browsers (`IndexedDB`) bzw. bei der Desktop-App in einer lokalen SQLite-Datei gespeichert.
+### 1.2 Drei Betriebsarten: Browser / PWA (Read-Only) vs. Desktop-App (Read-Write)
+- **1. Browser (Online-Web-App) & 2. Installierte Browser-PWA — *Read-Only Offliner***:
+  Beide nutzen die veröffentlichte Web-App inklusive Offline-Cache. Der Wortschatz bleibt schreibgeschützt (kuratierte Korpora); nur Ihr persönlicher Lernstand (Leitner-Boxen 1–5) wird lokal in der `IndexedDB` des Browsers gespeichert. **Wichtig:** Da ein Löschen der Browserdaten auch `IndexedDB` leert, sollten Sie regelmäßig ein `.json`-Backup sichern.
+- **3. Desktop-App (Tauri für macOS, Windows & Linux) — *Read-Write Offliner***:
+  **Wer eigene Wortlisten selbst kuratieren und als `.tsv`-Dateien importieren möchte, muss die Desktop-App herunterladen** (verfügbar über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest)). Sie speichert sowohl Wortlisten als auch Lernstände dauerhaft in einer lokalen SQLite-Datenbank auf der Festplatte.
+
+### 1.3 Lokale Datenspeicherung & Datenschutz
+- **100 % lokal auf dem Endgerät**: Lernstände (und in der Desktop-App auch eigene importierte TSV-Wortlisten) werden ausschließlich in der `IndexedDB` Ihres Browsers bzw. in der lokalen SQLite-Datenbank der Desktop-App gespeichert.
 - **Keine Server-Synchronisation**: Es werden keinerlei persönliche Lerndaten, Lernstände, Zeitstempel oder selbsterstellte Wortschätze an einen Server übertragen. Sie behalten die uneingeschränkte Kontrolle über Ihre Daten.
 
-### 1.3 Automatische Programm-Updates
-- Sobald Ihr Endgerät mit dem Internet verbunden ist, prüft der Service Worker im Hintergrund, ob auf dem Server eine neuere Version von Alexis vorliegt.
-- Bei einem Update werden der Programmcode und allfällige Korrekturen an den kanonischen Wörterbüchern im Cache aktualisiert.
-- **Ihre persönlichen Lernfortschritte** (in welcher Box eine Karte liegt, Fälligkeitsdaten, selbsterstellte Vokabellisten) bleiben dabei vollständig erhalten, da sie getrennt vom Programmcode in Ihrer lokalen Datenbank abgelegt sind.
+### 1.4 Automatische Programm-Updates
+- **Browser & PWA**: Sobald Ihr Endgerät mit dem Internet verbunden ist, prüft der Service Worker (Network-First) im Hintergrund, ob eine neuere Version von Alexis vorliegt, und aktualisiert App-Shell sowie kanonische Wörterbücher.
+- **Desktop-App (Tauri)**: Die Desktop-App prüft 4 Sekunden nach dem Start automatisch (sowie jederzeit manuell über **💾 Offline / Download** -> **🔄 Nach Updates suchen**) gegen GitHub Releases auf signierte Updates und installiert diese direkt in der App.
+- **Erhalt lokaler Daten**: Ihre persönlichen Lernfortschritte und in der Desktop-App importierte Wortlisten (`alexis.db` bzw. `IndexedDB`) bleiben bei jedem Update vollständig erhalten.
 
-### 1.4 Handhabung eigener Wörterverzeichnisse
+### 1.5 Handhabung eigener Wörterverzeichnisse
 - **Warum kein automatisches Teilen?** Viele Lernende erfassen Wortschätze aus urheberrechtlich geschützten Lehrbüchern. Ein automatisches Hochladen auf einen Server würde rechtliche Probleme aufwerfen, Datenschutzvereinbarungen erfordern und zu unkontrolliertem Datenwildwuchs führen.
 - **Souveräner Peer-to-Peer-Austausch**: Wenn Sie selbsterstellte Lektionen mit anderen teilen möchten, nutzen Sie die integrierte TSV-Export-Funktion. Sie erhalten eine saubere Textdatei (`.tsv`), die Sie per E-Mail, Messenger oder USB-Stick weitergeben können.
 - **Kuratierter Beitrag**: Haben Sie ein vollständiges gemeinfreies oder lizenziertes Werk erarbeitet, kann dieses dem Repository-Inhaber per GitHub Pull Request oder Issue zur offiziellen Aufnahme vorgeschlagen werden.

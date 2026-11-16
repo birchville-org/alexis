@@ -1,5 +1,16 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.5.0 (2026-11-16)
+
+### Datenintegrität & Kernfunktionen
+- **Desktop-Auto-Updater (`src/services/updater.ts`, `tauri-plugin-updater`)**: Automatische Update-Prüfung 4 Sekunden nach App-Start sowie manuelle Prüfung im Offline-/Download-Modal (`🔄 Nach Updates suchen`) mit signierten Paketen über `latest.json` unter vollständigem Erhalt der lokalen SQLite-Datenbank (`alexis.db`).
+- **Sichtbarer Betriebsmodus-Indikator (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`)**: Unter *Korpora & Gliederung* und im Offline-/Download-Modal wird nun transparent angezeigt, ob Alexis als *Browser / PWA (Wortschatz Read-Only)* oder *Desktop-App (SQLite Read-Write)* läuft; das Benutzerhandbuch stellt klar, dass eigene TSV-Kuration die Desktop-App erfordert.
+
+### Plattform- & Backend-Stabilität
+- **Multi-Plattform Desktop-CI (`.github/workflows/release-desktop.yml`)**: Automatisierter Build und Signierung für macOS (`universal-apple-darwin` `.dmg`/`.app`), Windows (`.msi`/`.exe`) und Linux (`.AppImage`/`.deb`) inklusive konsolidiertem `latest.json`-Updater-Manifest.
+
+---
+
 ## v0.4.0 (2026-11-16)
 
 ### Datenintegrität & Kernfunktionen

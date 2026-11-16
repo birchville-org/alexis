@@ -89,6 +89,43 @@
       </div>
     </div>
 
+    <!-- Desktop Auto-Update Banner (Tauri) -->
+    <div
+      v-if="isTauri && desktopUpdateInfo?.available && !desktopUpdateDismissed"
+      class="desktop-update-banner"
+    >
+      <div class="desktop-update-text">
+        <strong>Neue Desktop-Version v{{ desktopUpdateInfo.version }} verfügbar</strong>
+        <span v-if="desktopUpdateInstalling && desktopUpdateProgress !== null">
+          · Download {{ desktopUpdateProgress }}%
+        </span>
+      </div>
+      <div class="desktop-update-actions">
+        <button
+          class="btn-primary"
+          @click="installDesktopUpdate"
+          :disabled="desktopUpdateInstalling"
+        >
+          {{ desktopUpdateInstalling ? "Installiert..." : "Jetzt aktualisieren" }}
+        </button>
+        <a
+          :href="GITHUB_RELEASES_URL"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-outline"
+        >
+          Release Notes
+        </a>
+        <button
+          class="btn-link"
+          @click="desktopUpdateDismissed = true"
+          :disabled="desktopUpdateInstalling"
+        >
+          Später
+        </button>
+      </div>
+    </div>
+
     <!-- Main Content Area -->
     <main class="app-main">
       <!-- 1. TRAINER TAB -->
@@ -485,6 +522,7 @@
           <div class="panel-header">
             <h3>Gliederungen für "{{ activeCorpusTitle }}"</h3>
             <div class="panel-header-actions">
+              <span class="runtime-mode-pill">{{ runtimeModeInfo.badge }}</span>
               <label v-if="canImportCorpora" class="btn-link upload-label">
                 <input
                   type="file"
@@ -1085,8 +1123,22 @@
           <div class="offline-status-banner">
             <span class="status-dot green"></span>
             <div>
-              <strong>100% Offline-fähig im Browser</strong>
-              <p>Alle Vokabeln und Lernstände werden lokal im Browser (IndexedDB / Cache) gespeichert. Es wird keine Serververbindung benötigt.</p>
+              <strong>{{ runtimeModeInfo.title }}</strong>
+              <p>{{ runtimeModeInfo.detail }}</p>
+            </div>
+          </div>
+
+          <div v-if="isTauri" class="desktop-update-modal-box">
+            <h4>Desktop-App Updates (Tauri)</h4>
+            <p class="modal-text" v-if="desktopUpdateNotice">{{ desktopUpdateNotice }}</p>
+            <div class="modal-btn-row">
+              <button
+                class="btn-outline"
+                @click="runDesktopUpdateCheck(true)"
+                :disabled="desktopUpdateChecking"
+              >
+                {{ desktopUpdateChecking ? "Prüft..." : "🔄 Nach Updates suchen" }}
+              </button>
             </div>
           </div>
 
@@ -1127,7 +1179,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import VocabularyExplorer from "./components/VocabularyExplorer.vue";
 import { HindiDictionaryProvider } from "./providers/hindiDictionary";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
@@ -1139,6 +1191,12 @@ import {
 } from "./services/hindiMorphology";
 import { speechService } from "./services/speech";
 import { downloadTSV, isTauriEnvironment, storage } from "./services/storage";
+import {
+  type AppUpdateInfo,
+  GITHUB_RELEASES_URL,
+  checkForUpdates,
+  installAppUpdate,
+} from "./services/updater";
 import type {
   CorpusMeta,
   DeckStats,
@@ -1154,7 +1212,44 @@ const isLocalHost =
   typeof window !== "undefined" &&
   (window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1");
+const isStandalonePwa = ref(
+  typeof window !== "undefined" &&
+    (window.matchMedia?.("(display-mode: standalone)").matches ||
+      (window.navigator as { standalone?: boolean }).standalone === true),
+);
 const canImportCorpora = computed(() => isTauri.value || isLocalHost);
+const runtimeModeInfo = computed(() => {
+  if (isTauri.value) {
+    return {
+      badge: "Desktop-App · SQLite (Read-Write)",
+      title: "100% Offline-fähig als Desktop-App (Tauri)",
+      detail:
+        "Vokabeln und Lernstände liegen dauerhaft in einer lokalen SQLite-Datenbank. Eigene TSV-Wortlisten können importiert werden.",
+    };
+  }
+  if (isLocalHost) {
+    return {
+      badge: "Lokale Web-Instanz · IndexedDB (Read-Write)",
+      title: "Lokaler Entwicklungs-/Redaktionsmodus",
+      detail:
+        "Vokabeln und Lernstände liegen lokal in IndexedDB. TSV-Import ist auf localhost freigeschaltet.",
+    };
+  }
+  if (isStandalonePwa.value) {
+    return {
+      badge: "PWA · Wortschatz Read-Only",
+      title: "100% Offline-fähig als installierte PWA",
+      detail:
+        "Kuratierter Wortschatz (Read-Only); dein Lernstand (Boxen 1–5) liegt lokal in IndexedDB. Bitte regelmäßig ein JSON-Backup sichern.",
+    };
+  }
+  return {
+    badge: "Browser · Wortschatz Read-Only",
+    title: "100% Offline-fähig im Browser (PWA)",
+    detail:
+      "Kuratierter Wortschatz (Read-Only); dein Lernstand (Boxen 1–5) liegt lokal in IndexedDB. Bitte regelmäßig ein JSON-Backup sichern.",
+  };
+});
 const currentTheme = ref<"light" | "dark">("light");
 const isEmbedded = ref(false);
 
@@ -1626,12 +1721,76 @@ onMounted(async () => {
   // Load queue
   await reloadQueue(false);
   await refreshStats();
+
+  if (isTauri.value) {
+    desktopUpdateTimer = setTimeout(() => {
+      runDesktopUpdateCheck(false);
+    }, 4000);
+  }
 });
 
 onUnmounted(() => {
   window.removeEventListener("keydown", onKeydown);
   window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+  if (desktopUpdateTimer) {
+    clearTimeout(desktopUpdateTimer);
+    desktopUpdateTimer = null;
+  }
 });
+
+// Desktop Auto-Updater (Tauri)
+const desktopUpdateInfo = shallowRef<AppUpdateInfo | null>(null);
+const desktopUpdateChecking = ref(false);
+const desktopUpdateInstalling = ref(false);
+const desktopUpdateProgress = ref<number | null>(null);
+const desktopUpdateNotice = ref("");
+const desktopUpdateDismissed = ref(false);
+let desktopUpdateTimer: ReturnType<typeof setTimeout> | null = null;
+
+async function runDesktopUpdateCheck(manual: boolean) {
+  if (!isTauri.value || desktopUpdateChecking.value) return;
+  desktopUpdateChecking.value = true;
+  if (manual) {
+    desktopUpdateNotice.value = "";
+  }
+  try {
+    const info = await checkForUpdates();
+    desktopUpdateInfo.value = info;
+    if (info.available) {
+      desktopUpdateDismissed.value = false;
+      desktopUpdateNotice.value = `Version v${info.version} verfügbar.`;
+    } else if (manual) {
+      desktopUpdateNotice.value = info.error
+        ? `Update-Prüfung fehlgeschlagen: ${info.error}`
+        : "Du nutzt bereits die neueste Version.";
+    }
+  } finally {
+    desktopUpdateChecking.value = false;
+  }
+}
+
+async function installDesktopUpdate() {
+  const update = desktopUpdateInfo.value?.update;
+  if (!update || desktopUpdateInstalling.value) return;
+  desktopUpdateInstalling.value = true;
+  desktopUpdateProgress.value = 0;
+  try {
+    await installAppUpdate(update, (downloaded, total) => {
+      if (total && total > 0) {
+        desktopUpdateProgress.value = Math.min(
+          100,
+          Math.round((downloaded / total) * 100),
+        );
+      }
+    });
+    desktopUpdateNotice.value =
+      "Update installiert. Bitte App neu starten, um die neue Version zu aktivieren.";
+  } catch (err: unknown) {
+    desktopUpdateNotice.value = `Installation fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`;
+  } finally {
+    desktopUpdateInstalling.value = false;
+  }
+}
 
 // Selection Logic
 async function selectCorpus(corpusId: string) {
@@ -2904,6 +3063,43 @@ async function performDictSearch() {
   color: var(--accent-gold);
   font-size: 0.85rem;
   text-decoration: none;
+}
+
+.runtime-mode-pill {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+}
+
+.desktop-update-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1.5rem;
+  background-color: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--accent-gold);
+}
+
+.desktop-update-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.desktop-update-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.desktop-update-modal-box {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* Stats */
