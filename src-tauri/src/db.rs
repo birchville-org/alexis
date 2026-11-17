@@ -300,6 +300,28 @@ pub fn import_bundle(conn: &mut Connection, bundle: &CorpusBundle) -> Result<usi
     Ok(inserted_count)
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct EntryPatch {
+    pub id: String,
+    pub lemma_native: String,
+    pub lemma_translit: String,
+    pub pos: Option<String>,
+    pub gender: Option<String>,
+}
+
+pub fn update_entries(conn: &mut Connection, patches: &[EntryPatch]) -> Result<usize> {
+    let tx = conn.transaction()?;
+    let mut updated = 0;
+    for p in patches {
+        updated += tx.execute(
+            "UPDATE entries SET lemma_native = ?2, lemma_translit = ?3, pos = ?4, gender = ?5 WHERE id = ?1",
+            params![p.id, p.lemma_native, p.lemma_translit, p.pos, p.gender],
+        )?;
+    }
+    tx.commit()?;
+    Ok(updated)
+}
+
 pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<Vec<StudyCardItem>> {
     let mut sql = String::from(
         "SELECT e.id, e.corpus_id, e.volume_id, v.title, e.lesson_id,

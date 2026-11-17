@@ -1,6 +1,6 @@
 pub mod db;
 
-use db::{CorpusBundle, CorpusMeta, DeckStats, ReviewSubmission, StudyCardItem, StudyQueueQuery, VolumeData};
+use db::{CorpusBundle, CorpusMeta, DeckStats, EntryPatch, ReviewSubmission, StudyCardItem, StudyQueueQuery, VolumeData};
 use rusqlite::params;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -44,6 +44,12 @@ fn transliterate(text: String, from: String, to: String) -> String {
 fn import_corpus_bundle(state: State<AppState>, bundle: CorpusBundle) -> Result<usize, String> {
     let mut conn = state.db.lock().map_err(|e| e.to_string())?;
     db::import_bundle(&mut conn, &bundle).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn update_corpus_entries(state: State<AppState>, patches: Vec<EntryPatch>) -> Result<usize, String> {
+    let mut conn = state.db.lock().map_err(|e| e.to_string())?;
+    db::update_entries(&mut conn, &patches).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -198,6 +204,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             transliterate,
             import_corpus_bundle,
+            update_corpus_entries,
             get_study_queue,
             record_review,
             get_deck_stats,

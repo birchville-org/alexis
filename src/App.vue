@@ -3,7 +3,7 @@
     <!-- Header (Hidden in strict embed mode or minimal embed header) -->
     <header v-if="!isEmbedded" class="app-header">
       <div class="header-left">
-        <img src="/birchville_logo.png" alt="Birchville" class="header-logo" />
+        <img src="/alexis_logo.png" alt="Alexis" class="header-logo" />
         <div class="header-title-wrap">
           <h1 class="header-title">Alexis</h1>
           <span class="header-tagline">Vokabeltrainer</span>
@@ -59,7 +59,7 @@
     <!-- Compact Breadcrumb Bar in Embedded Mode -->
     <div v-else class="embedded-header">
       <div class="embed-title">
-        <img src="/birchville_logo.png" alt="Birchville" class="embed-logo" />
+        <img src="/alexis_logo.png" alt="Alexis" class="embed-logo" />
         <strong>Alexis Trainer</strong>
         <span class="embed-sub">{{ activeCorpusTitle }} · {{ selectedVolumesSummary }}</span>
       </div>
@@ -483,12 +483,14 @@
         :corpus-id="selectedCorpusId"
         :corpus-title="activeCorpusTitle"
         :is-hindi="isHindi"
+        :can-edit-corpora="canImportCorpora"
         :volumes-list="volumesList"
         :lessons-list="lessonsList"
         :selected-volume-ids="selectedVolumeIds"
         :selected-lesson-ids="selectedLessonIds"
         @practice-selection="startSessionWithItems"
         @switch-tab="currentTab = $event as Tab"
+        @entries-updated="reloadQueue(dueOnly)"
       />
 
       <!-- 3. CORPORA & GLIEDERUNG TAB -->
@@ -1155,8 +1157,9 @@
 
           <h4>1. Drei Betriebsarten im Überblick</h4>
           <p class="modal-text">
-            • <strong>Browser (Online-Web-App)</strong> &amp; <strong>Browser-PWA (App-Fenster):</strong> Read-Only für Wortlisten; dein Lernstand (Boxen 1–5) liegt lokal in <code>IndexedDB</code> (regelmäßiges <code>.json</code>-Backup empfohlen).
-            <br>• <strong>Desktop-App (Tauri · macOS, Windows, Linux):</strong> Read-Write Offliner mit lokaler <code>SQLite</code>-Datenbank für eigene <code>.tsv</code>-Wortlisten und automatischen Updates.
+            <strong>1. Browser (online):</strong> Standard-Vokabelliste direkt vom Server, unveränderlich (Lernstand lokal in <code>IndexedDB</code>).
+            <br><strong>2. Browser-PWA (installiert):</strong> Eigenes App-Fenster, offline nutzbar — aktualisiert App &amp; Standard-Wortliste bei Internetverbindung vom Server (<code>.json</code>-Backup empfohlen).
+            <br><strong>3. Desktop-App (Tauri · installiert):</strong> Offline mit lokaler <code>SQLite</code>-Datenbank — <strong>einzige Betriebsart für eigenen Vokabelbestand</strong> (<code>.tsv</code>-Import) inklusive Auto-Update.
           </p>
           <div v-if="!isTauri" class="modal-btn-row">
             <a

@@ -1,9 +1,9 @@
-const CACHE_NAME = "alexis-cache-v2";
+const CACHE_NAME = "alexis-cache-v3";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./birchville_logo.png",
+  "./alexis_logo.png",
 ];
 
 const IS_LOCALHOST =

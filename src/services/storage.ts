@@ -17,6 +17,14 @@ export function isTauriEnvironment(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 }
 
+export interface EntryPatch {
+  id: string;
+  lemma_native: string;
+  lemma_translit: string;
+  pos?: string | null;
+  gender?: string | null;
+}
+
 class StorageService {
   private memoryBundles: CorpusBundle[] = [
     defaultHindiBolo as unknown as CorpusBundle,
@@ -443,6 +451,36 @@ class StorageService {
     }
     await this.persistCorpusBundle(bundle.corpus.id, bundle);
     return bundle.entries.length;
+  }
+
+  async updateEntries(
+    corpusId: string,
+    patches: EntryPatch[],
+  ): Promise<number> {
+    if (patches.length === 0) return 0;
+    if (isTauriEnvironment()) {
+      const { invoke } = await import("@tauri-apps/api/core");
+      return invoke<number>("update_corpus_entries", { patches });
+    }
+    await this.ensureInitialized();
+    const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
+    if (!bundle) return 0;
+
+    const patchMap = new Map(patches.map((p) => [p.id, p]));
+    let updated = 0;
+    for (const entry of bundle.entries) {
+      const patch = patchMap.get(entry.id);
+      if (!patch) continue;
+      entry.lemma_native = patch.lemma_native;
+      entry.lemma_translit = patch.lemma_translit;
+      entry.pos = patch.pos ?? undefined;
+      entry.gender = patch.gender ?? undefined;
+      updated++;
+    }
+    if (updated > 0) {
+      await this.persistCorpusBundle(corpusId, bundle);
+    }
+    return updated;
   }
 
   async importTSV(

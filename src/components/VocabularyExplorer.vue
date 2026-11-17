@@ -22,6 +22,14 @@
         </button>
         <button
           class="btn-copy-tsv"
+          :disabled="filteredEntries.length === 0 || auditRunning"
+          @click="runOnlineAudit"
+          title="Prüft die aktuelle Vokabelliste gegen Wiktionary / Cologne MW auf Korrektheit"
+        >
+          🔎 Online prüfen ({{ filteredEntries.length }})
+        </button>
+        <button
+          class="btn-copy-tsv"
           :disabled="filteredEntries.length === 0"
           @click="downloadFilteredTSV"
           title="Lädt die gefilterte Liste als .tsv-Datei herunter"
@@ -456,11 +464,134 @@
         </div>
       </div>
     </div>
+
+    <!-- Online Dictionary Audit Popup Modal -->
+    <div v-if="showAuditModal" class="detail-modal-backdrop" @click.self="closeAuditModal">
+      <div class="detail-modal-box audit-modal">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <h3>Online-Wörterbuchprüfung ({{ isHindi ? "Wiktionary hi" : "Cologne MW" }})</h3>
+            <span class="modal-translit">
+              {{ auditRunning ? `Prüft ${auditDone} / ${auditTotal} Einträge…` : `${auditTotal} Einträge geprüft` }}
+            </span>
+          </div>
+          <button class="modal-close-btn" @click="closeAuditModal">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div v-if="auditRunning" class="audit-progress-box">
+            <div class="audit-progress-bar">
+              <div
+                class="audit-progress-fill"
+                :style="{ width: auditTotal ? `${Math.round((auditDone / auditTotal) * 100)}%` : '0%' }"
+              ></div>
+            </div>
+            <p class="audit-progress-text">
+              {{ auditDone }} von {{ auditTotal }} Einträgen gegen das Online-Wörterbuch geprüft…
+            </p>
+          </div>
+
+          <div v-else>
+            <div class="audit-summary-row">
+              <span class="audit-stat">Geprüft: <strong>{{ auditTotal }}</strong></span>
+              <span class="audit-stat">Befunde: <strong>{{ auditFindings.length }}</strong></span>
+              <span class="audit-stat">Auto-Korrekturen: <strong>{{ fixableFindingsCount }}</strong></span>
+            </div>
+
+            <div v-if="auditApplyNotice" class="audit-notice">
+              ✓ {{ auditApplyNotice }}
+            </div>
+
+            <div v-if="auditFindings.length === 0" class="audit-clean">
+              ✓ Alle {{ auditTotal }} geprüften Einträge stimmen mit dem Online-Wörterbuch und den Umschriftregeln überein.
+            </div>
+
+            <div v-else class="audit-list">
+              <div
+                v-for="(item, idx) in auditFindings"
+                :key="`${item.entryId}-${item.issueType}-${idx}`"
+                class="audit-item"
+              >
+                <label class="audit-item-check">
+                  <input
+                    v-if="hasSuggestion(item)"
+                    type="checkbox"
+                    :value="findingKey(item)"
+                    v-model="selectedFindingKeys"
+                  />
+                  <span v-else class="audit-warn-dot" title="Manuelle Prüfung erforderlich">⚠</span>
+                </label>
+                <div class="audit-item-body">
+                  <div class="audit-item-head">
+                    <strong class="deva-text">{{ item.lemmaNative }}</strong>
+                    <span v-if="item.lemmaTranslit" class="audit-translit">({{ item.lemmaTranslit }})</span>
+                    <a
+                      :href="item.lookupUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="audit-ext-link"
+                    >
+                      {{ item.lookupLabel }}
+                    </a>
+                  </div>
+                  <div class="audit-item-msg">{{ item.message }}</div>
+                  <div v-if="hasSuggestion(item)" class="audit-diff">
+                    Vorschlag:
+                    <span v-if="item.suggestedTranslit">
+                      Umschrift: <code>{{ item.lemmaTranslit || "–" }}</code> -> <code>{{ item.suggestedTranslit }}</code>
+                    </span>
+                    <span v-if="item.suggestedPos">
+                      Wortart: <code>{{ item.currentPos || "–" }}</code> -> <code>{{ item.suggestedPos }}</code>
+                    </span>
+                    <span v-if="item.suggestedGender">
+                      Genus: <code>{{ item.currentGender || "–" }}</code> -> <code>{{ item.suggestedGender }}</code>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p v-if="!canEditCorpora && fixableFindingsCount > 0" class="audit-readonly-hint">
+              Hinweis: Im Browser/PWA-Modus sind Wortlisten schreibgeschützt. Für dauerhafte Korrekturen in SQLite bitte die Desktop-App nutzen (oder Liste als TSV exportieren).
+            </p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <template v-if="auditRunning">
+            <button class="btn-outline" @click="cancelOnlineAudit">
+              Abbrechen
+            </button>
+          </template>
+          <template v-else>
+            <button
+              v-if="fixableFindingsCount > 0"
+              class="btn-outline"
+              @click="toggleAllFixable"
+            >
+              {{ selectedFindingKeys.length === fixableFindingsCount ? "Auswahl aufheben" : "Alle Vorschläge auswählen" }}
+            </button>
+            <button
+              v-if="canEditCorpora && fixableFindingsCount > 0"
+              class="btn-primary"
+              :disabled="selectedFindingKeys.length === 0 || auditApplying"
+              @click="applySelectedFixes"
+            >
+              {{ auditApplying ? "Speichert…" : `✓ Freigeben & Korrekturen anwenden (${selectedFindingKeys.length})` }}
+            </button>
+            <button class="btn-outline" @click="closeAuditModal">
+              Schließen
+            </button>
+          </template>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { type AuditFinding, auditEntriesOnline } from "../services/corpusAudit";
 import {
   type HindiNounDeclension,
   type HindiVerbParadigm,
@@ -468,7 +599,12 @@ import {
   getHindiVerbParadigm,
 } from "../services/hindiMorphology";
 import { speechService } from "../services/speech";
-import { downloadTSV, sanitizeTsvField, storage } from "../services/storage";
+import {
+  type EntryPatch,
+  downloadTSV,
+  sanitizeTsvField,
+  storage,
+} from "../services/storage";
 import {
   hkToDevanagariSync,
   hkToIast,
@@ -481,6 +617,7 @@ const props = defineProps<{
   corpusId: string;
   corpusTitle: string;
   isHindi: boolean;
+  canEditCorpora?: boolean;
   volumesList: VolumeData[];
   lessonsList: LessonData[];
   selectedVolumeIds: string[];
@@ -490,6 +627,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "practice-selection", items: StudyCardItem[]): void;
   (e: "switch-tab", tab: string): void;
+  (e: "entries-updated"): void;
 }>();
 
 // State
@@ -738,6 +876,148 @@ const filteredEntries = computed(() => {
 
   return sorted;
 });
+
+// Online Dictionary Audit & Approval Flow
+const showAuditModal = ref(false);
+const auditRunning = ref(false);
+const auditApplying = ref(false);
+const auditDone = ref(0);
+const auditTotal = ref(0);
+const auditFindings = ref<AuditFinding[]>([]);
+const selectedFindingKeys = ref<string[]>([]);
+const auditApplyNotice = ref("");
+let auditAbortController: AbortController | null = null;
+
+function findingKey(item: AuditFinding): string {
+  return `${item.entryId}::${item.issueType}`;
+}
+
+function hasSuggestion(item: AuditFinding): boolean {
+  return Boolean(
+    item.suggestedTranslit || item.suggestedPos || item.suggestedGender,
+  );
+}
+
+const fixableFindingsCount = computed(() => {
+  return auditFindings.value.filter(hasSuggestion).length;
+});
+
+async function runOnlineAudit() {
+  const targets = filteredEntries.value;
+  if (targets.length === 0 || auditRunning.value) return;
+
+  auditAbortController?.abort();
+  auditAbortController = new AbortController();
+
+  showAuditModal.value = true;
+  auditRunning.value = true;
+  auditDone.value = 0;
+  auditTotal.value = targets.length;
+  auditFindings.value = [];
+  selectedFindingKeys.value = [];
+  auditApplyNotice.value = "";
+
+  try {
+    const findings = await auditEntriesOnline(targets, props.isHindi, {
+      signal: auditAbortController.signal,
+      onProgress: (done, total) => {
+        auditDone.value = done;
+        auditTotal.value = total;
+      },
+    });
+    auditFindings.value = findings;
+    selectedFindingKeys.value = findings.filter(hasSuggestion).map(findingKey);
+  } catch (err) {
+    if (!(err instanceof DOMException && err.name === "AbortError")) {
+      console.warn("Online audit failed:", err);
+    }
+  } finally {
+    auditRunning.value = false;
+    auditAbortController = null;
+  }
+}
+
+function cancelOnlineAudit() {
+  auditAbortController?.abort();
+  auditRunning.value = false;
+}
+
+onUnmounted(() => {
+  cancelOnlineAudit();
+});
+
+function closeAuditModal() {
+  cancelOnlineAudit();
+  showAuditModal.value = false;
+}
+
+function toggleAllFixable() {
+  const fixable = auditFindings.value.filter(hasSuggestion).map(findingKey);
+  if (selectedFindingKeys.value.length === fixable.length) {
+    selectedFindingKeys.value = [];
+  } else {
+    selectedFindingKeys.value = fixable;
+  }
+}
+
+async function applySelectedFixes() {
+  if (!props.canEditCorpora || auditApplying.value) return;
+  const selectedSet = new Set(selectedFindingKeys.value);
+  const selectedFindings = auditFindings.value.filter((item) =>
+    selectedSet.has(findingKey(item)),
+  );
+  if (selectedFindings.length === 0) return;
+
+  auditApplying.value = true;
+  try {
+    const entryMap = new Map(allEntries.value.map((e) => [e.entry_id, e]));
+    const patchMap = new Map<string, EntryPatch>();
+
+    for (const item of selectedFindings) {
+      const base = entryMap.get(item.entryId);
+      if (!base) continue;
+      const existing = patchMap.get(item.entryId) ?? {
+        id: base.entry_id,
+        lemma_native: base.lemma_native,
+        lemma_translit: base.lemma_translit,
+        pos: base.pos ?? null,
+        gender: base.gender ?? null,
+      };
+      if (item.suggestedTranslit) {
+        existing.lemma_translit = item.suggestedTranslit;
+      }
+      if (item.suggestedPos) {
+        existing.pos = item.suggestedPos;
+      }
+      if (item.suggestedGender) {
+        existing.gender = item.suggestedGender;
+      }
+      patchMap.set(item.entryId, existing);
+    }
+
+    const patches = Array.from(patchMap.values());
+    const count = await storage.updateEntries(props.corpusId, patches);
+
+    for (const patch of patches) {
+      const target = entryMap.get(patch.id);
+      if (target) {
+        target.lemma_native = patch.lemma_native;
+        target.lemma_translit = patch.lemma_translit;
+        target.pos = patch.pos ?? undefined;
+        target.gender = patch.gender ?? undefined;
+      }
+    }
+
+    auditFindings.value = auditFindings.value.filter(
+      (item) => !selectedSet.has(findingKey(item)),
+    );
+    selectedFindingKeys.value = [];
+    auditApplyNotice.value = `${count} Korrektur(en) gespeichert.`;
+    emit("entries-updated");
+  } finally {
+    auditApplying.value = false;
+  }
+}
 
 // Format helpers
 function formatPosShort(pos?: string | null): string {
@@ -1705,6 +1985,132 @@ async function copyAsTSV() {
 
 .btn-outline:hover {
   background: var(--bg-surface);
+}
+
+/* Audit Modal */
+.audit-modal {
+  max-width: 720px;
+}
+
+.audit-progress-box {
+  padding: 1.25rem 0;
+}
+
+.audit-progress-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bg-surface);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.audit-progress-fill {
+  height: 100%;
+  background: var(--accent-gold);
+  transition: width 0.2s ease;
+}
+
+.audit-progress-text {
+  margin-top: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.audit-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.audit-notice {
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--accent-gold);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.audit-clean {
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-height: 52vh;
+  overflow-y: auto;
+}
+
+.audit-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.audit-item-check {
+  padding-top: 0.15rem;
+}
+
+.audit-warn-dot {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.audit-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.audit-item-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.audit-translit {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.audit-ext-link {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+.audit-item-msg {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.audit-diff {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.audit-readonly-hint {
+  margin-top: 0.85rem;
+  font-size: 0.84rem;
+  color: var(--text-muted);
 }
 
 @media (max-width: 768px) {

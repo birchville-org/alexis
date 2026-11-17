@@ -1,5 +1,17 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.0 (2026-11-17)
+
+### Datenintegrität & Kernfunktionen
+- **Online-Wörterbuchprüfung & Freigabe-Korrektur (`src/services/corpusAudit.ts`, `VocabularyExplorer.vue`)**: Im Vokabel-Explorer prüft `🔎 Online prüfen` die aktive Liste gegen Wiktionary (Hindi: Existenz, Wortart, IAST-Langvokale & Nuktas) bzw. Cologne Monier-Williams (Sanskrit: Existenz, IAST-Umschrift & fehlendes Genus). Befunde erscheinen im Popup-Fenster mit Vorschlägen (`Alt -> Neu`), Direktlinks und Freigabe-Button (`✓ Freigeben & Korrekturen anwenden`) für SQLite (`update_corpus_entries`) und `IndexedDB`.
+- **Eigenes Alexis-Logo (`public/alexis_logo.png`, `src-tauri/icons/`)**: Neues Leitner-Codex-Emblem mit Devanāgarī **अ** (links) und griechischem **Ω** (rechts) für Favicon, PWA-Manifest, Header und alle Desktop-/App-Icons.
+- **Präzisierte 3 Betriebsarten (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`)**: Klare Nummerierung 1. Browser (online), 2. Browser-PWA (installiert, offline mit Server-Updates) und 3. Desktop-App (offline, einzige Betriebsart für eigenen Vokabelbestand).
+
+### Plattform- & Backend-Stabilität
+- **PWA Service Worker (`public/sw.js`)**: Cache auf `alexis-cache-v3` (inkl. `alexis_logo.png`) aktualisiert.
+
+---
+
 ## v0.5.1 (2026-11-17)
 
 ### Datenintegrität & Kernfunktionen

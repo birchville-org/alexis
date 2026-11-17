@@ -13,11 +13,10 @@ Alexis unterscheidet sich grundlegend von herkömmlichen Vokabel-Cloud-Diensten 
 - **Strikter Schreibschutz & blockierter Online-Import**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. Zudem ist das Einlesen neuer Wörterbücher in der Online-Web-App / PWA bewusst deaktiviert, damit die Referenz-Wörterbücher konsistent bleiben.
 - **Inhaber-Kuration (Redaktions-Pipeline)**: Neue offizielle Wörterbücher oder Lektionen werden ausschließlich lokal durch den Redaktor validiert (siehe [REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und über authentifizierte Git-Commits (`git push`) eingespielt.
 
-### 1.2 Drei Betriebsarten: Browser / PWA (Read-Only) vs. Desktop-App (Read-Write)
-- **1. Browser (Online-Web-App) & 2. Installierte Browser-PWA — *Read-Only Offliner***:
-  Beide nutzen die veröffentlichte Web-App inklusive Offline-Cache. Der Wortschatz bleibt schreibgeschützt (kuratierte Korpora); nur Ihr persönlicher Lernstand (Leitner-Boxen 1–5) wird lokal in der `IndexedDB` des Browsers gespeichert. **Wichtig:** Da ein Löschen der Browserdaten auch `IndexedDB` leert, sollten Sie regelmäßig ein `.json`-Backup sichern.
-- **3. Desktop-App (Tauri für macOS, Windows & Linux) — *Read-Write Offliner***:
-  **Wer eigene Wortlisten selbst kuratieren und als `.tsv`-Dateien importieren möchte, muss die Desktop-App herunterladen** (verfügbar über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest)). Sie speichert sowohl Wortlisten als auch Lernstände dauerhaft in einer lokalen SQLite-Datenbank auf der Festplatte.
+### 1.2 Drei Betriebsarten: Browser, PWA & Desktop-App
+1. **Browser (online)**: Lädt die Standard-Vokabelliste direkt vom Server (unveränderlich / Read-Only). Ihr persönlicher Lernstand (Leitner-Boxen 1–5) wird lokal in `IndexedDB` gespeichert.
+2. **Browser-PWA (installiert)**: Eigenständiges App-Fenster für die Offline-Nutzung. Bei Internetverbindung werden App und Standard-Wortliste automatisch vom Server aktualisiert (Read-Only). Da ein Löschen der Browserdaten auch `IndexedDB` leert, wird ein regelmäßiges `.json`-Backup empfohlen.
+3. **Desktop-App (Tauri · macOS, Windows & Linux)**: Offline-Programm mit lokaler `SQLite`-Datenbank — **einzige Betriebsart für einen eigenen Vokabelbestand** (`.tsv`-Import & dauerhafte Kuration). Verfügbar über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest) inklusive Auto-Update.
 
 ### 1.3 Lokale Datenspeicherung & Datenschutz
 - **100 % lokal auf dem Endgerät**: Lernstände (und in der Desktop-App auch eigene importierte TSV-Wortlisten) werden ausschließlich in der `IndexedDB` Ihres Browsers bzw. in der lokalen SQLite-Datenbank der Desktop-App gespeichert.

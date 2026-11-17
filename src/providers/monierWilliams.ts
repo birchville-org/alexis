@@ -69,7 +69,7 @@ const IAST_TO_SLP1_CHARS: Record<string, string> = {
   ṣ: "z",
 };
 
-function iastToSlp1(iast: string): string {
+export function iastToSlp1(iast: string): string {
   let out = iast.toLowerCase();
   for (const [src, dst] of IAST_TO_SLP1_DIGRAPHS) {
     out = out.replaceAll(src, dst);
