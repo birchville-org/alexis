@@ -523,6 +523,16 @@
             <h3>Gliederungen für "{{ activeCorpusTitle }}"</h3>
             <div class="panel-header-actions">
               <span class="runtime-mode-pill">{{ runtimeModeInfo.badge }}</span>
+              <a
+                v-if="!canImportCorpora"
+                :href="GITHUB_RELEASES_URL"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-link"
+                title="Für eigenen TSV-Import Desktop-App herunterladen"
+              >
+                ↗ Desktop-App für TSV-Import
+              </a>
               <label v-if="canImportCorpora" class="btn-link upload-label">
                 <input
                   type="file"
@@ -827,6 +837,7 @@
                 Kein Lernender benötigt einen Account, und keine persönlichen Lernstatistiken verlassen jemals Ihr Gerät.
               </div>
               <ul class="help-list">
+                <li><strong>Drei Betriebsarten (Browser / PWA vs. Desktop-App):</strong> Im <em>Browser</em> und in der installierten <em>PWA</em> ist Alexis ein Read-Only-Offliner für den kuratierten Wortschatz (Lernstände liegen lokal in <code>IndexedDB</code>; regelmäßiges <code>.json</code>-Backup empfohlen). Wer eigene Wortlisten als <code>.tsv</code> importieren und dauerhaft in <code>SQLite</code> kuratieren möchte, nutzt die <a :href="GITHUB_RELEASES_URL" target="_blank" rel="noopener noreferrer" class="dict-link">Desktop-App (macOS, Windows, Linux)</a>.</li>
                 <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Das Einlesen neuer Wörter ist online blockiert; offizielle Korpora werden ausschließlich über die lokale Redaktions-Pipeline validiert und vom Repository-Inhaber per <code>git push</code> eingespielt.</li>
                 <li><strong>100 % lokale Datenhaltung:</strong> Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
                 <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und neue Lektionen der Basis-Korpora. Ihre lokalen Lernfortschritte bleiben davon unberührt erhalten.</li>
@@ -1142,7 +1153,23 @@
             </div>
           </div>
 
-          <h4>1. App installieren (PWA)</h4>
+          <h4>1. Drei Betriebsarten im Überblick</h4>
+          <p class="modal-text">
+            • <strong>Browser (Online-Web-App)</strong> &amp; <strong>Browser-PWA (App-Fenster):</strong> Read-Only für Wortlisten; dein Lernstand (Boxen 1–5) liegt lokal in <code>IndexedDB</code> (regelmäßiges <code>.json</code>-Backup empfohlen).
+            <br>• <strong>Desktop-App (Tauri · macOS, Windows, Linux):</strong> Read-Write Offliner mit lokaler <code>SQLite</code>-Datenbank für eigene <code>.tsv</code>-Wortlisten und automatischen Updates.
+          </p>
+          <div v-if="!isTauri" class="modal-btn-row">
+            <a
+              :href="GITHUB_RELEASES_URL"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-outline download-btn"
+            >
+              🖥️ Desktop-App herunterladen (macOS / Windows / Linux)
+            </a>
+          </div>
+
+          <h4>2. Als Browser-PWA installieren</h4>
           <p class="modal-text" v-if="deferredInstallPrompt">
             Klicke unten, um Alexis als eigenständige Desktop- oder Mobil-App zu installieren:
           </p>
@@ -1157,7 +1184,7 @@
             </button>
           </div>
 
-          <h4>2. Lokale Vokabeldaten herunterladen</h4>
+          <h4>3. Lokale Vokabeldaten &amp; Backups</h4>
           <p class="modal-text">
             Sichere die Vokabeln des aktuellen Korpus oder deinen persönlichen Lernstand als JSON-Datei:
           </p>

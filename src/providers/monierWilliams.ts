@@ -2,6 +2,7 @@ import {
   containsDevanagari,
   devanagariToIast,
   hkToIast,
+  iastToHk,
   isHarvardKyotoInput,
 } from "../services/transliteration";
 import type { DictionaryProvider, DictionaryResult } from "../types";
@@ -169,6 +170,7 @@ export class MonierWilliamsProvider implements DictionaryProvider {
       iastQuery = hkToIast(rawQuery);
     }
     const slp1Key = iastToSlp1(iastQuery);
+    const hkQuery = iastToHk(iastQuery);
 
     const cologneResults = await Promise.all(
       COLOGNE_DICTS.map((spec) => fetchCologneEntry(spec, rawQuery, slp1Key)),
@@ -187,7 +189,7 @@ export class MonierWilliamsProvider implements DictionaryProvider {
         },
         {
           label: "↗ NWS Halle (Nachtragswörterbuch)",
-          url: "https://nws.uzi.uni-halle.de/?lang=de",
+          url: `https://nws.uzi.uni-halle.de/search?q=${encodeURIComponent(hkQuery)}&lang=de`,
         },
       ],
     };

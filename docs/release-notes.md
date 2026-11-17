@@ -1,5 +1,14 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.5.1 (2026-11-17)
+
+### Datenintegrität & Kernfunktionen
+- **Platts (DSAL) IAST-Abfrage & Schwa-Tilgung (`src/providers/hindiDictionary.ts`)**: Platts erhält ab sofort IAST-Suchbegriffe (inkl. Schwa-Tilgung am Wortende bei Devanāgarī-Eingaben wie `किताब` -> `kitāb`), sodass persisch-arabische und klassische Hindi/Urdu-Lemmata direkt gefunden werden.
+- **NWS Halle Direktsuche (`src/providers/monierWilliams.ts`)**: Übergibt den Suchbegriff in Harvard-Kyoto direkt an `https://nws.uzi.uni-halle.de/search?q=...&lang=de`.
+- **Betriebsarten- & Desktop-Download-Hinweise (`src/App.vue`)**: Verweis auf die 3 Betriebsarten (Browser, Browser-PWA, Desktop-App) und Direktlink zur Desktop-Release-Seite im Offline-/Download-Modal, unter *Korpora & Gliederung* (bei deaktiviertem Online-Import) und im Hilfe-Modal.
+
+---
+
 ## v0.5.0 (2026-11-16)
 
 ### Datenintegrität & Kernfunktionen

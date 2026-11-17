@@ -1,6 +1,8 @@
 import {
   containsDevanagari,
+  devanagariToIast,
   hkToDevanagari,
+  hkToIast,
   iastToDevanagari,
   isHarvardKyotoInput,
 } from "../services/transliteration";
@@ -46,23 +48,38 @@ async function resolveDevanagariQuery(raw: string): Promise<string> {
   return deva.replace(/\u094d(?=\s|$)/gu, "");
 }
 
+async function resolveIastQuery(raw: string): Promise<string> {
+  const clean = raw.trim();
+  if (!clean) return clean;
+  if (containsDevanagari(clean)) {
+    const iast = await devanagariToIast(clean);
+    // Hindi schwa-deletion: strip trailing inherent 'a' after a consonant
+    return iast.replace(/([bcdfghjklmnpqrstvwxyzṅñṭḍṇśṣġ])a(?=\s|$)/giu, "$1");
+  }
+  return isHarvardKyotoInput(clean, false)
+    ? hkToIast(clean)
+    : clean.toLowerCase();
+}
+
 function buildExternalLinks(
   devaQuery: string,
+  iastQuery: string,
   rawQuery: string,
 ): DictionaryLink[] {
-  const dsalTerm = devaQuery || rawQuery;
+  const dsalDeva = devaQuery || rawQuery;
+  const plattsTerm = iastQuery || rawQuery;
   return [
     {
       label: "↗ McGregor (Oxford Hindi-English, DSAL)",
-      url: `https://dsal.uchicago.edu/cgi-bin/app/mcgregor_query.py?qs=${encodeURIComponent(dsalTerm)}&searchhws=yes`,
+      url: `https://dsal.uchicago.edu/cgi-bin/app/mcgregor_query.py?qs=${encodeURIComponent(dsalDeva)}&searchhws=yes`,
     },
     {
       label: "↗ Platts (Classical Hindi & Urdu, DSAL)",
-      url: `https://dsal.uchicago.edu/cgi-bin/app/platts_query.py?qs=${encodeURIComponent(dsalTerm)}&searchhws=yes`,
+      url: `https://dsal.uchicago.edu/cgi-bin/app/platts_query.py?qs=${encodeURIComponent(plattsTerm)}&searchhws=yes`,
     },
     {
       label: "↗ Wiktionary (Hindi)",
-      url: `https://en.wiktionary.org/wiki/${encodeURIComponent(dsalTerm)}#Hindi`,
+      url: `https://en.wiktionary.org/wiki/${encodeURIComponent(dsalDeva)}#Hindi`,
     },
   ];
 }
@@ -77,7 +94,8 @@ export class HindiDictionaryProvider implements DictionaryProvider {
     if (!rawQuery) return [];
 
     const devaQuery = await resolveDevanagariQuery(rawQuery);
-    const externalLinks = buildExternalLinks(devaQuery, rawQuery);
+    const iastQuery = await resolveIastQuery(rawQuery);
+    const externalLinks = buildExternalLinks(devaQuery, iastQuery, rawQuery);
     const translitLabel =
       devaQuery && devaQuery !== rawQuery ? rawQuery : undefined;
 
