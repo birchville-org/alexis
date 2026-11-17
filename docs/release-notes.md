@@ -1,5 +1,14 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.1 (2026-11-17)
+
+### Datenintegrität & Kernfunktionen
+- **Automatisches SQLite-Seeding für die Desktop-App (`src/services/storage.ts`)**: Bei einer frisch angelegten oder noch leeren lokalen `alexis.db` spielt `listCorpora()` beim App-Start automatisch die eingebetteten Standard-Korpora (`hindi-bolo`, `payer-sanskrit`) einmalig in SQLite ein; zudem hält `updateEntries()` den In-Memory-Stand in `memoryBundles` synchron.
+- **Natives Desktop-Menü & Hilfe-Kapitel 9 (`src-tauri/src/lib.rs`, `src/App.vue`)**: Menüleiste mit `File` (TSV-Import, TSV-Export, JSON-Backup), `View` (`Cmd+1`–`5`, Dark/Light, Richtung, Shuffle) und `Help` (`Benutzerhandbuch`, `Updates & Release Notes`, `Check for Updates...`) sowie neuem Hilfe-Kapitel `9. Updates & Release Notes` inkl. eingebetteter Versionshistorie.
+- **Präzisierte 3 Use Cases (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`)**: Klare Gegenüberstellung von Use Case 1 (Browser online), Use Case 2 (PWA offline mit Server-Updates auf Programm & Standard-Wortbestand) und Use Case 3 (Desktop-App für lokale Wortbestands-Pflege).
+
+---
+
 ## v0.6.0 (2026-11-17)
 
 ### Datenintegrität & Kernfunktionen

@@ -4,7 +4,8 @@ use db::{CorpusBundle, CorpusMeta, DeckStats, EntryPatch, ReviewSubmission, Stud
 use rusqlite::params;
 use std::path::PathBuf;
 use std::sync::Mutex;
-use tauri::{Manager, State};
+use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
+use tauri::{Emitter, Manager, State};
 use vidyut_lipi::{Lipika, Scheme};
 
 pub struct AppState {
@@ -199,6 +200,119 @@ pub fn run() {
             app.manage(AppState {
                 db: Mutex::new(conn),
             });
+
+            // Native Menu Bar (File, Edit, View, Window, Help)
+            let file_menu = Submenu::with_items(
+                app,
+                "File",
+                true,
+                &[
+                    &MenuItem::with_id(app, "import_tsv", "TSV-Wortliste importieren...", true, Some("CmdOrCtrl+O"))?,
+                    &MenuItem::with_id(app, "export_tsv", "Auswahl als TSV exportieren...", true, Some("CmdOrCtrl+E"))?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &MenuItem::with_id(app, "backup_json", "Lernstand-Backup sichern (.json)...", true, Some("CmdOrCtrl+S"))?,
+                ],
+            )?;
+            let edit_menu = Submenu::with_items(
+                app,
+                "Edit",
+                true,
+                &[
+                    &PredefinedMenuItem::undo(app, None)?,
+                    &PredefinedMenuItem::redo(app, None)?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &PredefinedMenuItem::cut(app, None)?,
+                    &PredefinedMenuItem::copy(app, None)?,
+                    &PredefinedMenuItem::paste(app, None)?,
+                    &PredefinedMenuItem::select_all(app, None)?,
+                ],
+            )?;
+            let view_menu = Submenu::with_items(
+                app,
+                "View",
+                true,
+                &[
+                    &MenuItem::with_id(app, "tab_trainer", "Trainer", true, Some("CmdOrCtrl+1"))?,
+                    &MenuItem::with_id(app, "tab_explorer", "Vokabelliste", true, Some("CmdOrCtrl+2"))?,
+                    &MenuItem::with_id(app, "tab_corpora", "Korpora & Gliederung", true, Some("CmdOrCtrl+3"))?,
+                    &MenuItem::with_id(app, "tab_dictionary", "Wörterbuch", true, Some("CmdOrCtrl+4"))?,
+                    &MenuItem::with_id(app, "tab_stats", "Statistik", true, Some("CmdOrCtrl+5"))?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &MenuItem::with_id(app, "toggle_theme", "Dark / Light Mode umschalten", true, Some("CmdOrCtrl+Shift+D"))?,
+                    &MenuItem::with_id(app, "toggle_direction", "Lernrichtung umkehren", true, Some("CmdOrCtrl+Shift+R"))?,
+                    &MenuItem::with_id(app, "toggle_shuffle", "Zufall / Shuffle umschalten", true, Some("CmdOrCtrl+Shift+S"))?,
+                ],
+            )?;
+            let window_menu = Submenu::with_items(
+                app,
+                "Window",
+                true,
+                &[
+                    &PredefinedMenuItem::minimize(app, None)?,
+                    &PredefinedMenuItem::maximize(app, None)?,
+                    &PredefinedMenuItem::close_window(app, None)?,
+                ],
+            )?;
+            let help_menu = Submenu::with_items(
+                app,
+                "Help",
+                true,
+                &[
+                    &MenuItem::with_id(app, "open_help_manual", "Benutzerhandbuch", true, Some("CmdOrCtrl+/"))?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &MenuItem::with_id(app, "open_help_updates", "Updates & Release Notes", true, None::<String>)?,
+                    &MenuItem::with_id(app, "check_updates_help", "Check for Updates...", true, None::<String>)?,
+                ],
+            )?;
+
+            #[cfg(target_os = "macos")]
+            let app_menu = {
+                let about_metadata = tauri::menu::AboutMetadata {
+                    name: Some("Alexis".to_string()),
+                    version: Some(app.package_info().version.to_string()),
+                    ..Default::default()
+                };
+                Submenu::with_items(
+                    app,
+                    "Alexis",
+                    true,
+                    &[
+                        &PredefinedMenuItem::about(app, None, Some(about_metadata))?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &MenuItem::with_id(app, "check_updates", "Check for Updates...", true, None::<String>)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::services(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::hide(app, None)?,
+                        &PredefinedMenuItem::hide_others(app, None)?,
+                        &PredefinedMenuItem::show_all(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::quit(app, None)?,
+                    ],
+                )?
+            };
+
+            let mut menu_items: Vec<&dyn tauri::menu::IsMenuItem<tauri::Wry>> = Vec::new();
+            #[cfg(target_os = "macos")]
+            menu_items.push(&app_menu);
+            menu_items.push(&file_menu);
+            menu_items.push(&edit_menu);
+            menu_items.push(&view_menu);
+            menu_items.push(&window_menu);
+            menu_items.push(&help_menu);
+
+            let menu = Menu::with_items(app, &menu_items)?;
+            app.set_menu(menu)?;
+
+            app.on_menu_event(|app_handle, event| {
+                let id = event.id().0.as_str();
+                let mapped = match id {
+                    "check_updates_help" => "check_updates",
+                    other => other,
+                };
+                let _ = app_handle.emit("menu-event", mapped);
+            });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

@@ -13,10 +13,13 @@ Alexis unterscheidet sich grundlegend von herkömmlichen Vokabel-Cloud-Diensten 
 - **Strikter Schreibschutz & blockierter Online-Import**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. Zudem ist das Einlesen neuer Wörterbücher in der Online-Web-App / PWA bewusst deaktiviert, damit die Referenz-Wörterbücher konsistent bleiben.
 - **Inhaber-Kuration (Redaktions-Pipeline)**: Neue offizielle Wörterbücher oder Lektionen werden ausschließlich lokal durch den Redaktor validiert (siehe [REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und über authentifizierte Git-Commits (`git push`) eingespielt.
 
-### 1.2 Drei Betriebsarten: Browser, PWA & Desktop-App
-1. **Browser (online)**: Lädt die Standard-Vokabelliste direkt vom Server (unveränderlich / Read-Only). Ihr persönlicher Lernstand (Leitner-Boxen 1–5) wird lokal in `IndexedDB` gespeichert.
-2. **Browser-PWA (installiert)**: Eigenständiges App-Fenster für die Offline-Nutzung. Bei Internetverbindung werden App und Standard-Wortliste automatisch vom Server aktualisiert (Read-Only). Da ein Löschen der Browserdaten auch `IndexedDB` leert, wird ein regelmäßiges `.json`-Backup empfohlen.
-3. **Desktop-App (Tauri · macOS, Windows & Linux)**: Offline-Programm mit lokaler `SQLite`-Datenbank — **einzige Betriebsart für einen eigenen Vokabelbestand** (`.tsv`-Import & dauerhafte Kuration). Verfügbar über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest) inklusive Auto-Update.
+### 1.2 Welcher Modus passt zu meinem Anwendungsfall? (3 Use Cases)
+- **Use Case 1 — Reiner Online-Betrieb im Browser:**
+  Du übst direkt im Browser mit dem vorgegebenen, kuratierten Standard-Wortschatz vom Server (schreibgeschützt). Dein persönlicher Lernfortschritt (Leitner-Boxen 1–5) wird dabei automatisch lokal in deinem Browser (`IndexedDB`) gespeichert.
+- **Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen:**
+  Du installierst Alexis aus dem Browser heraus als App-Fenster und kannst komplett offline lernen. Auch hier ist der Wortschatz schreibgeschützt. Sobald der Computer wieder online ist, werden Programm und offizieller Standard-Wortschatz automatisch vom Server aktualisiert; dein lokaler Lernfortschritt (Boxen 1–5) bleibt erhalten *(regelmäßiges `.json`-Backup empfohlen)*.
+- **Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für eigene Wortbestände:**
+  Du lädst und installierst die eigenständige Desktop-App über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest). Sie speichert alle Daten in einer lokalen `SQLite`-Datenbank auf der Festplatte und ist die **einzige Betriebsart, in der eigene Wortlisten (`.tsv`) importiert, geprüft und dauerhaft lokal gepflegt werden können**.
 
 ### 1.3 Lokale Datenspeicherung & Datenschutz
 - **100 % lokal auf dem Endgerät**: Lernstände (und in der Desktop-App auch eigene importierte TSV-Wortlisten) werden ausschließlich in der `IndexedDB` Ihres Browsers bzw. in der lokalen SQLite-Datenbank der Desktop-App gespeichert.

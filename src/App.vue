@@ -537,6 +537,7 @@
               </a>
               <label v-if="canImportCorpora" class="btn-link upload-label">
                 <input
+                  ref="tsvFileInput"
                   type="file"
                   accept=".tsv,.txt,.csv"
                   @change="handleFileUpload"
@@ -839,7 +840,9 @@
                 Kein Lernender benötigt einen Account, und keine persönlichen Lernstatistiken verlassen jemals Ihr Gerät.
               </div>
               <ul class="help-list">
-                <li><strong>Drei Betriebsarten (Browser / PWA vs. Desktop-App):</strong> Im <em>Browser</em> und in der installierten <em>PWA</em> ist Alexis ein Read-Only-Offliner für den kuratierten Wortschatz (Lernstände liegen lokal in <code>IndexedDB</code>; regelmäßiges <code>.json</code>-Backup empfohlen). Wer eigene Wortlisten als <code>.tsv</code> importieren und dauerhaft in <code>SQLite</code> kuratieren möchte, nutzt die <a :href="GITHUB_RELEASES_URL" target="_blank" rel="noopener noreferrer" class="dict-link">Desktop-App (macOS, Windows, Linux)</a>.</li>
+                <li><strong>Use Case 1 — Reiner Online-Betrieb im Browser:</strong> Du übst direkt im Browser mit dem vorgegebenen, kuratierten Standard-Wortschatz vom Server (schreibgeschützt). Dein persönlicher Lernfortschritt (Leitner-Boxen 1–5) wird dabei automatisch lokal in deinem Browser (<code>IndexedDB</code>) gespeichert.</li>
+                <li><strong>Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen:</strong> Du installierst Alexis aus dem Browser heraus als App-Fenster und kannst komplett offline lernen. Auch hier ist der Wortschatz schreibgeschützt. Sobald der Computer wieder online ist, werden Programm und offizieller Standard-Wortschatz automatisch vom Server aktualisiert; dein lokaler Lernfortschritt (Boxen 1–5) bleibt erhalten <em>(regelmäßiges <code>.json</code>-Backup empfohlen)</em>.</li>
+                <li><strong>Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für eigene Wortbestände:</strong> Du lädst und installierst die eigenständige <a :href="GITHUB_RELEASES_URL" target="_blank" rel="noopener noreferrer" class="dict-link">Desktop-App</a>. Sie speichert alle Daten in einer lokalen <code>SQLite</code>-Datenbank auf der Festplatte und ist die <strong>einzige Betriebsart, in der eigene Wortlisten (<code>.tsv</code>) importiert, geprüft und dauerhaft lokal gepflegt werden können</strong>.</li>
                 <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Das Einlesen neuer Wörter ist online blockiert; offizielle Korpora werden ausschließlich über die lokale Redaktions-Pipeline validiert und vom Repository-Inhaber per <code>git push</code> eingespielt.</li>
                 <li><strong>100 % lokale Datenhaltung:</strong> Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
                 <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und neue Lektionen der Basis-Korpora. Ihre lokalen Lernfortschritte bleiben davon unberührt erhalten.</li>
@@ -1120,6 +1123,53 @@
                 <br>• <strong>Phase 5: Optionales Tastatur-Schrifttraining:</strong> Zuschaltbarer Modus zum aktiven Eintippen.
               </p>
             </section>
+
+            <!-- Kapitel 9 -->
+            <section v-show="activeHelpSection === 'sec-9'" class="doc-section">
+              <div class="doc-crumb">Kapitel 9 · Updates &amp; Release Notes</div>
+              <h4>9. Programm-Updates &amp; Versionshistorie</h4>
+              <div class="doc-callout">
+                <strong>Installierte Version:</strong> <code>v{{ appVersion }}</code> ·
+                <span>{{ runtimeModeInfo.badge }}</span>
+              </div>
+              <div v-if="isTauri" class="desktop-update-help-box">
+                <p class="modal-text" v-if="desktopUpdateNotice">{{ desktopUpdateNotice }}</p>
+                <div class="modal-btn-row">
+                  <button
+                    class="btn-outline"
+                    @click="runDesktopUpdateCheck(true)"
+                    :disabled="desktopUpdateChecking"
+                  >
+                    {{ desktopUpdateChecking ? "Prüft..." : "🔄 Nach Updates suchen (Check for Updates...)" }}
+                  </button>
+                  <button
+                    v-if="desktopUpdateInfo?.available"
+                    class="btn-primary"
+                    @click="installDesktopUpdate"
+                    :disabled="desktopUpdateInstalling"
+                  >
+                    {{ desktopUpdateInstalling ? "Installiert..." : `Jetzt auf v${desktopUpdateInfo.version} aktualisieren` }}
+                  </button>
+                </div>
+              </div>
+              <p v-else class="modal-text">
+                Im Browser und in der installierten PWA werden Updates bei bestehender Internetverbindung automatisch über den Service Worker geladen. Für die Desktop-App sind neue Versionen über die <a :href="GITHUB_RELEASES_URL" target="_blank" rel="noopener noreferrer" class="dict-link">GitHub Releases</a> verfügbar.
+              </p>
+
+              <h5>Release Notes</h5>
+              <div class="release-notes-list">
+                <div
+                  v-for="rel in releaseNotesEntries"
+                  :key="rel.heading"
+                  class="release-note-card"
+                >
+                  <h6>{{ rel.heading }}</h6>
+                  <ul class="help-list">
+                    <li v-for="(line, idx) in rel.lines" :key="idx">{{ line }}</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
           </article>
         </div>
       </div>
@@ -1155,11 +1205,11 @@
             </div>
           </div>
 
-          <h4>1. Drei Betriebsarten im Überblick</h4>
+          <h4>1. Welcher Modus passt zu meinem Anwendungsfall? (3 Use Cases)</h4>
           <p class="modal-text">
-            <strong>1. Browser (online):</strong> Standard-Vokabelliste direkt vom Server, unveränderlich (Lernstand lokal in <code>IndexedDB</code>).
-            <br><strong>2. Browser-PWA (installiert):</strong> Eigenes App-Fenster, offline nutzbar — aktualisiert App &amp; Standard-Wortliste bei Internetverbindung vom Server (<code>.json</code>-Backup empfohlen).
-            <br><strong>3. Desktop-App (Tauri · installiert):</strong> Offline mit lokaler <code>SQLite</code>-Datenbank — <strong>einzige Betriebsart für eigenen Vokabelbestand</strong> (<code>.tsv</code>-Import) inklusive Auto-Update.
+            <strong>Use Case 1 — Reiner Online-Betrieb im Browser:</strong> Du übst online mit dem vorgegebenen Standard-Wortschatz (schreibgeschützt); dein Lernfortschritt (Boxen 1–5) wird lokal im Browser (<code>IndexedDB</code>) gespeichert.
+            <br><strong>Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen:</strong> App-Fenster für kompletten Offline-Betrieb (Wortschatz schreibgeschützt). Bei Internetverbindung werden Programm und offizieller Standard-Wortschatz automatisch vom Server aktualisiert; dein lokaler Lernfortschritt bleibt erhalten <em>(regelmäßiges <code>.json</code>-Backup empfohlen)</em>.
+            <br><strong>Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für eigene Wortbestände:</strong> Offline-Betrieb mit lokaler <code>SQLite</code>-Datenbank — <strong>einzige Betriebsart, in der eigene Wortlisten (<code>.tsv</code>) importiert, geprüft und dauerhaft lokal gepflegt werden können</strong>.
           </p>
           <div v-if="!isTauri" class="modal-btn-row">
             <a
@@ -1209,7 +1259,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, shallowRef } from "vue";
+import {
+  computed,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  shallowRef,
+} from "vue";
+import releaseNotesRaw from "../docs/release-notes.md?raw";
+import pkg from "../package.json";
 import VocabularyExplorer from "./components/VocabularyExplorer.vue";
 import { HindiDictionaryProvider } from "./providers/hindiDictionary";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
@@ -1635,7 +1694,29 @@ const helpSections = [
   { id: "sec-6", title: "6. Tastaturkürzel-Referenz", num: "6" },
   { id: "sec-7", title: "7. TSV-Spezifikation", num: "7" },
   { id: "sec-8", title: "8. Anki-Vergleich & Roadmap", num: "8" },
+  { id: "sec-9", title: "9. Updates & Release Notes", num: "9" },
 ];
+
+const appVersion = pkg.version;
+
+const releaseNotesEntries = computed(() => {
+  const blocks = releaseNotesRaw
+    .split(/\n---\n/)
+    .map((b) => b.trim())
+    .filter(Boolean);
+  const parsed: Array<{ heading: string; lines: string[] }> = [];
+  for (const block of blocks) {
+    const lines = block.split("\n");
+    const headingLine = lines.find((l) => l.startsWith("## "));
+    if (!headingLine) continue;
+    const heading = headingLine.replace(/^##\s+/, "").trim();
+    const bullets = lines
+      .filter((l) => l.trim().startsWith("- "))
+      .map((l) => l.trim().slice(2).replace(/\*\*/g, "").replace(/`/g, ""));
+    parsed.push({ heading, lines: bullets });
+  }
+  return parsed;
+});
 
 function selectHelpSection(id: string) {
   activeHelpSection.value = id;
@@ -1756,19 +1837,87 @@ onMounted(async () => {
     desktopUpdateTimer = setTimeout(() => {
       runDesktopUpdateCheck(false);
     }, 4000);
+
+    try {
+      const { listen } = await import("@tauri-apps/api/event");
+      const unlisten = await listen<string>("menu-event", (event) => {
+        switch (event.payload) {
+          case "import_tsv":
+            currentTab.value = "corpora";
+            nextTick(() => tsvFileInput.value?.click());
+            break;
+          case "export_tsv":
+            exportSelectedLessonsTSV();
+            break;
+          case "backup_json":
+            downloadStudyBackup();
+            break;
+          case "tab_trainer":
+            currentTab.value = "trainer";
+            break;
+          case "tab_explorer":
+            currentTab.value = "explorer";
+            break;
+          case "tab_corpora":
+            currentTab.value = "corpora";
+            break;
+          case "tab_dictionary":
+            openDictionaryTab();
+            break;
+          case "tab_stats":
+            currentTab.value = "stats";
+            break;
+          case "toggle_theme":
+            toggleTheme();
+            break;
+          case "toggle_direction":
+            toggleDirection();
+            break;
+          case "toggle_shuffle":
+            toggleShuffle();
+            break;
+          case "open_help_manual":
+            activeHelpSection.value = "sec-1";
+            showHelpModal.value = true;
+            break;
+          case "open_help_updates":
+            activeHelpSection.value = "sec-9";
+            showHelpModal.value = true;
+            break;
+          case "check_updates":
+            activeHelpSection.value = "sec-9";
+            showHelpModal.value = true;
+            runDesktopUpdateCheck(true);
+            break;
+        }
+      });
+      if (isUnmounted) {
+        unlisten();
+      } else {
+        unlistenMenu = unlisten;
+      }
+    } catch (err) {
+      console.warn("Could not attach menu listener:", err);
+    }
   }
 });
 
 onUnmounted(() => {
+  isUnmounted = true;
   window.removeEventListener("keydown", onKeydown);
   window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
   if (desktopUpdateTimer) {
     clearTimeout(desktopUpdateTimer);
     desktopUpdateTimer = null;
   }
+  unlistenMenu?.();
+  unlistenMenu = null;
 });
 
-// Desktop Auto-Updater (Tauri)
+// Desktop Auto-Updater & Native Menu Refs (Tauri)
+const tsvFileInput = ref<HTMLInputElement | null>(null);
+let isUnmounted = false;
+let unlistenMenu: (() => void) | null = null;
 const desktopUpdateInfo = shallowRef<AppUpdateInfo | null>(null);
 const desktopUpdateChecking = ref(false);
 const desktopUpdateInstalling = ref(false);
@@ -3130,6 +3279,30 @@ async function performDictSearch() {
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.desktop-update-help-box {
+  margin: 0.75rem 0 1.25rem;
+}
+
+.release-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 0.6rem;
+}
+
+.release-note-card {
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+}
+
+.release-note-card h6 {
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  color: var(--accent-gold);
 }
 
 /* Stats */

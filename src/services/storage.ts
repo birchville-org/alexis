@@ -163,7 +163,19 @@ class StorageService {
   async listCorpora(): Promise<CorpusMeta[]> {
     if (isTauriEnvironment()) {
       const { invoke } = await import("@tauri-apps/api/core");
-      return invoke<CorpusMeta[]>("list_corpora");
+      let corpora = await invoke<CorpusMeta[]>("list_corpora");
+      const existingIds = new Set(corpora.map((c) => c.id));
+      let seeded = false;
+      for (const bundle of this.memoryBundles) {
+        if (!existingIds.has(bundle.corpus.id)) {
+          await invoke<number>("import_corpus_bundle", { bundle });
+          seeded = true;
+        }
+      }
+      if (seeded) {
+        corpora = await invoke<CorpusMeta[]>("list_corpora");
+      }
+      return corpora;
     }
     await this.ensureInitialized();
     return this.memoryBundles.map((b) => b.corpus);
@@ -458,26 +470,26 @@ class StorageService {
     patches: EntryPatch[],
   ): Promise<number> {
     if (patches.length === 0) return 0;
+    const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
+    const patchMap = new Map(patches.map((p) => [p.id, p]));
+    let updated = 0;
+    if (bundle) {
+      for (const entry of bundle.entries) {
+        const patch = patchMap.get(entry.id);
+        if (!patch) continue;
+        entry.lemma_native = patch.lemma_native;
+        entry.lemma_translit = patch.lemma_translit;
+        entry.pos = patch.pos ?? undefined;
+        entry.gender = patch.gender ?? undefined;
+        updated++;
+      }
+    }
     if (isTauriEnvironment()) {
       const { invoke } = await import("@tauri-apps/api/core");
       return invoke<number>("update_corpus_entries", { patches });
     }
     await this.ensureInitialized();
-    const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
-    if (!bundle) return 0;
-
-    const patchMap = new Map(patches.map((p) => [p.id, p]));
-    let updated = 0;
-    for (const entry of bundle.entries) {
-      const patch = patchMap.get(entry.id);
-      if (!patch) continue;
-      entry.lemma_native = patch.lemma_native;
-      entry.lemma_translit = patch.lemma_translit;
-      entry.pos = patch.pos ?? undefined;
-      entry.gender = patch.gender ?? undefined;
-      updated++;
-    }
-    if (updated > 0) {
+    if (bundle && updated > 0) {
       await this.persistCorpusBundle(corpusId, bundle);
     }
     return updated;
