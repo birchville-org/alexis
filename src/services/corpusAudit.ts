@@ -87,7 +87,7 @@ async function auditHindiEntry(
   const headword = normalizeLookupHeadword(entry.lemma_native);
   if (!headword) return findings;
 
-  const mcgregorUrl = `https://dsal.uchicago.edu/cgi-bin/app/mcgregor_query.py?qs=${encodeURIComponent(headword)}&searchhws=yes`;
+  const mcgregorUrl = `https://dsal.uchicago.edu/cgi-bin/app/mcgregor_query.py?qs=${encodeURIComponent(headword)}&matchtype=default`;
 
   const rawTranslit = entry.lemma_translit?.trim() ?? "";
   if (!rawTranslit) {

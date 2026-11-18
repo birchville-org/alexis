@@ -1,5 +1,14 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.2 (2026-11-18)
+
+### Datenintegrität & Kernfunktionen
+- **DSAL-Volltextsuche für Hindi (McGregor & Platts) (`src/providers/hindiDictionary.ts`, `src/services/corpusAudit.ts`)**: `searchhws=yes` (Beschränkung auf Hauptlemmata) durch `matchtype=default` ersetzt, sodass auch Untereinträge wie `नमस्ते` (unter `नमस` im McGregor) sowie Wendungen direkt gefunden werden.
+- **Dynamische Versionsanzeige in der Hilfe (`src/App.vue`)**: Der Footer der Hilfe-Seitenleiste bindet nun `appVersion` direkt aus `package.json` statt eines statischen Versionsstrings.
+- **Roadmap-Meilensteine `v1.0` vs. `v2.0` (`docs/ROADMAP.md`)**: Abgrenzung der Indologie-Stabilisierung (Hindi & Sanskrit bis `v1.0`) von der Multi-Language-Erweiterung (`grc`, `fr`, `it`, `en`, `rm` und Desktop-Korpusanlage ab `v2.0`).
+
+---
+
 ## v0.6.1 (2026-11-17)
 
 ### Datenintegrität & Kernfunktionen

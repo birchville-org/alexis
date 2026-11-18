@@ -71,11 +71,11 @@ function buildExternalLinks(
   return [
     {
       label: "↗ McGregor (Oxford Hindi-English, DSAL)",
-      url: `https://dsal.uchicago.edu/cgi-bin/app/mcgregor_query.py?qs=${encodeURIComponent(dsalDeva)}&searchhws=yes`,
+      url: `https://dsal.uchicago.edu/cgi-bin/app/mcgregor_query.py?qs=${encodeURIComponent(dsalDeva)}&matchtype=default`,
     },
     {
       label: "↗ Platts (Classical Hindi & Urdu, DSAL)",
-      url: `https://dsal.uchicago.edu/cgi-bin/app/platts_query.py?qs=${encodeURIComponent(plattsTerm)}&searchhws=yes`,
+      url: `https://dsal.uchicago.edu/cgi-bin/app/platts_query.py?qs=${encodeURIComponent(plattsTerm)}&matchtype=default`,
     },
     {
       label: "↗ Wiktionary (Hindi)",

@@ -822,7 +822,7 @@
               </ul>
             </div>
             <div class="doc-sidebar-footer">
-              <span class="doc-version-tag">Alexis v0.3.1 · Local-First</span>
+              <span class="doc-version-tag">Alexis v{{ appVersion }} · Local-First</span>
             </div>
           </aside>
 

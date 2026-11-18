@@ -71,3 +71,17 @@ Anki ist ein bewährtes, generisches Karteikartenprogramm, erzeugt jedoch im Ler
 - **Lösung**: Zuschaltbarer Modus *„Tippen statt nur Aufdecken“*:
   - Bei der Richtung *Deutsch ➔ Hindi* erscheint ein Eingabefeld (IAST oder Devanagari).
   - Sofortiges visuelles Feedback beim Drücken der Eingabetaste. Wer nicht tippen will, nutzt weiterhin die Leertaste zum Aufdecken.
+
+---
+
+## 4. Meilensteine: v1.0 vs. v2.0
+
+### Release v1.0 — Indologie-Fokus (Hindi & Sanskrit)
+- **Ziel**: Stabiler, vollständig geprüfter Funktionsumfang für **Hindi (`hi`)** und **Sanskrit (`sa`)** über alle drei Betriebsarten (Browser, PWA, Desktop-App mit SQLite & Auto-Updater).
+- **Umfang**: Feinschliff der bestehenden HI/SA-Korpora, Online-Wörterbuchprüfung (`Wiktionary hi`, `Cologne MW`) sowie optional Umsetzung der Phasen 3–5.
+
+### Release v2.0 — Multi-Language-Verallgemeinerung (`grc`, `fr`, `it`, `en`, `rm`, …)
+- **Sprach-Profile (`LanguageProfile`)**: Ablösung der binären `isHindi`-Logik durch deklarative Profile pro `lang_code` (Transliteration, Morphologie, TTS-Locale, UI-Platzhalter).
+- **Neues Korpus anlegen (Desktop-App)**: Direkt in *Korpora & Gliederung* (bei Schreibzugriff in SQLite) neue Sprachkurse anlegen und eigene `.tsv`-Listen kuratieren.
+- **Erweiterter Wörterbuch-Hub & Audit**: Generischer Wiktionary-Provider (`data[lang_code]`) sowie Fachportale wie **Logeion / LSJ** (Altgriechisch) und **Pledari Grond** (Rätoromanisch).
+- **Typografie & Suche**: Polytonische Griechisch-Normalisierung (`NFD` ohne Akzente/Spiritus) und optionale `transliteration`-Spalte für lateinschriftliche Sprachen.
