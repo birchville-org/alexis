@@ -25,10 +25,26 @@ if ("serviceWorker" in navigator && !("__TAURI_INTERNALS__" in window)) {
       return;
     }
 
-    navigator.serviceWorker.register("./sw.js").catch((err) => {
-      console.warn("ServiceWorker registration failed:", err);
-    });
+    navigator.serviceWorker
+      .register("./sw.js", { updateViaCache: "none" })
+      .then((reg) => {
+        reg.update().catch(() => {});
+      })
+      .catch((err) => {
+        console.warn("ServiceWorker registration failed:", err);
+      });
   });
 }
+
+window.addEventListener("vite:preloadError", () => {
+  try {
+    if (!sessionStorage.getItem("alexis_preload_recovery")) {
+      sessionStorage.setItem("alexis_preload_recovery", "1");
+      window.location.reload();
+    }
+  } catch {
+    // ignore storage restrictions
+  }
+});
 
 createApp(App).mount("#app");

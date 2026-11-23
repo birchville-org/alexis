@@ -1,4 +1,4 @@
-const CACHE_NAME = "alexis-cache-v3";
+const CACHE_NAME = "alexis-cache-v4";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -44,8 +44,13 @@ self.addEventListener("fetch", (event) => {
   if (IS_LOCALHOST || event.request.method !== "GET") return;
 
   // Network-first so new releases appear immediately when online, with offline cache fallback
+  const networkRequest =
+    event.request.mode === "navigate"
+      ? fetch(event.request.url, { cache: "no-cache" })
+      : fetch(event.request);
+
   event.respondWith(
-    fetch(event.request)
+    networkRequest
       .then((networkResponse) => {
         if (
           networkResponse &&

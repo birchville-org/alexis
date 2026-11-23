@@ -1,5 +1,13 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.3 (2026-11-23)
+
+### Plattform- & Backend-Stabilität
+- **Blank-Page-Selbstheilung nach Deployments (`index.html`, `src/main.ts`)**: Inline-Fehlerfänger im `<head>` (vor den Vite-Asset-Tags) sowie `vite:preloadError`-Handler erkennen fehlgeschlagene `/assets/`-Skripte/Stylesheets nach veraltetem Cache, deregistrieren alte Service Worker, leeren `caches` und laden die Seite einmalig neu (`sessionStorage`-Guard gegen Reload-Schleifen).
+- **Service-Worker-Caching gehärtet (`public/sw.js`, `src/main.ts`)**: Cache auf `alexis-cache-v4` aktualisiert, Service-Worker-Registrierung auf `{ updateViaCache: "none" }` mit `reg.update()` umgestellt und Navigationsanfragen über `fetch(event.request.url, { cache: "no-cache" })` revalidiert.
+
+---
+
 ## v0.6.2 (2026-11-18)
 
 ### Datenintegrität & Kernfunktionen

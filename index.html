@@ -4,6 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alexis — Vokabeltrainer</title>
+    <script>
+      (function () {
+        var RECOVERY_KEY = "alexis_asset_recovery";
+        function recoverFromStaleAssets() {
+          try {
+            if (sessionStorage.getItem(RECOVERY_KEY)) return;
+            sessionStorage.setItem(RECOVERY_KEY, "1");
+          } catch (_) {
+            return;
+          }
+          var tasks = [];
+          if ("serviceWorker" in navigator) {
+            tasks.push(
+              navigator.serviceWorker.getRegistrations().then(function (regs) {
+                return Promise.all(regs.map(function (r) { return r.unregister(); }));
+              })
+            );
+          }
+          if ("caches" in window) {
+            tasks.push(
+              caches.keys().then(function (keys) {
+                return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+              })
+            );
+          }
+          Promise.all(tasks).finally(function () {
+            window.location.reload();
+          });
+        }
+        window.addEventListener(
+          "error",
+          function (ev) {
+            var target = ev.target;
+            if (!target) return;
+            var url = target.src || target.href || "";
+            if (
+              (target.tagName === "SCRIPT" || target.tagName === "LINK") &&
+              url.indexOf("/assets/") !== -1
+            ) {
+              recoverFromStaleAssets();
+            }
+          },
+          true
+        );
+      })();
+    </script>
     <meta name="theme-color" content="#03192e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
