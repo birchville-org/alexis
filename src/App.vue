@@ -687,31 +687,62 @@
           </p>
         </div>
 
-        <div class="dict-provider-switch" role="tablist" aria-label="Wörterbuch-Auswahl">
-          <button
-            :class="['dict-provider-btn', { active: dictLang === 'sa' }]"
-            @click="selectDictLang('sa')"
-          >
-            Sanskrit (MW / PW / DCS / NWS)
-          </button>
-          <button
-            :class="['dict-provider-btn', { active: dictLang === 'hi' }]"
-            @click="selectDictLang('hi')"
-          >
-            Hindi (Wiktionary / McGregor / Platts)
-          </button>
+        <div class="dict-controls-row">
+          <div class="dict-provider-switch" role="tablist" aria-label="Wörterbuch-Auswahl">
+            <button
+              :class="['dict-provider-btn', { active: dictLang === 'sa' }]"
+              @click="selectDictLang('sa')"
+            >
+              Sanskrit (MW / PW / DCS / NWS)
+            </button>
+            <button
+              :class="['dict-provider-btn', { active: dictLang === 'hi' }]"
+              @click="selectDictLang('hi')"
+            >
+              Hindi (Wiktionary / McGregor / Platts)
+            </button>
+          </div>
+
+          <div class="dict-translit-bar" role="group" aria-label="Schrift-Umwandlung">
+            <button
+              type="button"
+              class="dict-translit-btn"
+              @mousedown.prevent
+              @click="toggleDictTransliteration('iast')"
+              title="IAST ⇄ Devanāgarī umwandeln (⌥⌘D / Ctrl+Alt+D)"
+            >
+              <span class="translit-tag-iast">IAST</span>
+              <span class="translit-arrow" aria-hidden="true">⇄</span>
+              <span class="translit-tag-deva script-deva">देव</span>
+              <span class="translit-kbd">(⌥⌘D)</span>
+            </button>
+            <button
+              type="button"
+              class="dict-translit-btn"
+              @mousedown.prevent
+              @click="toggleDictTransliteration('hk')"
+              title="Harvard-Kyoto ⇄ Devanāgarī umwandeln (⌥⌘H / Ctrl+Alt+H)"
+            >
+              <span class="translit-tag-hk">HK</span>
+              <span class="translit-arrow" aria-hidden="true">⇄</span>
+              <span class="translit-tag-deva script-deva">देव</span>
+              <span class="translit-kbd">(⌥⌘H)</span>
+            </button>
+          </div>
         </div>
 
         <div class="dict-search-box">
           <input
+            ref="dictInputRef"
             type="text"
             v-model="dictQuery"
             :placeholder="
               dictLang === 'hi'
                 ? 'Suchbegriff in Devanāgarī, IAST oder HK (z.B. किताब, kitāb, namaste)...'
-                : 'Suchbegriff in IAST oder Devanāgarī (z.B. deva, agni, dharma)...'
+                : 'Suchbegriff in Devanāgarī, IAST oder HK (z.B. धर्म, dharma, nArAyaNa)...'
             "
             @keyup.enter="performDictSearch"
+            @keydown="onDictInputKeydown"
             class="dict-input"
           />
           <button class="btn-primary" @click="performDictSearch" :disabled="dictLoading">
@@ -1281,6 +1312,10 @@ import {
 import { speechService } from "./services/speech";
 import { downloadTSV, isTauriEnvironment, storage } from "./services/storage";
 import {
+  containsDevanagari,
+  toggleTransliteration,
+} from "./services/transliteration";
+import {
   type AppUpdateInfo,
   GITHUB_RELEASES_URL,
   checkForUpdates,
@@ -1428,6 +1463,7 @@ const mwProvider = new MonierWilliamsProvider();
 const hindiDictProvider = new HindiDictionaryProvider();
 const dictLang = ref<"sa" | "hi">("hi");
 const dictQuery = ref("");
+const dictInputRef = ref<HTMLInputElement | null>(null);
 const dictLoading = ref(false);
 const dictResults = ref<DictionaryResult[]>([]);
 
@@ -2059,6 +2095,80 @@ async function refreshStats() {
 
 // Dictionary Action
 let dictSearchSeq = 0;
+let dictTranslitSeq = 0;
+
+async function convertDictChunk(
+  chunk: string,
+  scheme: "iast" | "hk",
+): Promise<string> {
+  if (containsDevanagari(chunk)) {
+    const converted = await toggleTransliteration(chunk, scheme);
+    if (dictLang.value === "hi") {
+      return converted.replace(
+        /(\S*[aeiouāīūṛṝḷḹAIUR](?:[kgcjṭḍtdpbTD]h|[bcdfghjklmnpqrstvwxyzṅñṭḍṇśṣġGJNTDNSz]))a(?=\s|$)/gu,
+        "$1",
+      );
+    }
+    return converted;
+  }
+
+  const input = scheme === "iast" ? chunk.toLowerCase() : chunk;
+  const deva = await toggleTransliteration(input, scheme);
+  if (dictLang.value === "hi") {
+    return deva.replace(/\u094d(?=\s|$)/gu, "");
+  }
+  return deva;
+}
+
+async function toggleDictTransliteration(scheme: "iast" | "hk") {
+  if (!dictQuery.value.trim()) {
+    dictInputRef.value?.focus();
+    return;
+  }
+
+  const seq = ++dictTranslitSeq;
+  const inputEl = dictInputRef.value;
+  const full = dictQuery.value;
+  const selStart = inputEl?.selectionStart ?? null;
+  const selEnd = inputEl?.selectionEnd ?? null;
+  const hasSelection =
+    selStart !== null && selEnd !== null && selStart !== selEnd;
+
+  const targetSlice = hasSelection ? full.slice(selStart, selEnd) : full;
+  const convertedSlice = await convertDictChunk(targetSlice, scheme);
+  if (seq !== dictTranslitSeq) return;
+
+  if (hasSelection) {
+    dictQuery.value =
+      full.slice(0, selStart) + convertedSlice + full.slice(selEnd);
+    const nextEnd = selStart + convertedSlice.length;
+    await nextTick();
+    if (dictInputRef.value) {
+      dictInputRef.value.focus();
+      dictInputRef.value.setSelectionRange(selStart, nextEnd);
+    }
+  } else {
+    dictQuery.value = convertedSlice;
+    await nextTick();
+    if (dictInputRef.value) {
+      dictInputRef.value.focus();
+      const endPos = convertedSlice.length;
+      dictInputRef.value.setSelectionRange(endPos, endPos);
+    }
+  }
+}
+
+function onDictInputKeydown(e: KeyboardEvent) {
+  if (e.altKey && (e.metaKey || e.ctrlKey)) {
+    if (e.code === "KeyD") {
+      e.preventDefault();
+      void toggleDictTransliteration("iast");
+    } else if (e.code === "KeyH") {
+      e.preventDefault();
+      void toggleDictTransliteration("hk");
+    }
+  }
+}
 
 function openDictionaryTab() {
   if (dictResults.value.length === 0 && !dictQuery.value.trim()) {
@@ -3165,11 +3275,89 @@ async function performDictSearch() {
 }
 
 /* Dictionary */
+.dict-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
 .dict-provider-switch {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
+}
+
+.dict-translit-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.dict-translit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.68rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono",
+    monospace;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.dict-translit-btn:hover {
+  background-color: var(--bg-surface);
+  border-color: var(--accent-gold);
+}
+
+.dict-translit-btn:active {
+  transform: scale(0.97);
+}
+
+.translit-tag-iast {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.translit-tag-hk {
+  color: #059669;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .translit-tag-hk {
+  color: #34d399;
+}
+
+.translit-arrow {
+  color: var(--text-muted);
+}
+
+.translit-tag-deva {
+  color: #b22222;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+[data-theme="dark"] .translit-tag-deva {
+  color: #ff6b6b;
+}
+
+.translit-kbd {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  opacity: 0.8;
 }
 
 .dict-provider-btn {
@@ -3613,6 +3801,9 @@ async function performDictSearch() {
   }
   .doc-content {
     padding: 1.25rem;
+  }
+  .translit-kbd {
+    display: none;
   }
 }
 

@@ -1,5 +1,12 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.4 (2026-11-24)
+
+### Datenintegrität & Kernfunktionen
+- **Wörterbuch-Transliterations-Toggles (`IAST ⇄ देव` & `HK ⇄ देव`) (`src/App.vue`)**: Zwei kompakte Umwandlungs-Buttons über dem Suchfeld des Wörterbuch-Hubs (nach ZenTauri-Vorbild) samt Tastenkürzeln `⌥⌘D` / `Ctrl+Alt+D` (IAST ⇄ Devanāgarī) und `⌥⌘H` / `Ctrl+Alt+H` (Harvard-Kyoto ⇄ Devanāgarī). Unterstützt sowohl Teilmarkierungen als auch das gesamte Eingabefeld inkl. sprachabhängiger Hindi-Schwa-Tilgung am Wortende.
+
+---
+
 ## v0.6.3 (2026-11-23)
 
 ### Plattform- & Backend-Stabilität
