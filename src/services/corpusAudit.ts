@@ -30,16 +30,32 @@ export interface AuditOptions {
 
 const WIKTIONARY_POS_MAP: Record<string, string> = {
   noun: "noun",
+  "proper noun": "noun",
   verb: "verb",
   adjective: "adj",
+  determiner: "adj",
   adverb: "adv",
   pronoun: "pron",
   postposition: "postp",
+  preposition: "postp",
   conjunction: "conj",
   particle: "part",
   interjection: "interj",
   numeral: "num",
 };
+
+const INDECLINABLE_POS = new Set(["adv", "part", "conj", "interj", "postp"]);
+
+function isPosCompatible(currentPos: string, wikiPosList: string[]): boolean {
+  if (wikiPosList.includes(currentPos)) return true;
+  if (
+    currentPos === "ind" &&
+    wikiPosList.some((p) => INDECLINABLE_POS.has(p))
+  ) {
+    return true;
+  }
+  return false;
+}
 
 const POS_CANON_MAP: Record<string, string> = {
   subst: "noun",
@@ -127,6 +143,10 @@ async function auditHindiEntry(
     }
   }
 
+  // Multi-word phrases / compound verbs are rarely indexed directly as headwords on Wiktionary;
+  // local IAST & Nukta validation above already checked them.
+  if (/\s/.test(headword)) return findings;
+
   try {
     const res = await fetch(
       `https://en.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(headword)}`,
@@ -175,7 +195,7 @@ async function auditHindiEntry(
     if (
       wikiPosList.length > 0 &&
       currentPos &&
-      !wikiPosList.includes(currentPos)
+      !isPosCompatible(currentPos, wikiPosList)
     ) {
       findings.push({
         entryId: entry.entry_id,

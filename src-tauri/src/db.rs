@@ -96,6 +96,8 @@ pub struct StudyCardItem {
     pub interval_days: i32,
     pub consecutive_successes: i32,
     pub next_due: String,
+    #[serde(default)]
+    pub user_note: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -181,7 +183,8 @@ pub fn init_db(db_path: &Path) -> Result<Connection> {
             last_reviewed TEXT,
             next_due TEXT NOT NULL DEFAULT (datetime('now')),
             review_count INTEGER NOT NULL DEFAULT 0,
-            lapse_count INTEGER NOT NULL DEFAULT 0
+            lapse_count INTEGER NOT NULL DEFAULT 0,
+            user_note TEXT
         );
 
         CREATE TABLE IF NOT EXISTS review_history (
@@ -198,6 +201,9 @@ pub fn init_db(db_path: &Path) -> Result<Connection> {
         CREATE INDEX IF NOT EXISTS idx_study_next_due ON study_state(next_due, box_number);
         ",
     )?;
+
+    // Non-destructive migration for existing databases created before user_note
+    let _ = conn.execute("ALTER TABLE study_state ADD COLUMN user_note TEXT", []);
 
     Ok(conn)
 }
@@ -307,6 +313,10 @@ pub struct EntryPatch {
     pub lemma_translit: String,
     pub pos: Option<String>,
     pub gender: Option<String>,
+    #[serde(default)]
+    pub definitions: Option<Vec<EntryDefinition>>,
+    #[serde(default)]
+    pub tags: Option<Vec<String>>,
 }
 
 pub fn update_entries(conn: &mut Connection, patches: &[EntryPatch]) -> Result<usize> {
@@ -317,9 +327,66 @@ pub fn update_entries(conn: &mut Connection, patches: &[EntryPatch]) -> Result<u
             "UPDATE entries SET lemma_native = ?2, lemma_translit = ?3, pos = ?4, gender = ?5 WHERE id = ?1",
             params![p.id, p.lemma_native, p.lemma_translit, p.pos, p.gender],
         )?;
+        if let Some(defs) = &p.definitions {
+            let defs_json = serde_json::to_string(defs).unwrap_or_else(|_| "[]".to_string());
+            tx.execute(
+                "UPDATE entries SET definitions = ?2 WHERE id = ?1",
+                params![p.id, defs_json],
+            )?;
+        }
+        if let Some(tags) = &p.tags {
+            let tags_json = serde_json::to_string(tags).unwrap_or_else(|_| "[]".to_string());
+            tx.execute(
+                "UPDATE entries SET tags = ?2 WHERE id = ?1",
+                params![p.id, tags_json],
+            )?;
+        }
     }
     tx.commit()?;
     Ok(updated)
+}
+
+pub fn save_user_note(conn: &Connection, entry_id: &str, note: Option<&str>) -> Result<()> {
+    let cleaned = note.map(str::trim).filter(|s| !s.is_empty());
+    conn.execute(
+        "INSERT INTO study_state (entry_id, box_number, interval_days, next_due, user_note)
+         VALUES (?1, 1, 1, datetime('now'), ?2)
+         ON CONFLICT(entry_id) DO UPDATE SET user_note = excluded.user_note",
+        params![entry_id, cleaned],
+    )?;
+    Ok(())
+}
+
+pub fn export_study_state(conn: &Connection) -> Result<serde_json::Map<String, serde_json::Value>> {
+    let mut stmt = conn.prepare(
+        "SELECT entry_id, box_number, interval_days, consecutive_successes, next_due, user_note
+         FROM study_state
+         WHERE review_count > 0 OR (user_note IS NOT NULL AND trim(user_note) != '')",
+    )?;
+    let rows = stmt.query_map([], |row| {
+        let entry_id: String = row.get(0)?;
+        let box_num: i32 = row.get(1)?;
+        let interval: i32 = row.get(2)?;
+        let successes: i32 = row.get(3)?;
+        let next_due: String = row.get(4)?;
+        let user_note: Option<String> = row.get(5)?;
+        Ok((entry_id, box_num, interval, successes, next_due, user_note))
+    })?;
+
+    let mut map = serde_json::Map::new();
+    for item in rows {
+        let (entry_id, box_num, interval, successes, next_due, user_note) = item?;
+        let mut obj = serde_json::Map::new();
+        obj.insert("box".to_string(), serde_json::json!(box_num));
+        obj.insert("interval".to_string(), serde_json::json!(interval));
+        obj.insert("successes".to_string(), serde_json::json!(successes));
+        obj.insert("nextDue".to_string(), serde_json::json!(next_due));
+        if let Some(n) = user_note.map(|s| s.trim().to_string()).filter(|s| !s.is_empty()) {
+            obj.insert("userNote".to_string(), serde_json::json!(n));
+        }
+        map.insert(entry_id, serde_json::Value::Object(obj));
+    }
+    Ok(map)
 }
 
 pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<Vec<StudyCardItem>> {
@@ -330,7 +397,8 @@ pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<V
                 COALESCE(s.box_number, 1),
                 COALESCE(s.interval_days, 1),
                 COALESCE(s.consecutive_successes, 0),
-                COALESCE(s.next_due, datetime('now'))
+                COALESCE(s.next_due, datetime('now')),
+                s.user_note
          FROM entries e
          JOIN volumes v ON e.volume_id = v.id
          LEFT JOIN study_state s ON e.id = s.entry_id
@@ -406,6 +474,7 @@ pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<V
             interval_days: row.get(12)?,
             consecutive_successes: row.get(13)?,
             next_due: row.get(14)?,
+            user_note: row.get(15)?,
         })
     })?;
 
@@ -522,4 +591,116 @@ pub fn get_deck_stats(conn: &Connection, corpus_id: Option<&str>) -> Result<Deck
             due_today: r.get(6)?,
         })
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    fn temp_db_path(name: &str) -> PathBuf {
+        let mut p = std::env::temp_dir();
+        p.push(format!("alexis_test_{name}_{}.db", std::process::id()));
+        let _ = fs::remove_file(&p);
+        p
+    }
+
+    #[test]
+    fn update_entries_and_notes_roundtrip() {
+        let db_path = temp_db_path("entries_notes");
+        let mut conn = init_db(&db_path).expect("init_db");
+
+        let bundle = CorpusBundle {
+            corpus: CorpusMeta {
+                id: "test-corpus".to_string(),
+                title: "Test".to_string(),
+                lang_code: "hi".to_string(),
+                script: "Deva".to_string(),
+                target_lang: "de".to_string(),
+                description: None,
+            },
+            volumes: vec![VolumeData {
+                id: "v1".to_string(),
+                corpus_id: "test-corpus".to_string(),
+                title: "Band 1".to_string(),
+                sort_order: 1,
+                level: Some("A1".to_string()),
+                entry_count: None,
+            }],
+            lessons: vec![LessonData {
+                id: "v1_l01".to_string(),
+                volume_id: "v1".to_string(),
+                lesson_number: 1,
+                title: "Lektion 1".to_string(),
+                sort_order: 1,
+                entry_count: None,
+            }],
+            entries: vec![EntryData {
+                id: "e1".to_string(),
+                corpus_id: "test-corpus".to_string(),
+                volume_id: "v1".to_string(),
+                lesson_id: Some("v1_l01".to_string()),
+                lemma_native: "दस".to_string(),
+                lemma_translit: "das".to_string(),
+                pos: Some("num".to_string()),
+                gender: None,
+                grammar_metadata: None,
+                definitions: vec![EntryDefinition {
+                    lang: "de".to_string(),
+                    meaning: "zeihn".to_string(),
+                    notes: None,
+                }],
+                tags: Some(vec!["zahlen".to_string(), "a1".to_string()]),
+                context_examples: None,
+                dictionary_refs: None,
+            }],
+        };
+
+        let imported = import_bundle(&mut conn, &bundle).expect("import_bundle");
+        assert_eq!(imported, 1);
+
+        save_user_note(&conn, "e1", Some("  Grundzahl 10  ")).expect("save_user_note");
+
+        // Patch definitions from "zeihn" to "zehn" while omitting tags (preserving existing tags)
+        let updated = update_entries(
+            &mut conn,
+            &[EntryPatch {
+                id: "e1".to_string(),
+                lemma_native: "दस".to_string(),
+                lemma_translit: "das".to_string(),
+                pos: Some("num".to_string()),
+                gender: None,
+                definitions: Some(vec![EntryDefinition {
+                    lang: "de".to_string(),
+                    meaning: "zehn".to_string(),
+                    notes: Some("Kardinalzahl".to_string()),
+                }]),
+                tags: None,
+            }],
+        )
+        .expect("update_entries");
+        assert_eq!(updated, 1);
+
+        let queue = query_study_queue(
+            &conn,
+            &StudyQueueQuery {
+                corpus_id: "test-corpus".to_string(),
+                volume_ids: None,
+                lesson_ids: None,
+                tags: None,
+                due_only: false,
+                limit: None,
+                shuffle: Some(false),
+            },
+        )
+        .expect("query_study_queue");
+
+        assert_eq!(queue.len(), 1);
+        assert_eq!(queue[0].definitions[0].meaning, "zehn");
+        assert_eq!(queue[0].definitions[0].notes.as_deref(), Some("Kardinalzahl"));
+        assert_eq!(queue[0].tags, vec!["zahlen", "a1"]);
+        assert_eq!(queue[0].user_note.as_deref(), Some("Grundzahl 10"));
+
+        let _ = fs::remove_file(&db_path);
+    }
 }

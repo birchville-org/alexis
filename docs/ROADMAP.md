@@ -32,7 +32,7 @@ Anki ist ein bewährtes, generisches Karteikartenprogramm, erzeugt jedoch im Ler
 | **Reihenfolge** | In Deck-Einstellungen vergraben. | **Direktwahl**: Umschalter `🔀 Zufall / Alphabetisch` (Taste `s`) jederzeit verfügbar. |
 | **Grammatik & Morphologie** | Reiner Freitext. | **Automatisierte Paradigmen**: Generiert vollständige Deklinationstabellen, Verbstämme, Ergativ-Regeln und Umschrift. |
 | **Spaced Repetition** | SM-2 / FSRS mit Dutzenden Variablen. | **5-Boxen-Leitner-System**: Transparente, feste Intervalle (1, 3, 7, 14, 30 Tage) mit 4 Tasten (1–4) – berechenbar und stressfrei. |
-| **Daten-Kuration & Export** | Komplexes CSV-Feld-Mapping. | **Redaktions-Pipeline & 1-Klick-Export**: Kuratierte, geprüfte Referenz-Korpora online (Read-Only) plus 1-Klick TSV-Export pro Lektion. |
+| **Daten-Kuration & Export** | Komplexes CSV-Feld-Mapping. | **Redaktions-Pipeline, Notizen & Delta-Review**: Kuratierte, geprüfte Referenz-Korpora online (Read-Only), 9-Spalten-TSV-Export (`notes`), geräte-lokale Notizen (`user_note`) sowie `?review=1`-Delta-Export. |
 
 ---
 
@@ -78,7 +78,7 @@ Anki ist ein bewährtes, generisches Karteikartenprogramm, erzeugt jedoch im Ler
 
 ### Release v1.0 — Indologie-Fokus (Hindi & Sanskrit)
 - **Ziel**: Stabiler, vollständig geprüfter Funktionsumfang für **Hindi (`hi`)** und **Sanskrit (`sa`)** über alle drei Betriebsarten (Browser, PWA, Desktop-App mit SQLite & Auto-Updater).
-- **Umfang**: Feinschliff der bestehenden HI/SA-Korpora, Online-Wörterbuchprüfung (`Wiktionary hi`, `Cologne MW`) sowie optional Umsetzung der Phasen 3–5.
+- **Umfang**: Feinschliff der bestehenden HI/SA-Korpora, persönliche Lernnotizen (`user_note`) + 9-Spalten-TSV (`notes`), Einzelwort-Editor mit `Git-Sync`, `?review=1`-Gutachter-Deltas (`alexis-review-delta-v1`), Online-Wörterbuchprüfung (`Wiktionary hi`, `Cologne MW`) sowie optional Umsetzung der Phasen 3–5.
 
 ### Release v2.0 — Multi-Language-Verallgemeinerung (`grc`, `fr`, `it`, `en`, `rm`, …)
 - **Sprach-Profile (`LanguageProfile`)**: Ablösung der binären `isHindi`-Logik durch deklarative Profile pro `lang_code` (Transliteration, Morphologie, TTS-Locale, UI-Platzhalter).

@@ -2,6 +2,7 @@ import type {
   CorpusBundle,
   CorpusMeta,
   DeckStats,
+  EntryDefinition,
   LessonData,
   ReviewSubmission,
   StudyCardItem,
@@ -23,17 +24,102 @@ export interface EntryPatch {
   lemma_translit: string;
   pos?: string | null;
   gender?: string | null;
+  definitions?: EntryDefinition[];
+  tags?: string[];
+  reviewer_comment?: string;
+}
+
+export interface EntrySnapshot {
+  lemma_native: string;
+  lemma_translit: string;
+  pos: string | null;
+  gender: string | null;
+  definitions: EntryDefinition[];
+  tags: string[];
+}
+
+export interface ReviewDeltaItem {
+  id: string;
+  volume_id: string;
+  lesson_id?: string | null;
+  before: EntrySnapshot;
+  after: EntrySnapshot;
+  reviewer_comment?: string;
+}
+
+export interface ReviewDeltaDocument {
+  schema: "alexis-review-delta-v1";
+  corpus_id: string;
+  corpus_title: string;
+  exported_at: string;
+  changes: ReviewDeltaItem[];
+}
+
+export function toEntrySnapshot(e: {
+  lemma_native: string;
+  lemma_translit: string;
+  pos?: string | null;
+  gender?: string | null;
+  definitions: EntryDefinition[];
+  tags?: string[];
+}): EntrySnapshot {
+  return {
+    lemma_native: e.lemma_native,
+    lemma_translit: e.lemma_translit,
+    pos: e.pos || null,
+    gender: e.gender && e.gender !== "-" ? e.gender : null,
+    definitions: e.definitions.map((d) => ({
+      lang: d.lang || "de",
+      meaning: d.meaning,
+      ...(d.notes ? { notes: d.notes } : {}),
+    })),
+    tags: [...(e.tags || [])],
+  };
+}
+
+export function snapshotsEqual(a: EntrySnapshot, b: EntrySnapshot): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+const CANONICAL_BUNDLES: CorpusBundle[] = [
+  defaultHindiBolo as unknown as CorpusBundle,
+  defaultPayerSanskrit as unknown as CorpusBundle,
+];
+
+function cloneBundle(bundle: CorpusBundle): CorpusBundle {
+  return JSON.parse(JSON.stringify(bundle)) as CorpusBundle;
+}
+
+function applyPatchToEntry(
+  entry: CorpusBundle["entries"][number],
+  patch: EntryPatch,
+) {
+  entry.lemma_native = patch.lemma_native;
+  entry.lemma_translit = patch.lemma_translit;
+  entry.pos = patch.pos || undefined;
+  entry.gender =
+    patch.gender && patch.gender !== "-" ? patch.gender : undefined;
+  if (patch.definitions !== undefined) {
+    entry.definitions = patch.definitions.map((d) => ({ ...d }));
+  }
+  if (patch.tags !== undefined) {
+    entry.tags = [...patch.tags];
+  }
 }
 
 class StorageService {
-  private memoryBundles: CorpusBundle[] = [
-    defaultHindiBolo as unknown as CorpusBundle,
-    defaultPayerSanskrit as unknown as CorpusBundle,
-  ];
+  private memoryBundles: CorpusBundle[] = CANONICAL_BUNDLES.map(cloneBundle);
   private localStudyState: Map<
     string,
-    { box: number; interval: number; successes: number; nextDue: string }
+    {
+      box: number;
+      interval: number;
+      successes: number;
+      nextDue: string;
+      userNote?: string;
+    }
   > = new Map();
+  private entryOverrides: Map<string, EntryPatch> = new Map();
   private dbPromise: Promise<IDBDatabase> | null = null;
 
   constructor() {
@@ -48,7 +134,7 @@ class StorageService {
 
   private initIndexedDB() {
     this.dbPromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open("alexis_db", 2);
+      const request = indexedDB.open("alexis_db", 3);
       request.onupgradeneeded = (e: any) => {
         const db = e.target.result;
         if (!db.objectStoreNames.contains("study_state")) {
@@ -56,6 +142,9 @@ class StorageService {
         }
         if (!db.objectStoreNames.contains("corpus_bundles")) {
           db.createObjectStore("corpus_bundles", { keyPath: "corpusId" });
+        }
+        if (!db.objectStoreNames.contains("entry_overrides")) {
+          db.createObjectStore("entry_overrides", { keyPath: "id" });
         }
       };
       request.onsuccess = async () => {
@@ -80,7 +169,7 @@ class StorageService {
           );
         }
 
-        // load persisted custom/imported corpus bundles
+        // load persisted custom/imported corpus bundles without shadowing canonical built-in updates
         if (db.objectStoreNames.contains("corpus_bundles")) {
           loadPromises.push(
             new Promise<void>((resBundles) => {
@@ -93,7 +182,28 @@ class StorageService {
                     (b) => b.corpus.id === item.corpusId,
                   );
                   if (idx >= 0) {
-                    this.memoryBundles[idx] = item.bundle;
+                    const base = this.memoryBundles[idx];
+                    const persisted = item.bundle as CorpusBundle;
+                    const baseVolIds = new Set(base.volumes.map((v) => v.id));
+                    for (const vol of persisted.volumes || []) {
+                      if (!baseVolIds.has(vol.id)) {
+                        base.volumes.push(vol);
+                      }
+                    }
+                    const baseLessonIds = new Set(
+                      base.lessons.map((l) => l.id),
+                    );
+                    for (const les of persisted.lessons || []) {
+                      if (!baseLessonIds.has(les.id)) {
+                        base.lessons.push(les);
+                      }
+                    }
+                    const baseEntryIds = new Set(base.entries.map((e) => e.id));
+                    for (const entry of persisted.entries || []) {
+                      if (!baseEntryIds.has(entry.id)) {
+                        base.entries.push(entry);
+                      }
+                    }
                   } else {
                     this.memoryBundles.push(item.bundle);
                   }
@@ -106,6 +216,29 @@ class StorageService {
         }
 
         await Promise.all(loadPromises);
+
+        // apply per-entry user/audit overrides on top of canonical and imported bundles
+        if (db.objectStoreNames.contains("entry_overrides")) {
+          await new Promise<void>((resOverrides) => {
+            const txOv = db.transaction("entry_overrides", "readonly");
+            const storeOv = txOv.objectStore("entry_overrides");
+            const getAllOv = storeOv.getAll();
+            getAllOv.onsuccess = () => {
+              for (const ov of getAllOv.result as EntryPatch[]) {
+                this.entryOverrides.set(ov.id, ov);
+                for (const bundle of this.memoryBundles) {
+                  const target = bundle.entries.find((e) => e.id === ov.id);
+                  if (target) {
+                    applyPatchToEntry(target, ov);
+                  }
+                }
+              }
+              resOverrides();
+            };
+            getAllOv.onerror = () => resOverrides();
+          });
+        }
+
         resolve(db);
       };
       request.onerror = () => reject(request.error);
@@ -125,6 +258,7 @@ class StorageService {
       interval: number;
       successes: number;
       nextDue: string;
+      userNote?: string;
     },
   ) {
     this.localStudyState.set(entryId, state);
@@ -156,6 +290,131 @@ class StorageService {
         }
       } catch (err) {
         console.warn("Could not persist bundle to IndexedDB:", err);
+      }
+    }
+  }
+
+  private async persistEntryOverrides(patches: EntryPatch[]) {
+    if (patches.length === 0) return;
+    const toPersist: EntryPatch[] = [];
+    const toClear: string[] = [];
+
+    for (const patch of patches) {
+      const prev = this.entryOverrides.get(patch.id);
+      const reviewer_comment =
+        patch.reviewer_comment !== undefined
+          ? patch.reviewer_comment.trim() || undefined
+          : prev?.reviewer_comment;
+
+      let canonEntry: CorpusBundle["entries"][number] | undefined;
+      for (const cb of CANONICAL_BUNDLES) {
+        canonEntry = cb.entries.find((e) => e.id === patch.id);
+        if (canonEntry) break;
+      }
+      let liveEntry: CorpusBundle["entries"][number] | undefined;
+      for (const lb of this.memoryBundles) {
+        liveEntry = lb.entries.find((e) => e.id === patch.id);
+        if (liveEntry) break;
+      }
+
+      if (
+        canonEntry &&
+        liveEntry &&
+        !reviewer_comment &&
+        snapshotsEqual(toEntrySnapshot(canonEntry), toEntrySnapshot(liveEntry))
+      ) {
+        toClear.push(patch.id);
+        continue;
+      }
+
+      const merged: EntryPatch = {
+        ...prev,
+        ...patch,
+        definitions: patch.definitions ?? prev?.definitions,
+        tags: patch.tags ?? prev?.tags,
+        reviewer_comment,
+      };
+      this.entryOverrides.set(patch.id, merged);
+      toPersist.push(merged);
+    }
+
+    if (toClear.length > 0) {
+      await this.clearEntryOverrides(toClear);
+    }
+    if (toPersist.length === 0) return;
+
+    if (this.dbPromise) {
+      try {
+        const db = await this.dbPromise;
+        if (db.objectStoreNames.contains("entry_overrides")) {
+          const tx = db.transaction("entry_overrides", "readwrite");
+          const store = tx.objectStore("entry_overrides");
+          for (const merged of toPersist) {
+            store.put(JSON.parse(JSON.stringify(merged)));
+          }
+        }
+      } catch (err) {
+        console.warn("Could not persist entry overrides to IndexedDB:", err);
+      }
+    }
+  }
+
+  private async syncDevCorpusToDisk(
+    payload: Record<string, unknown>,
+  ): Promise<boolean> {
+    const isReviewUrl =
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("review") === "1";
+    if (!import.meta.env.DEV || isTauriEnvironment() || isReviewUrl) {
+      return false;
+    }
+    try {
+      const res = await fetch("/__alexis_dev/corpus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Alexis-Dev": "1",
+        },
+        body: JSON.stringify(payload),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  private async clearEntryOverrides(ids: string[]) {
+    if (ids.length === 0) return;
+    for (const id of ids) {
+      this.entryOverrides.delete(id);
+    }
+    if (this.dbPromise) {
+      try {
+        const db = await this.dbPromise;
+        if (db.objectStoreNames.contains("entry_overrides")) {
+          const tx = db.transaction("entry_overrides", "readwrite");
+          const store = tx.objectStore("entry_overrides");
+          for (const id of ids) {
+            store.delete(id);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not clear entry overrides from IndexedDB:", err);
+      }
+    }
+  }
+
+  private async clearPersistedCorpusBundle(corpusId: string) {
+    if (this.dbPromise) {
+      try {
+        const db = await this.dbPromise;
+        if (db.objectStoreNames.contains("corpus_bundles")) {
+          const tx = db.transaction("corpus_bundles", "readwrite");
+          const store = tx.objectStore("corpus_bundles");
+          store.delete(corpusId);
+        }
+      } catch (err) {
+        console.warn("Could not clear bundle from IndexedDB:", err);
       }
     }
   }
@@ -281,6 +540,7 @@ class StorageService {
         interval_days: state.interval,
         consecutive_successes: state.successes,
         next_due: state.nextDue,
+        user_note: state.userNote,
       };
     });
 
@@ -292,14 +552,15 @@ class StorageService {
         seen.set(key, item);
       } else {
         const existing = seen.get(key)!;
-        // Merge definitions if distinct
+        // Merge definitions if distinct (or backfill notes)
         for (const def of item.definitions) {
-          if (
-            !existing.definitions.some(
-              (d) => d.meaning.trim() === def.meaning.trim(),
-            )
-          ) {
+          const matchDef = existing.definitions.find(
+            (d) => d.meaning.trim() === def.meaning.trim(),
+          );
+          if (!matchDef) {
             existing.definitions.push(def);
+          } else if (def.notes && !matchDef.notes) {
+            matchDef.notes = def.notes;
           }
         }
         // Merge tags
@@ -307,6 +568,9 @@ class StorageService {
           if (!existing.tags.includes(t)) {
             existing.tags.push(t);
           }
+        }
+        if (!existing.user_note && item.user_note) {
+          existing.user_note = item.user_note;
         }
         // Prioritize lower/more urgent Leitner box
         if (
@@ -394,10 +658,36 @@ class StorageService {
       interval: newInterval,
       successes: newSuccesses,
       nextDue,
+      userNote: current.userNote,
     };
 
     await this.persistStudyState(review.entry_id, updated);
     return updated;
+  }
+
+  async saveUserNote(
+    entryId: string,
+    note: string,
+  ): Promise<string | undefined> {
+    const cleaned = note.trim() || undefined;
+    if (isTauriEnvironment()) {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("save_user_note", { entryId, note: cleaned ?? null });
+      return cleaned;
+    }
+    await this.ensureInitialized();
+    const current = this.localStudyState.get(entryId) || {
+      box: 1,
+      interval: 1,
+      successes: 0,
+      nextDue: new Date().toISOString(),
+    };
+    const updated = {
+      ...current,
+      userNote: cleaned,
+    };
+    await this.persistStudyState(entryId, updated);
+    return cleaned;
   }
 
   async getDeckStats(corpusId?: string): Promise<DeckStats> {
@@ -477,10 +767,7 @@ class StorageService {
       for (const entry of bundle.entries) {
         const patch = patchMap.get(entry.id);
         if (!patch) continue;
-        entry.lemma_native = patch.lemma_native;
-        entry.lemma_translit = patch.lemma_translit;
-        entry.pos = patch.pos ?? undefined;
-        entry.gender = patch.gender ?? undefined;
+        applyPatchToEntry(entry, patch);
         updated++;
       }
     }
@@ -489,8 +776,17 @@ class StorageService {
       return invoke<number>("update_corpus_entries", { patches });
     }
     await this.ensureInitialized();
-    if (bundle && updated > 0) {
-      await this.persistCorpusBundle(corpusId, bundle);
+    if (updated > 0) {
+      const syncedToDisk = await this.syncDevCorpusToDisk({
+        action: "patch",
+        corpusId,
+        patches,
+      });
+      if (syncedToDisk) {
+        await this.clearEntryOverrides(patches.map((p) => p.id));
+      } else {
+        await this.persistEntryOverrides(patches);
+      }
     }
     return updated;
   }
@@ -512,11 +808,24 @@ class StorageService {
     const colGen = header.indexOf("gender");
     const colMng = header.findIndex((h) => h.includes("meaning"));
     const colTag = header.indexOf("tags");
+    const colNotes = header.findIndex(
+      (h) => h === "notes" || h === "note" || h === "notiz" || h === "notizen",
+    );
 
     const bundle = this.memoryBundles.find(
       (b) => b.corpus.id === targetCorpusId,
     );
     if (!bundle) return 0;
+
+    const usedIds = new Set(bundle.entries.map((e) => e.id));
+    const mergedExistingMap = new Map<string, EntryPatch>();
+    const isDevGitSync =
+      import.meta.env.DEV &&
+      !isTauriEnvironment() &&
+      !(
+        typeof window !== "undefined" &&
+        new URLSearchParams(window.location.search).get("review") === "1"
+      );
 
     let count = 0;
     for (let i = 1; i < lines.length; i++) {
@@ -529,11 +838,13 @@ class StorageService {
       const pos = colPos >= 0 ? parts[colPos]?.trim() : "";
       const gen = colGen >= 0 ? parts[colGen]?.trim() : "";
       const mng = colMng >= 0 ? parts[colMng]?.trim() : "";
+      const rawNotes = colNotes >= 0 ? parts[colNotes] : "";
 
       if (!nat || !mng) continue;
       const cleanNat = nat.replace(/\r/g, "").trim();
       const cleanMng = mng.replace(/\r/g, "").trim();
       const cleanTrn = trn.replace(/\r/g, "").trim();
+      const cleanNotes = rawNotes ? rawNotes.replace(/\r/g, "").trim() : "";
       const cleanTags = (
         colTag >= 0 && parts[colTag]
           ? parts[colTag].replace(/\r/g, "").split(";")
@@ -575,24 +886,60 @@ class StorageService {
       );
 
       if (existing) {
-        // Merge definition without duplicates
-        if (!existing.definitions.some((d) => d.meaning.trim() === cleanMng)) {
-          existing.definitions.push({ lang: "de", meaning: cleanMng });
+        let changed = false;
+        // Merge definition without duplicates (or backfill notes)
+        const matchingDef = existing.definitions.find(
+          (d) => d.meaning.trim() === cleanMng,
+        );
+        if (!matchingDef) {
+          existing.definitions.push({
+            lang: "de",
+            meaning: cleanMng,
+            ...(cleanNotes ? { notes: cleanNotes } : {}),
+          });
+          changed = true;
+        } else if (cleanNotes && !matchingDef.notes) {
+          matchingDef.notes = cleanNotes;
+          changed = true;
         }
         // Merge tags
         for (const t of cleanTags) {
           if (!existing.tags?.includes(t)) {
             existing.tags = existing.tags || [];
             existing.tags.push(t);
+            changed = true;
           }
         }
-        if (!existing.pos && pos) existing.pos = pos.trim();
-        if (!existing.gender && gen && gen !== "-")
+        if (!existing.pos && pos) {
+          existing.pos = pos.trim();
+          changed = true;
+        }
+        if (!existing.gender && gen && gen !== "-") {
           existing.gender = gen.trim();
+          changed = true;
+        }
+        if (changed) {
+          mergedExistingMap.set(existing.id, {
+            id: existing.id,
+            lemma_native: existing.lemma_native,
+            lemma_translit: existing.lemma_translit,
+            pos: existing.pos ?? null,
+            gender: existing.gender ?? null,
+            definitions: existing.definitions.map((d) => ({ ...d })),
+            tags: [...(existing.tags ?? [])],
+          });
+          count++;
+        }
       } else {
-        const id = `${vol}_l${les.padStart(2, "0")}_${String(
-          bundle.entries.length + 1,
-        ).padStart(3, "0")}`;
+        let seq =
+          bundle.entries.filter((e) => e.lesson_id === lessonId).length + 1;
+        const idPrefix = isDevGitSync ? lessonId : `usr_${lessonId}`;
+        let id = `${idPrefix}_${String(seq).padStart(3, "0")}`;
+        while (usedIds.has(id)) {
+          seq++;
+          id = `${idPrefix}_${String(seq).padStart(3, "0")}`;
+        }
+        usedIds.add(id);
         bundle.entries.push({
           id,
           corpus_id: targetCorpusId,
@@ -602,17 +949,41 @@ class StorageService {
           lemma_translit: cleanTrn,
           pos: pos ? pos.trim() : undefined,
           gender: gen && gen !== "-" ? gen.trim() : undefined,
-          definitions: [{ lang: "de", meaning: cleanMng }],
+          definitions: [
+            {
+              lang: "de",
+              meaning: cleanMng,
+              ...(cleanNotes ? { notes: cleanNotes } : {}),
+            },
+          ],
           tags: cleanTags,
         });
         count++;
       }
     }
 
-    await this.persistCorpusBundle(targetCorpusId, bundle);
     if (isTauriEnvironment()) {
       const { invoke } = await import("@tauri-apps/api/core");
       await invoke("import_corpus_bundle", { bundle });
+    } else {
+      const syncedToDisk = await this.syncDevCorpusToDisk({
+        action: "save_bundle",
+        corpusId: targetCorpusId,
+        bundle,
+      });
+      if (syncedToDisk) {
+        await this.clearPersistedCorpusBundle(targetCorpusId);
+        if (mergedExistingMap.size > 0) {
+          await this.clearEntryOverrides(Array.from(mergedExistingMap.keys()));
+        }
+      } else {
+        await this.persistCorpusBundle(targetCorpusId, bundle);
+        if (mergedExistingMap.size > 0) {
+          await this.persistEntryOverrides(
+            Array.from(mergedExistingMap.values()),
+          );
+        }
+      }
     }
     return count;
   }
@@ -626,6 +997,25 @@ class StorageService {
     const bundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
     if (!bundle) return "";
 
+    let userNoteMap: Record<string, { userNote?: string }> = {};
+    if (isTauriEnvironment()) {
+      try {
+        const { invoke } = await import("@tauri-apps/api/core");
+        userNoteMap =
+          await invoke<Record<string, { userNote?: string }>>(
+            "export_study_state",
+          );
+      } catch {
+        userNoteMap = {};
+      }
+    } else {
+      for (const [key, val] of this.localStudyState.entries()) {
+        if (val.userNote) {
+          userNoteMap[key] = { userNote: val.userNote };
+        }
+      }
+    }
+
     let entries = bundle.entries;
     if (volumeIds && volumeIds.length > 0) {
       entries = entries.filter((e) => volumeIds.includes(e.volume_id));
@@ -637,7 +1027,7 @@ class StorageService {
     }
 
     const header =
-      "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags";
+      "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags\tnotes";
     const rows = entries.map((e) => {
       const les = bundle.lessons.find((l) => l.id === e.lesson_id);
       const lesNum = les
@@ -652,6 +1042,10 @@ class StorageService {
         .map((t) => sanitizeTsvField(t))
         .filter(Boolean)
         .join(";");
+      const notes = formatCombinedNotes(
+        e.definitions,
+        userNoteMap[e.id]?.userNote,
+      );
       return [
         sanitizeTsvField(e.volume_id),
         sanitizeTsvField(lesNum),
@@ -661,6 +1055,7 @@ class StorageService {
         sanitizeTsvField(e.gender || "-"),
         mean,
         tags,
+        notes,
       ].join("\t");
     });
 
@@ -671,13 +1066,134 @@ class StorageService {
     return this.memoryBundles.find((b) => b.corpus.id === corpusId);
   }
 
-  exportStudyBackup(): Record<string, any> {
+  getEntryOverride(entryId: string): EntryPatch | undefined {
+    return this.entryOverrides.get(entryId);
+  }
+
+  async getReviewDelta(
+    corpusId: string,
+    liveItems?: StudyCardItem[],
+  ): Promise<ReviewDeltaDocument> {
+    await this.ensureInitialized();
+    const canonicalBundle = CANONICAL_BUNDLES.find(
+      (b) => b.corpus.id === corpusId,
+    );
+    const liveBundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
+    const canonicalMap = new Map(
+      (canonicalBundle?.entries ?? []).map((e) => [e.id, e]),
+    );
+    const changes: ReviewDeltaItem[] = [];
+
+    if (!isTauriEnvironment()) {
+      for (const entry of liveBundle?.entries ?? []) {
+        const ov = this.entryOverrides.get(entry.id);
+        if (!ov) continue;
+        const base = canonicalMap.get(entry.id);
+        const before = base ? toEntrySnapshot(base) : toEntrySnapshot(entry);
+        const after = toEntrySnapshot(entry);
+        const comment = ov.reviewer_comment?.trim() || undefined;
+        if (!snapshotsEqual(before, after) || comment) {
+          changes.push({
+            id: entry.id,
+            volume_id: entry.volume_id,
+            lesson_id: entry.lesson_id ?? null,
+            before,
+            after,
+            ...(comment ? { reviewer_comment: comment } : {}),
+          });
+        }
+      }
+    } else {
+      const lemmaCounts = new Map<string, number>();
+      for (const ce of canonicalBundle?.entries ?? []) {
+        const k = ce.lemma_native.trim();
+        lemmaCounts.set(k, (lemmaCounts.get(k) ?? 0) + 1);
+      }
+      for (const item of liveItems ?? []) {
+        const base = canonicalMap.get(item.entry_id);
+        if (!base) continue;
+        if ((lemmaCounts.get(base.lemma_native.trim()) ?? 0) > 1) continue;
+        const before = toEntrySnapshot(base);
+        const after = toEntrySnapshot(item);
+        if (!snapshotsEqual(before, after)) {
+          changes.push({
+            id: item.entry_id,
+            volume_id: item.volume_id,
+            lesson_id: item.lesson_id ?? null,
+            before,
+            after,
+          });
+        }
+      }
+    }
+
+    return {
+      schema: "alexis-review-delta-v1",
+      corpus_id: corpusId,
+      corpus_title:
+        liveBundle?.corpus.title ?? canonicalBundle?.corpus.title ?? corpusId,
+      exported_at: new Date().toISOString(),
+      changes,
+    };
+  }
+
+  async resetCorpusOverrides(corpusId: string): Promise<void> {
+    await this.ensureInitialized();
+    const canonicalBundle = CANONICAL_BUNDLES.find(
+      (b) => b.corpus.id === corpusId,
+    );
+    const liveBundle = this.memoryBundles.find((b) => b.corpus.id === corpusId);
+    if (!liveBundle) return;
+
+    const canonicalMap = new Map(
+      (canonicalBundle?.entries ?? []).map((e) => [e.id, e]),
+    );
+    const idsToClear: string[] = [];
+
+    for (let i = 0; i < liveBundle.entries.length; i++) {
+      const entry = liveBundle.entries[i];
+      if (this.entryOverrides.has(entry.id)) {
+        idsToClear.push(entry.id);
+        const base = canonicalMap.get(entry.id);
+        if (base) {
+          liveBundle.entries[i] = JSON.parse(JSON.stringify(base));
+        }
+      }
+    }
+
+    await this.clearEntryOverrides(idsToClear);
+  }
+
+  async exportStudyBackup(): Promise<Record<string, any>> {
+    if (isTauriEnvironment()) {
+      const { invoke } = await import("@tauri-apps/api/core");
+      return invoke<Record<string, any>>("export_study_state");
+    }
+    await this.ensureInitialized();
     const backup: Record<string, any> = {};
     for (const [key, val] of this.localStudyState.entries()) {
       backup[key] = val;
     }
     return backup;
   }
+}
+
+export function formatCombinedNotes(
+  definitions: EntryDefinition[],
+  userNote?: string | null,
+): string {
+  const parts: string[] = [];
+  for (const d of definitions) {
+    const clean = sanitizeTsvField(d.notes);
+    if (clean && !parts.includes(clean)) {
+      parts.push(clean);
+    }
+  }
+  const cleanUser = sanitizeTsvField(userNote);
+  if (cleanUser && !parts.includes(cleanUser)) {
+    parts.push(cleanUser);
+  }
+  return parts.join(" · ");
 }
 
 export function sanitizeTsvField(val: string | null | undefined): string {

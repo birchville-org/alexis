@@ -81,6 +81,7 @@ export interface StudyCardItem {
   interval_days: number;
   consecutive_successes: number;
   next_due: string;
+  user_note?: string;
 }
 
 export interface ReviewSubmission {

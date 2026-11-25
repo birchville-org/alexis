@@ -8,6 +8,10 @@
           Vollständiges Verzeichnis aller Vokabeln für <strong>{{ corpusTitle }}</strong>.
           Durchsuchen, filtern und studieren ohne Bewertungszwang.
         </p>
+        <p v-if="!canEditCorpora" class="readonly-mode-hint">
+          🔒 <strong>Server-Ansicht (Referenz-Datensatz):</strong> Prüf- und Editierfunktionen am Wortschatz sind hier ausgeschaltet. Für individuelle, lokal editierbare Datensätze bitte Alexis als
+          <button type="button" class="btn-inline-link" @click="emit('open-install-info')">PWA installieren oder die Desktop-App nutzen</button>.
+        </p>
       </div>
 
       <!-- Quick Action: Practice filtered set in Trainer -->
@@ -21,6 +25,7 @@
           ▶️ Diese Auswahl im Trainer üben ({{ filteredEntries.length }})
         </button>
         <button
+          v-if="canEditCorpora"
           class="btn-copy-tsv"
           :disabled="filteredEntries.length === 0 || auditRunning"
           @click="runOnlineAudit"
@@ -28,6 +33,28 @@
         >
           🔎 Online prüfen ({{ filteredEntries.length }})
         </button>
+        <button
+          v-if="canEditCorpora && !isReviewMode && pendingDeltaItems.length > 0"
+          type="button"
+          class="btn-copy-tsv"
+          @click="downloadReviewDelta"
+          title="Lokale Korrekturen als Delta-Datei (.json) exportieren"
+        >
+          📤 Delta exportieren ({{ pendingDeltaItems.length }})
+        </button>
+        <label
+          v-if="canEditCorpora && !isReviewMode"
+          class="btn-copy-tsv upload-delta-label"
+          title="Lädt ein Korrektur-Delta (.json) eines Gutachters zur Prüfung und selektiven Übernahme"
+        >
+          📥 Delta prüfen
+          <input
+            type="file"
+            accept=".json,application/json"
+            style="display:none"
+            @change="handleDeltaFileUpload"
+          />
+        </label>
         <button
           class="btn-copy-tsv"
           :disabled="filteredEntries.length === 0"
@@ -43,6 +70,31 @@
           title="Kopiert die aktuelle Liste tabellarisch in die Zwischenablage"
         >
           {{ copyStatus ? '✓ Kopiert!' : '📋 Als TSV kopieren' }}
+        </button>
+      </div>
+    </div>
+
+    <div v-if="isReviewMode && canEditCorpora" class="reviewer-banner">
+      <div class="reviewer-banner-text">
+        <strong>📝 Gutachter-Modus:</strong>
+        <span>{{ pendingDeltaItems.length }} Änderung(en) gegenüber dem Referenzkorpus lokal vorgemerkt (Server bleibt unverändert).</span>
+      </div>
+      <div class="reviewer-banner-actions">
+        <button
+          v-if="pendingDeltaItems.length > 0"
+          type="button"
+          class="btn-outline-sm btn-no-mt"
+          @click="discardStagedOverrides"
+        >
+          ↺ Verwerfen
+        </button>
+        <button
+          type="button"
+          class="btn-primary-sm"
+          :disabled="pendingDeltaItems.length === 0"
+          @click="downloadReviewDelta"
+        >
+          📤 Korrektur-Delta herunterladen (.json) ({{ pendingDeltaItems.length }})
         </button>
       </div>
     </div>
@@ -286,9 +338,19 @@
                 <div class="meaning-text">
                   {{ formatMeanings(item) }}
                 </div>
-                <div v-if="item.tags && item.tags.length > 0" class="item-tags">
-                  <span v-for="tag in item.tags.slice(0, 3)" :key="tag" class="tag-pill">
+                <div
+                  v-if="(item.tags && item.tags.length > 0) || item.user_note || item.definitions.some((d) => d.notes)"
+                  class="item-tags"
+                >
+                  <span v-for="tag in (item.tags || []).slice(0, 3)" :key="tag" class="tag-pill">
                     #{{ tag }}
+                  </span>
+                  <span
+                    v-if="item.user_note || item.definitions.some((d) => d.notes)"
+                    class="note-pill"
+                    :title="formatCombinedNotes(item.definitions, item.user_note)"
+                  >
+                    📝 Notiz
                   </span>
                 </div>
               </td>
@@ -319,7 +381,7 @@
     </div>
 
     <!-- Detail Drawer / Modal for selected entry -->
-    <div v-if="selectedEntry" class="detail-modal-backdrop" @click="selectedEntry = null">
+    <div v-if="selectedEntry" class="detail-modal-backdrop" @click="closeEntryDetail">
       <div class="detail-modal-card" @click.stop>
         <div class="modal-header">
           <div class="modal-lemma-block">
@@ -338,7 +400,7 @@
               </svg>
             </button>
           </div>
-          <button class="modal-close-btn" @click="selectedEntry = null" title="Schließen">✕</button>
+          <button class="modal-close-btn" @click="closeEntryDetail" title="Schließen">✕</button>
         </div>
 
         <div class="modal-body">
@@ -363,19 +425,176 @@
             </div>
 
             <div class="modal-meanings">
-              <h4>Bedeutung(en):</h4>
-              <ul class="meanings-list">
-                <li v-for="(def, dIdx) in selectedEntry.definitions" :key="dIdx">
-                  <strong>{{ def.meaning }}</strong>
-                  <span v-if="def.notes" class="def-notes">({{ def.notes }})</span>
-                </li>
-              </ul>
+              <div class="modal-meanings-head">
+                <h4>Bedeutung(en):</h4>
+                <span v-if="entryEditSaved" class="note-saved-badge">✓ Gespeichert</span>
+                <button
+                  v-if="canEditCorpora && !editingEntry"
+                  type="button"
+                  class="btn-outline-sm btn-no-mt"
+                  @click="startEntryEdit"
+                >
+                  ✏️ Eintrag bearbeiten
+                </button>
+              </div>
+
+              <template v-if="canEditCorpora && editingEntry">
+                <div class="entry-edit-form">
+                  <div class="entry-edit-grid">
+                    <label class="entry-edit-field">
+                      <span>Devanāgarī / Nativschrift</span>
+                      <input
+                        v-model="editNativeDraft"
+                        type="text"
+                        class="entry-edit-input script-deva"
+                      />
+                    </label>
+                    <label class="entry-edit-field">
+                      <span>Umschrift (IAST)</span>
+                      <input
+                        v-model="editTranslitDraft"
+                        type="text"
+                        class="entry-edit-input"
+                      />
+                    </label>
+                  </div>
+
+                  <div class="entry-edit-grid">
+                    <label class="entry-edit-field">
+                      <span>Wortart</span>
+                      <select v-model="editPosDraft" class="entry-edit-input">
+                        <option value="">–</option>
+                        <option value="noun">noun (Substantiv)</option>
+                        <option value="verb">verb (Verb)</option>
+                        <option value="adj">adj (Adjektiv)</option>
+                        <option value="adv">adv (Adverb)</option>
+                        <option value="pron">pron (Pronomen)</option>
+                        <option value="num">num (Zahlwort)</option>
+                        <option value="postp">postp (Postposition)</option>
+                        <option value="conj">conj (Konjunktion)</option>
+                        <option value="part">part (Partikel)</option>
+                        <option value="interj">interj (Interjektion)</option>
+                        <option value="ind">ind (Indeklinabile)</option>
+                        <option
+                          v-if="editPosDraft && !['noun','verb','adj','adv','pron','num','postp','conj','part','interj','ind'].includes(editPosDraft)"
+                          :value="editPosDraft"
+                        >
+                          {{ editPosDraft }}
+                        </option>
+                      </select>
+                    </label>
+                    <label class="entry-edit-field">
+                      <span>Genus</span>
+                      <select v-model="editGenderDraft" class="entry-edit-input">
+                        <option value="">–</option>
+                        <option value="m">m (Maskulinum)</option>
+                        <option value="f">f (Femininum)</option>
+                        <option value="n">n (Neutrum)</option>
+                        <option value="m/f">m/f (Maskulin / Feminin)</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <div
+                    v-for="(defDraft, dIdx) in editDefinitionsDraft"
+                    :key="dIdx"
+                    class="entry-edit-grid"
+                  >
+                    <label class="entry-edit-field">
+                      <span>Deutsche Bedeutung{{ editDefinitionsDraft.length > 1 ? ` (${dIdx + 1})` : '' }}</span>
+                      <input
+                        v-model="defDraft.meaning"
+                        type="text"
+                        class="entry-edit-input"
+                      />
+                    </label>
+                    <label class="entry-edit-field">
+                      <span>Hinweis / Spalte notes (optional)</span>
+                      <input
+                        v-model="defDraft.notes"
+                        type="text"
+                        class="entry-edit-input"
+                        placeholder="z.B. Etymologie, Konstruktion…"
+                      />
+                    </label>
+                  </div>
+
+                  <label class="entry-edit-field">
+                    <span>Tags (; getrennt)</span>
+                    <input
+                      v-model="editTagsDraft"
+                      type="text"
+                      class="entry-edit-input"
+                      placeholder="z.B. zahlen; a1"
+                    />
+                  </label>
+
+                  <label class="entry-edit-field">
+                    <span>Gutachter-Kommentar (optional, nur im Delta-Export)</span>
+                    <input
+                      v-model="editReviewerCommentDraft"
+                      type="text"
+                      class="entry-edit-input"
+                      placeholder="Begründung oder Rückfrage an Redaktion…"
+                    />
+                  </label>
+
+                  <div class="entry-edit-actions">
+                    <button
+                      type="button"
+                      class="btn-outline-sm btn-no-mt"
+                      @click="editingEntry = false"
+                    >
+                      Abbrechen
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-primary-sm"
+                      :disabled="!canSaveEntryEdit || savingEntryEdit"
+                      @click="saveEntryEdit"
+                    >
+                      {{ savingEntryEdit ? 'Speichert…' : 'Änderungen speichern' }}
+                    </button>
+                  </div>
+                </div>
+              </template>
+
+              <template v-else>
+                <ul class="meanings-list">
+                  <li v-for="(def, dIdx) in selectedEntry.definitions" :key="dIdx">
+                    <strong>{{ def.meaning }}</strong>
+                    <span v-if="def.notes" class="def-notes">({{ def.notes }})</span>
+                  </li>
+                </ul>
+
+                <div v-if="selectedEntry.tags && selectedEntry.tags.length > 0" class="modal-tags">
+                  <span v-for="tag in selectedEntry.tags" :key="tag" class="tag-pill-lg">
+                    #{{ tag }}
+                  </span>
+                </div>
+
+                <p v-if="!canEditCorpora" class="entry-readonly-note">
+                  🔒 Stammdaten in der Server-Ansicht schreibgeschützt — für eigene Korrekturen bitte installierte PWA oder Desktop-App nutzen.
+                </p>
+              </template>
             </div>
 
-            <div v-if="selectedEntry.tags && selectedEntry.tags.length > 0" class="modal-tags">
-              <span v-for="tag in selectedEntry.tags" :key="tag" class="tag-pill-lg">
-                #{{ tag }}
-              </span>
+            <div class="modal-user-note">
+              <div class="modal-note-head">
+                <h4>Persönliche Notiz:</h4>
+                <span v-if="explorerNoteSaved" class="note-saved-badge">✓ Gespeichert</span>
+              </div>
+              <textarea
+                v-model="explorerNoteDraft"
+                rows="2"
+                placeholder="Eigene Eselsbrücke, Beispielsatz oder Hinweis (wird beim TSV-Export in Spalte „notes“ ausgegeben)…"
+                class="explorer-note-textarea"
+              ></textarea>
+              <div class="modal-note-actions">
+                <button type="button" class="btn-outline-sm" @click="saveExplorerNote">
+                  Notiz speichern
+                </button>
+              </div>
             </div>
           </div>
 
@@ -458,7 +677,7 @@
           <button class="btn-primary" @click="practiceSingleEntry(selectedEntry)">
             ▶️ Diese Vokabel im Trainer üben
           </button>
-          <button class="btn-outline" @click="selectedEntry = null">
+          <button class="btn-outline" @click="closeEntryDetail">
             Schließen
           </button>
         </div>
@@ -586,6 +805,90 @@
         </div>
       </div>
     </div>
+
+    <!-- Review Delta Import & Selective Apply Modal -->
+    <div v-if="showDeltaModal" class="detail-modal-backdrop" @click.self="showDeltaModal = false">
+      <div class="detail-modal-box audit-modal">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <h3>Korrektur-Delta prüfen ({{ deltaModalTitle || corpusTitle }})</h3>
+            <span class="modal-translit">
+              {{ incomingDeltaItems.length }} Eintrag/Einträge im Delta · {{ applicableDeltaCount }} anwendbar
+            </span>
+          </div>
+          <button class="modal-close-btn" @click="showDeltaModal = false">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div v-if="deltaModalError" class="audit-notice">
+            ⚠ {{ deltaModalError }}
+          </div>
+          <div v-if="deltaApplyNotice" class="audit-notice">
+            ✓ {{ deltaApplyNotice }}
+          </div>
+
+          <div v-if="!deltaModalError && incomingDeltaItems.length === 0" class="audit-clean">
+            Das Delta enthält keine ausstehenden Änderungen.
+          </div>
+
+          <div v-else-if="incomingDeltaItems.length > 0" class="audit-list">
+            <div
+              v-for="row in incomingDeltaItems"
+              :key="row.id"
+              class="audit-item"
+            >
+              <label class="audit-item-check">
+                <input
+                  type="checkbox"
+                  :value="row.id"
+                  v-model="selectedDeltaIds"
+                  :disabled="!row.applicable"
+                />
+              </label>
+              <div class="audit-item-body">
+                <div class="audit-item-head">
+                  <strong class="deva-text">{{ row.after.lemma_native }}</strong>
+                  <span v-if="row.after.lemma_translit" class="audit-translit">({{ row.after.lemma_translit }})</span>
+                  <span class="audit-translit">ID: {{ row.id }}</span>
+                </div>
+                <div v-if="!row.applicable" class="audit-item-msg">
+                  (bereits identisch im aktuellen Korpus)
+                </div>
+                <div v-for="(diff, dIdx) in row.diffs" :key="dIdx" class="audit-diff">
+                  {{ diff }}
+                </div>
+                <div v-if="row.reviewer_comment" class="audit-item-msg">
+                  💬 Gutachter-Kommentar: „{{ row.reviewer_comment }}“
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            v-if="applicableDeltaCount > 0"
+            type="button"
+            class="btn-outline"
+            @click="toggleAllApplicableDeltas"
+          >
+            {{ selectedDeltaIds.length === applicableDeltaCount ? "Auswahl aufheben" : "Alle auswählen" }}
+          </button>
+          <button
+            v-if="applicableDeltaCount > 0"
+            type="button"
+            class="btn-primary"
+            :disabled="selectedDeltaIds.length === 0 || deltaApplying"
+            @click="applySelectedDeltas"
+          >
+            {{ deltaApplying ? "Speichert…" : `✓ Freigeben & Korrekturen anwenden (${selectedDeltaIds.length})` }}
+          </button>
+          <button type="button" class="btn-outline" @click="showDeltaModal = false">
+            Schließen
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -601,9 +904,15 @@ import {
 import { speechService } from "../services/speech";
 import {
   type EntryPatch,
+  type EntrySnapshot,
+  type ReviewDeltaDocument,
+  type ReviewDeltaItem,
   downloadTSV,
+  formatCombinedNotes,
   sanitizeTsvField,
+  snapshotsEqual,
   storage,
+  toEntrySnapshot,
 } from "../services/storage";
 import {
   hkToDevanagariSync,
@@ -618,6 +927,7 @@ const props = defineProps<{
   corpusTitle: string;
   isHindi: boolean;
   canEditCorpora?: boolean;
+  isReviewMode?: boolean;
   volumesList: VolumeData[];
   lessonsList: LessonData[];
   selectedVolumeIds: string[];
@@ -628,12 +938,39 @@ const emit = defineEmits<{
   (e: "practice-selection", items: StudyCardItem[]): void;
   (e: "switch-tab", tab: string): void;
   (e: "entries-updated"): void;
+  (e: "open-install-info"): void;
 }>();
 
 // State
 const loading = ref(false);
 const allEntries = ref<StudyCardItem[]>([]);
 const selectedEntry = ref<StudyCardItem | null>(null);
+const editingEntry = ref(false);
+const savingEntryEdit = ref(false);
+const entryEditSaved = ref(false);
+let entryEditSavedTimer: ReturnType<typeof setTimeout> | null = null;
+const editNativeDraft = ref("");
+const editTranslitDraft = ref("");
+const editPosDraft = ref("");
+const editGenderDraft = ref("");
+const editDefinitionsDraft = ref<
+  Array<{ lang: string; meaning: string; notes: string }>
+>([]);
+const editTagsDraft = ref("");
+const editReviewerCommentDraft = ref("");
+const pendingDeltaItems = ref<ReviewDeltaItem[]>([]);
+const showDeltaModal = ref(false);
+const deltaModalTitle = ref("");
+const deltaModalError = ref("");
+const deltaApplyNotice = ref("");
+const deltaApplying = ref(false);
+const incomingDeltaItems = ref<
+  Array<ReviewDeltaItem & { diffs: string[]; applicable: boolean }>
+>([]);
+const selectedDeltaIds = ref<string[]>([]);
+const explorerNoteDraft = ref("");
+const explorerNoteSaved = ref(false);
+let explorerNoteSavedTimer: ReturnType<typeof setTimeout> | null = null;
 
 // Filters
 const searchQuery = ref("");
@@ -717,6 +1054,7 @@ async function loadEntries() {
       due_only: false,
       shuffle: false,
     });
+    await refreshPendingDelta();
   } finally {
     loading.value = false;
   }
@@ -725,7 +1063,7 @@ async function loadEntries() {
 watch(
   () => props.corpusId,
   () => {
-    selectedEntry.value = null;
+    closeEntryDetail();
     loadEntries();
   },
 );
@@ -836,7 +1174,8 @@ const filteredEntries = computed(() => {
         return true;
       }
       if (
-        e.definitions.some((d) => (d.notes || "").toLowerCase().includes(q))
+        e.definitions.some((d) => (d.notes || "").toLowerCase().includes(q)) ||
+        (e.user_note || "").toLowerCase().includes(q)
       ) {
         return true;
       }
@@ -903,6 +1242,7 @@ const fixableFindingsCount = computed(() => {
 });
 
 async function runOnlineAudit() {
+  if (!props.canEditCorpora) return;
   const targets = filteredEntries.value;
   if (targets.length === 0 || auditRunning.value) return;
 
@@ -944,6 +1284,8 @@ function cancelOnlineAudit() {
 
 onUnmounted(() => {
   cancelOnlineAudit();
+  if (entryEditSavedTimer) clearTimeout(entryEditSavedTimer);
+  if (explorerNoteSavedTimer) clearTimeout(explorerNoteSavedTimer);
 });
 
 function closeAuditModal() {
@@ -1013,9 +1355,210 @@ async function applySelectedFixes() {
     );
     selectedFindingKeys.value = [];
     auditApplyNotice.value = `${count} Korrektur(en) gespeichert.`;
+    await refreshPendingDelta();
     emit("entries-updated");
   } finally {
     auditApplying.value = false;
+  }
+}
+
+async function refreshPendingDelta() {
+  if (!props.canEditCorpora) {
+    pendingDeltaItems.value = [];
+    return;
+  }
+  const doc = await storage.getReviewDelta(props.corpusId, allEntries.value);
+  pendingDeltaItems.value = doc.changes;
+}
+
+async function downloadReviewDelta() {
+  const doc = await storage.getReviewDelta(props.corpusId, allEntries.value);
+  pendingDeltaItems.value = doc.changes;
+  const content = `${JSON.stringify(doc, null, 2)}\n`;
+  const blob = new Blob([content], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${props.corpusId}_review_delta_${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function discardStagedOverrides() {
+  await storage.resetCorpusOverrides(props.corpusId);
+  closeEntryDetail();
+  await loadEntries();
+  emit("entries-updated");
+}
+
+function formatDefsForDiff(
+  defs: Array<{ meaning: string; notes?: string }>,
+): string {
+  return defs
+    .map((d) => (d.notes ? `${d.meaning} [${d.notes}]` : d.meaning))
+    .join(" · ");
+}
+
+function computeSnapshotDiffLines(
+  cur: EntrySnapshot,
+  next: EntrySnapshot,
+): string[] {
+  const lines: string[] = [];
+  if (cur.lemma_native !== next.lemma_native) {
+    lines.push(`Devanāgarī: ${cur.lemma_native} -> ${next.lemma_native}`);
+  }
+  if (cur.lemma_translit !== next.lemma_translit) {
+    lines.push(
+      `Umschrift: ${cur.lemma_translit || "–"} -> ${next.lemma_translit || "–"}`,
+    );
+  }
+  if ((cur.pos || "") !== (next.pos || "")) {
+    lines.push(`Wortart: ${cur.pos || "–"} -> ${next.pos || "–"}`);
+  }
+  if ((cur.gender || "") !== (next.gender || "")) {
+    lines.push(`Genus: ${cur.gender || "–"} -> ${next.gender || "–"}`);
+  }
+  const curDefs = formatDefsForDiff(cur.definitions);
+  const nextDefs = formatDefsForDiff(next.definitions);
+  if (curDefs !== nextDefs) {
+    lines.push(`Bedeutung/Notiz: ${curDefs || "–"} -> ${nextDefs || "–"}`);
+  }
+  const curTags = cur.tags.join(";");
+  const nextTags = next.tags.join(";");
+  if (curTags !== nextTags) {
+    lines.push(`Tags: ${curTags || "–"} -> ${nextTags || "–"}`);
+  }
+  return lines;
+}
+
+const applicableDeltaCount = computed(() => {
+  return incomingDeltaItems.value.filter((item) => item.applicable).length;
+});
+
+async function handleDeltaFileUpload(e: Event) {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  deltaModalError.value = "";
+  deltaApplyNotice.value = "";
+  incomingDeltaItems.value = [];
+  selectedDeltaIds.value = [];
+  deltaModalTitle.value = props.corpusTitle;
+
+  try {
+    const raw = await file.text();
+    const parsed = JSON.parse(raw) as Partial<ReviewDeltaDocument>;
+    if (
+      parsed?.schema !== "alexis-review-delta-v1" ||
+      !Array.isArray(parsed.changes)
+    ) {
+      deltaModalError.value =
+        "Ungültiges Dateiformat (erwartet Schema „alexis-review-delta-v1“).";
+      showDeltaModal.value = true;
+      return;
+    }
+    if (parsed.corpus_id && parsed.corpus_id !== props.corpusId) {
+      deltaModalError.value = `Dieses Delta gehört zum Korpus „${parsed.corpus_id}“ (aktiv ist „${props.corpusId}“). Bitte zuerst den passenden Korpus wählen.`;
+      showDeltaModal.value = true;
+      return;
+    }
+    deltaModalTitle.value = parsed.corpus_title || props.corpusTitle;
+
+    const entryMap = new Map(
+      allEntries.value.map((item) => [item.entry_id, item]),
+    );
+    const bundleEntries = new Map(
+      (storage.getCorpusBundle(props.corpusId)?.entries ?? []).map((item) => [
+        item.id,
+        item,
+      ]),
+    );
+
+    const rows = parsed.changes.map((change) => {
+      const currentItem =
+        entryMap.get(change.id) ?? bundleEntries.get(change.id);
+      const currentSnapshot = currentItem
+        ? toEntrySnapshot(currentItem)
+        : change.before;
+      const diffs = computeSnapshotDiffLines(currentSnapshot, change.after);
+      return {
+        ...change,
+        diffs,
+        applicable: diffs.length > 0,
+      };
+    });
+
+    incomingDeltaItems.value = rows;
+    selectedDeltaIds.value = rows.filter((r) => r.applicable).map((r) => r.id);
+    showDeltaModal.value = true;
+  } catch (err) {
+    deltaModalError.value = `Delta konnte nicht gelesen werden: ${err instanceof Error ? err.message : String(err)}`;
+    showDeltaModal.value = true;
+  } finally {
+    target.value = "";
+  }
+}
+
+function toggleAllApplicableDeltas() {
+  const applicableIds = incomingDeltaItems.value
+    .filter((item) => item.applicable)
+    .map((item) => item.id);
+  if (selectedDeltaIds.value.length === applicableIds.length) {
+    selectedDeltaIds.value = [];
+  } else {
+    selectedDeltaIds.value = applicableIds;
+  }
+}
+
+async function applySelectedDeltas() {
+  if (!props.canEditCorpora || deltaApplying.value) return;
+  const selectedSet = new Set(selectedDeltaIds.value);
+  const chosen = incomingDeltaItems.value.filter(
+    (item) => item.applicable && selectedSet.has(item.id),
+  );
+  if (chosen.length === 0) return;
+
+  deltaApplying.value = true;
+  try {
+    const patches: EntryPatch[] = chosen.map((item) => ({
+      id: item.id,
+      lemma_native: item.after.lemma_native,
+      lemma_translit: item.after.lemma_translit,
+      pos: item.after.pos ?? null,
+      gender: item.after.gender ?? null,
+      definitions: item.after.definitions.map((d) => ({ ...d })),
+      tags: [...item.after.tags],
+    }));
+
+    const count = await storage.updateEntries(props.corpusId, patches);
+    const entryMap = new Map(allEntries.value.map((e) => [e.entry_id, e]));
+    for (const patch of patches) {
+      const target = entryMap.get(patch.id);
+      if (target) {
+        target.lemma_native = patch.lemma_native;
+        target.lemma_translit = patch.lemma_translit;
+        target.pos = patch.pos ?? undefined;
+        target.gender = patch.gender ?? undefined;
+        target.definitions = (patch.definitions ?? []).map((d) => ({ ...d }));
+        target.tags = [...(patch.tags ?? [])];
+      }
+    }
+
+    for (const row of incomingDeltaItems.value) {
+      if (selectedSet.has(row.id)) {
+        row.applicable = false;
+        row.diffs = [];
+      }
+    }
+    selectedDeltaIds.value = [];
+    deltaApplyNotice.value = `${count} Delta-Korrektur(en) übernommen.`;
+    await refreshPendingDelta();
+    emit("entries-updated");
+  } finally {
+    deltaApplying.value = false;
   }
 }
 
@@ -1087,12 +1630,144 @@ function getLessonTitle(lessonId?: string): string {
 }
 
 // Inspect & Paradigms
+function closeEntryDetail() {
+  selectedEntry.value = null;
+  editingEntry.value = false;
+  entryEditSaved.value = false;
+}
+
 function toggleEntryDetail(item: StudyCardItem) {
   if (selectedEntry.value?.entry_id === item.entry_id) {
-    selectedEntry.value = null;
+    closeEntryDetail();
   } else {
     selectedEntry.value = item;
+    editingEntry.value = false;
+    entryEditSaved.value = false;
+    explorerNoteDraft.value = item.user_note || "";
+    explorerNoteSaved.value = false;
   }
+}
+
+function startEntryEdit() {
+  if (!props.canEditCorpora || !selectedEntry.value) return;
+  const item = selectedEntry.value;
+  editNativeDraft.value = item.lemma_native;
+  editTranslitDraft.value = item.lemma_translit;
+  editPosDraft.value = item.pos || "";
+  editGenderDraft.value = item.gender && item.gender !== "-" ? item.gender : "";
+  editDefinitionsDraft.value =
+    item.definitions.length > 0
+      ? item.definitions.map((d) => ({
+          lang: d.lang || "de",
+          meaning: d.meaning,
+          notes: d.notes || "",
+        }))
+      : [{ lang: "de", meaning: "", notes: "" }];
+  editTagsDraft.value = (item.tags || []).join("; ");
+  editReviewerCommentDraft.value =
+    storage.getEntryOverride(item.entry_id)?.reviewer_comment || "";
+  entryEditSaved.value = false;
+  editingEntry.value = true;
+}
+
+const canSaveEntryEdit = computed(() => {
+  return (
+    Boolean(editNativeDraft.value.trim()) &&
+    editDefinitionsDraft.value.some((d) => d.meaning.trim().length > 0)
+  );
+});
+
+async function saveEntryEdit() {
+  if (
+    !props.canEditCorpora ||
+    !selectedEntry.value ||
+    !canSaveEntryEdit.value ||
+    savingEntryEdit.value
+  ) {
+    return;
+  }
+  savingEntryEdit.value = true;
+  try {
+    const cleanedDefs = editDefinitionsDraft.value
+      .map((d) => ({
+        lang: d.lang || "de",
+        meaning: d.meaning.trim(),
+        ...(d.notes.trim() ? { notes: d.notes.trim() } : {}),
+      }))
+      .filter((d) => d.meaning.length > 0);
+    const cleanedTags = editTagsDraft.value
+      .split(/[;,]/)
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const cleanGender = editGenderDraft.value.trim();
+    const cleanComment = editReviewerCommentDraft.value.trim();
+    const patch: EntryPatch = {
+      id: selectedEntry.value.entry_id,
+      lemma_native: editNativeDraft.value.trim(),
+      lemma_translit: editTranslitDraft.value.trim(),
+      pos: editPosDraft.value.trim() || null,
+      gender: cleanGender && cleanGender !== "-" ? cleanGender : null,
+      definitions: cleanedDefs,
+      tags: cleanedTags,
+      ...(props.isReviewMode
+        ? { reviewer_comment: cleanComment }
+        : cleanComment
+          ? { reviewer_comment: cleanComment }
+          : {}),
+    };
+
+    await storage.updateEntries(props.corpusId, [patch]);
+
+    selectedEntry.value.lemma_native = patch.lemma_native;
+    selectedEntry.value.lemma_translit = patch.lemma_translit;
+    selectedEntry.value.pos = patch.pos ?? undefined;
+    selectedEntry.value.gender = patch.gender ?? undefined;
+    selectedEntry.value.definitions = cleanedDefs.map((d) => ({ ...d }));
+    selectedEntry.value.tags = [...cleanedTags];
+
+    const target = allEntries.value.find(
+      (e) => e.entry_id === selectedEntry.value?.entry_id,
+    );
+    if (target) {
+      target.lemma_native = patch.lemma_native;
+      target.lemma_translit = patch.lemma_translit;
+      target.pos = patch.pos ?? undefined;
+      target.gender = patch.gender ?? undefined;
+      target.definitions = cleanedDefs.map((d) => ({ ...d }));
+      target.tags = [...cleanedTags];
+    }
+
+    editingEntry.value = false;
+    entryEditSaved.value = true;
+    if (entryEditSavedTimer) clearTimeout(entryEditSavedTimer);
+    entryEditSavedTimer = setTimeout(() => {
+      entryEditSaved.value = false;
+    }, 2000);
+    await refreshPendingDelta();
+    emit("entries-updated");
+  } finally {
+    savingEntryEdit.value = false;
+  }
+}
+
+async function saveExplorerNote() {
+  if (!selectedEntry.value) return;
+  const saved = await storage.saveUserNote(
+    selectedEntry.value.entry_id,
+    explorerNoteDraft.value,
+  );
+  selectedEntry.value.user_note = saved;
+  const target = allEntries.value.find(
+    (e) => e.entry_id === selectedEntry.value?.entry_id,
+  );
+  if (target) {
+    target.user_note = saved;
+  }
+  explorerNoteSaved.value = true;
+  if (explorerNoteSavedTimer) clearTimeout(explorerNoteSavedTimer);
+  explorerNoteSavedTimer = setTimeout(() => {
+    explorerNoteSaved.value = false;
+  }, 2000);
 }
 
 const nounDeclension = computed<HindiNounDeclension | null>(() => {
@@ -1154,10 +1829,11 @@ async function toggleSearchTransliteration() {
 
 function buildFilteredTsvRows(includeCurriculumLabels: boolean): string {
   const header = includeCurriculumLabels
-    ? "Devanagari\tIAST\tWortart\tGenus\tBedeutung\tGliederung\tBox"
-    : "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags";
+    ? "Devanagari\tIAST\tWortart\tGenus\tBedeutung\tGliederung\tBox\tNotizen"
+    : "volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags\tnotes";
   const rows = filteredEntries.value.map((e) => {
     const meanings = sanitizeTsvField(formatMeanings(e));
+    const notes = formatCombinedNotes(e.definitions, e.user_note);
     if (includeCurriculumLabels) {
       return [
         sanitizeTsvField(e.lemma_native),
@@ -1167,6 +1843,7 @@ function buildFilteredTsvRows(includeCurriculumLabels: boolean): string {
         meanings,
         sanitizeTsvField(formatLessonLabel(e)),
         `Box ${e.box_number}`,
+        notes,
       ].join("\t");
     }
     const tags = (e.tags || [])
@@ -1182,6 +1859,7 @@ function buildFilteredTsvRows(includeCurriculumLabels: boolean): string {
       sanitizeTsvField(e.gender || "-"),
       meanings,
       tags,
+      notes,
     ].join("\t");
   });
   return [header, ...rows].join("\n");
@@ -1236,6 +1914,26 @@ async function copyAsTSV() {
 .header-desc {
   color: var(--text-muted);
   font-size: 0.95rem;
+}
+
+.readonly-mode-hint {
+  margin-top: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.btn-inline-link {
+  color: var(--accent-gold);
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
 }
 
 .header-actions {
@@ -1700,6 +2398,25 @@ async function copyAsTSV() {
   font-size: 0.85rem;
 }
 
+.btn-outline-sm.btn-no-mt {
+  margin-top: 0;
+}
+
+.btn-primary-sm {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--accent-gold);
+  color: #ffffff;
+  border: 1px solid var(--accent-gold);
+}
+
+.btn-primary-sm:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 /* Modal / Drawer */
 .detail-modal-backdrop {
   position: fixed;
@@ -1830,10 +2547,71 @@ async function copyAsTSV() {
   font-weight: 600;
 }
 
-.modal-meanings h4 {
-  font-size: 1rem;
+.modal-meanings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   margin-bottom: 0.5rem;
+}
+
+.modal-meanings-head h4 {
+  font-size: 1rem;
+  margin: 0;
   color: var(--text-muted);
+}
+
+.entry-readonly-note {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.entry-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.entry-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.65rem;
+}
+
+.entry-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.entry-edit-input {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.entry-edit-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.entry-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .meanings-list {
@@ -1867,6 +2645,69 @@ async function copyAsTSV() {
   font-size: 0.8rem;
   padding: 0.2rem 0.55rem;
   border-radius: 4px;
+}
+
+.note-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  color: var(--accent-gold);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+}
+
+.modal-user-note {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.modal-note-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.modal-note-head h4 {
+  font-size: 0.92rem;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.note-saved-badge {
+  font-size: 0.8rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.explorer-note-textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.explorer-note-textarea:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.modal-note-actions {
+  margin-top: 0.45rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-note-actions .btn-outline-sm {
+  margin-top: 0;
 }
 
 .morphology-section {
@@ -2111,6 +2952,40 @@ async function copyAsTSV() {
   margin-top: 0.85rem;
   font-size: 0.84rem;
   color: var(--text-muted);
+}
+
+.upload-delta-label {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.reviewer-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent-gold);
+  background: var(--bg-surface);
+  font-size: 0.9rem;
+}
+
+.reviewer-banner-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  color: var(--text-primary);
+}
+
+.reviewer-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 @media (max-width: 768px) {

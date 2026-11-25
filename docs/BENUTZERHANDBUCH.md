@@ -9,31 +9,31 @@
 Alexis unterscheidet sich grundlegend von herkömmlichen Vokabel-Cloud-Diensten durch das Prinzip **Zero-Config Local-First**:
 
 ### 1.1 Der Server als schreibgeschützte Basis (Read-Only)
-- **Kanonischer Datenbestand**: Die auf GitHub Pages bereitgestellte Web-App dient als statische Verteilungsbasis. Sie liefert den Programmcode und die verifizierten Kern-Wörterbücher (*Hindi bolo*, *Sanskritkurs Alois Payer*).
-- **Strikter Schreibschutz & blockierter Online-Import**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. Zudem ist das Einlesen neuer Wörterbücher in der Online-Web-App / PWA bewusst deaktiviert, damit die Referenz-Wörterbücher konsistent bleiben.
+- **Kanonischer Datenbestand**: Die auf `docs.birchville.org/alexis/` bereitgestellte Web-App dient als statische Verteilungsbasis. Sie liefert den Programmcode und die verifizierten Kern-Wörterbücher (*Hindi bolo*, *Sanskritkurs Alois Payer*).
+- **Schreibgeschützte Server-Ansicht**: GitHub Pages ist ein rein statischer Webserver ohne Datenbank und ohne Schreib-API. In der reinen Browser-/Server-Ansicht sind Wortschatz-Prüfung (`Online prüfen`), Einzelwort-Editor und TSV-Import bewusst ausgeschaltet, damit Besucher auf einem einheitlichen, unveränderten Referenzbestand lernen.
 - **Inhaber-Kuration (Redaktions-Pipeline)**: Neue offizielle Wörterbücher oder Lektionen werden ausschließlich lokal durch den Redaktor validiert (siehe [REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und über authentifizierte Git-Commits (`git push`) eingespielt.
 
 ### 1.2 Welcher Modus passt zu meinem Anwendungsfall? (3 Use Cases)
-- **Use Case 1 — Reiner Online-Betrieb im Browser:**
-  Du übst direkt im Browser mit dem vorgegebenen, kuratierten Standard-Wortschatz vom Server (schreibgeschützt). Dein persönlicher Lernfortschritt (Leitner-Boxen 1–5) wird dabei automatisch lokal in deinem Browser (`IndexedDB`) gespeichert.
-- **Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen:**
-  Du installierst Alexis aus dem Browser heraus als App-Fenster und kannst komplett offline lernen. Auch hier ist der Wortschatz schreibgeschützt. Sobald der Computer wieder online ist, werden Programm und offizieller Standard-Wortschatz automatisch vom Server aktualisiert; dein lokaler Lernfortschritt (Boxen 1–5) bleibt erhalten *(regelmäßiges `.json`-Backup empfohlen)*.
-- **Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für eigene Wortbestände:**
-  Du lädst und installierst die eigenständige Desktop-App über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest). Sie speichert alle Daten in einer lokalen `SQLite`-Datenbank auf der Festplatte und ist die **einzige Betriebsart, in der eigene Wortlisten (`.tsv`) importiert, geprüft und dauerhaft lokal gepflegt werden können**.
+- **Use Case 1 — Reiner Online-Betrieb im Browser (Server-Ansicht):**
+  Du übst direkt im Browser mit dem vorgegebenen, kuratierten Standard-Wortschatz vom Server (Stammdaten schreibgeschützt; Prüf- und Editierfunktionen am Wortschatz deaktiviert). Dein persönlicher Lernfortschritt (Leitner-Boxen 1–5) sowie persönliche Notizen werden dabei lokal in deinem Browser (`IndexedDB`) gespeichert.
+- **Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen & individuelle Anpassungen:**
+  Du installierst Alexis aus dem Browser heraus als eigenständige App (`standalone`) und kannst komplett offline lernen. Für diesen individuellen Datensatz sind Online-Wörterbuchprüfung, Einzelwort-Editor und TSV-Import lokal freigeschaltet (`IndexedDB` mit Eintrags-Overrides). Sobald das Gerät online ist, aktualisiert sich das Basis-Korpus im Hintergrund, ohne lokale Änderungen oder Lernstände zu überschreiben *(regelmäßiges `.json`-Backup empfohlen)*.
+- **Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für dauerhafte Eigenbestände:**
+  Du lädst und installierst die eigenständige Desktop-App über die [GitHub Releases](https://github.com/birchville-org/alexis/releases/latest). Sie speichert alle Daten, Korrekturen und eigene Wortlisten (`.tsv`) dauerhaft in einer lokalen `SQLite`-Datenbank auf der Festplatte.
 
 ### 1.3 Lokale Datenspeicherung & Datenschutz
-- **100 % lokal auf dem Endgerät**: Lernstände (und in der Desktop-App auch eigene importierte TSV-Wortlisten) werden ausschließlich in der `IndexedDB` Ihres Browsers bzw. in der lokalen SQLite-Datenbank der Desktop-App gespeichert.
+- **100 % lokal auf dem Endgerät**: Lernstände, persönliche Notizen sowie lokale Korrekturen/Importe (in PWA via `IndexedDB` und in der Desktop-App via `SQLite`) bleiben ausschließlich auf Ihrem Gerät.
 - **Keine Server-Synchronisation**: Es werden keinerlei persönliche Lerndaten, Lernstände, Zeitstempel oder selbsterstellte Wortschätze an einen Server übertragen. Sie behalten die uneingeschränkte Kontrolle über Ihre Daten.
 
 ### 1.4 Automatische Programm-Updates
 - **Browser & PWA**: Sobald Ihr Endgerät mit dem Internet verbunden ist, prüft der Service Worker (Network-First) im Hintergrund, ob eine neuere Version von Alexis vorliegt, und aktualisiert App-Shell sowie kanonische Wörterbücher.
 - **Desktop-App (Tauri)**: Die Desktop-App prüft 4 Sekunden nach dem Start automatisch (sowie jederzeit manuell über **💾 Offline / Download** -> **🔄 Nach Updates suchen**) gegen GitHub Releases auf signierte Updates und installiert diese direkt in der App.
-- **Erhalt lokaler Daten**: Ihre persönlichen Lernfortschritte und in der Desktop-App importierte Wortlisten (`alexis.db` bzw. `IndexedDB`) bleiben bei jedem Update vollständig erhalten.
+- **Erhalt lokaler Daten**: Ihre persönlichen Lernfortschritte, Notizen sowie lokale Korrekturen und importierte Wortlisten (`alexis.db` bzw. `IndexedDB`) bleiben bei jedem Update erhalten.
 
 ### 1.5 Handhabung eigener Wörterverzeichnisse
 - **Warum kein automatisches Teilen?** Viele Lernende erfassen Wortschätze aus urheberrechtlich geschützten Lehrbüchern. Ein automatisches Hochladen auf einen Server würde rechtliche Probleme aufwerfen, Datenschutzvereinbarungen erfordern und zu unkontrolliertem Datenwildwuchs führen.
 - **Souveräner Peer-to-Peer-Austausch**: Wenn Sie selbsterstellte Lektionen mit anderen teilen möchten, nutzen Sie die integrierte TSV-Export-Funktion. Sie erhalten eine saubere Textdatei (`.tsv`), die Sie per E-Mail, Messenger oder USB-Stick weitergeben können.
-- **Kuratierter Beitrag**: Haben Sie ein vollständiges gemeinfreies oder lizenziertes Werk erarbeitet, kann dieses dem Repository-Inhaber per GitHub Pull Request oder Issue zur offiziellen Aufnahme vorgeschlagen werden.
+- **Kuratierter Beitrag & Gutachter-Delta (`?review=1`):** Haben Sie ein vollständiges gemeinfreies oder lizenziertes Werk erarbeitet, kann dieses per GitHub Pull Request vorgeschlagen werden. Für gezielte Fachkorrekturen ohne Git schaltet der URL-Parameter `?review=1` einen lokalen Gutachter-Modus frei, dessen Korrekturen sich als kompaktes JSON-Delta (`alexis-review-delta-v1`) exportieren und vom Redaktor einspielen lassen.
 
 ---
 
@@ -106,7 +106,7 @@ Im Reiter **Korpora & Gliederung** bestimmen Sie, welche Lehrwerke und Lektionen
 - **Multi-Selektion:** Wählen Sie durch einfaches Anhaken einzelne oder mehrere Bände und Lektionen aus.
 - **Lektions-Export (`📥 TSV`):** Jede Lektion verfügt über einen separaten Export-Button, um den Wortschatz als strukturierte Textdatei zu sichern.
 - **Sammel-Export:** Über *„📥 Gewählte als TSV exportieren“* können mehrere markierte Lektionen in einer Datei zusammengefasst heruntergeladen werden.
-- **Redaktionelle Pflege:** Das Einlesen neuer Lektionen erfolgt ausschließlich durch Redaktoren über die lokale Validierungs-Pipeline ([REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md)) und steht in der Online-PWA nicht zur Verfügung.
+- **Lokale Pflege & Redaktion:** In der installierten PWA (`IndexedDB`) und der Desktop-App (`SQLite`) können individuelle Datensätze lokal geprüft, bearbeitet und per TSV erweitert werden. In der reinen Server-/Browser-Ansicht bleibt der Referenzwortschatz schreibgeschützt; offizielle Lektionen pflegt der Redaktor über [REDAKTIONSWORKFLOW.md](REDAKTIONSWORKFLOW.md).
 
 ---
 
@@ -150,9 +150,9 @@ Der Reiter **Wörterbuch** bündelt Online-Wörterbücher für beide Korpussprac
 Eigene Wortschatzlisten müssen als Tabstopp-getrennte Textdateien (UTF-8, `.tsv` oder `.txt`) formatiert sein. Die erste Zeile muss folgende Spaltenüberschriften tragen:
 
 ```tsv
-volume	lesson	native	transliteration	pos	gender	meaning_de	tags
-hb1	1	अच्छा	acchā	adj	-	gut; ach so!	adjektive;begruessung
-hb1	1	किताब	kitāb	noun	f	Buch	substantive
+volume	lesson	native	transliteration	pos	gender	meaning_de	tags	notes
+hb1	1	अच्छा	acchā	adj	-	gut; ach so!	adjektive;begruessung	oft am Satzanfang
+hb1	1	किताब	kitāb	noun	f	Buch	substantive	< Arab./Pers.
 ```
 
 - **volume:** Band-Kennung (z. B. `hb1`, `payer_vol1`).
@@ -163,3 +163,4 @@ hb1	1	किताब	kitāb	noun	f	Buch	substantive
 - **gender:** Grammatisches Geschlecht (`m`, `f`, `n`, `m/f` oder `-`).
 - **meaning_de:** Deutsche Bedeutung (mehrere Bedeutungen durch Semikolon trennen).
 - **tags:** Optionale Schlagworte, durch Semikolon getrennt.
+- **notes:** Optionales Freitextfeld (9. Spalte, z. B. Etymologie, Rektion, Eselsbrücke). Bisherige 8-Spalten-Dateien ohne `notes` bleiben kompatibel; beim Export fließen kuratierte Hinweise und persönliche Lernnotizen hier zusammen (ohne Tabs/Zeilenumbrüche, kompatibel mit Anki).

@@ -1,5 +1,22 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.5 (2026-11-25)
+
+### Datenintegrität & Kernfunktionen
+- **Zweistufiges Notizsystem — TSV-Spalte `notes` & persönliche Lernnotiz (`user_note`) (`src/types/index.ts`, `src/services/storage.ts`, `src-tauri/src/db.rs`, `src-tauri/src/lib.rs`, `src/App.vue`, `src/components/VocabularyExplorer.vue`, `scripts/validate_and_import_hindi.py`)**: Rückwärtskompatible optionale 9. TSV-Spalte `notes` für kuratierte Hinweise (Anki- und 8-Spalten-TSV-kompatibel) sowie geräte-lokales Freitextfeld `user_note` (Shortcut `n` / `+ Persönliche Notiz (N)` auf der aufgedeckten Karte sowie im Detail-Modal des Vokabel-Explorers, gespeichert in `IndexedDB` und `SQLite` inkl. idempotenter `ALTER TABLE`-Migration, enthalten in JSON-Backups und TSV-Export).
+- **Einzelwort-Editor, PWA-Lokal-Editierung & Entwicklungs-`Git-Sync` (`src/components/VocabularyExplorer.vue`, `src/services/storage.ts`, `vite.config.ts`)**: Im Detail-Modal lassen sich über `✏️ Eintrag bearbeiten` Devanāgarī, IAST, Wortart, Genus, deutsche Bedeutungen, Spalte `notes` und Tags direkt pflegen. Desktop-App (`SQLite`) und installierte PWA (`IndexedDB` v3 `entry_overrides` + kollisionssichere `usr_`-IDs für Importe) speichern lokal ohne Server-Updates zu blockieren; auf dem lokalen Vite-Entwicklungsserver (`localhost:5180`) schreiben Änderungen direkt Biome-formatiert in `data/corpora/*.json`.
+- **Externer Gutachter-Modus & Delta-Workflow (`?review=1`) (`src/App.vue`, `src/components/VocabularyExplorer.vue`, `src/services/storage.ts`)**: `?review=1` öffnet den Vokabel-Explorer mit lokal vorgemerkten Änderungen, Gutachter-Kommentarfeld und 1-Klick-Export im kompakten Schema `alexis-review-delta-v1` (`📤 Korrektur-Delta herunterladen (.json)`); die Redaktion prüft und übernimmt Deltas selektiv über `📥 Delta prüfen`.
+- **Korpus-Korrekturen & schärferes Hindi-Audit (`data/corpora/hindi_bolo.json`, `src/services/corpusAudit.ts`)**: Zwei Tippfehler in `Hindi bolo 1`, Lektion 2 (`करोड़` -> `zehn Millionen`, `दस` -> `zehn`) korrigiert; `auditHindiEntry` akzeptiert `ind` als kompatibel mit `adv`, `part`, `conj`, `interj`, `postp` und überspringt die Wiktionary-Einzelartikel-Suche bei Mehrwort-Wendungen.
+- **Dokumentation nachgezogen (`docs/`)**: `BENUTZERHANDBUCH.md`, `CHEATSHEET_REDAKTION.md`, `REDAKTIONSWORKFLOW.md`, `ARCHITECTURE.md` und `ROADMAP.md` (plus In-App-Hilfe) auf 9-Spalten-TSV, 3-Modi-Rollentrennung und Delta-Review aktualisiert.
+
+### Sicherheit & Sandbox
+- **Server-Read-Only-Härtung & Dev-CSRF-Schutz (`src/App.vue`, `src/components/VocabularyExplorer.vue`, `vite.config.ts`)**: Reine Browser-/Server-Ansichten (inkl. Simulation via `?readonly=1`) blenden `🔎 Online prüfen`, Einzelwort-Editor und TSV-Import konsequent aus und verweisen auf PWA/Desktop-App. Der ausschließlich im lokalen Vite-Dev-Server aktive Redaktions-Sync-Endpunkt erzwingt `POST`, Loopback-Adresse, `X-Alexis-Dev: 1`, `Content-Type: application/json`, lokalen `Host`/`Origin` sowie Bundle-Schema-Validierung und ist nicht im Produktions-Build enthalten.
+
+### Plattform- & Backend-Stabilität
+- **TDZ-Fix beim Karten-Watcher (`src/App.vue`)**: `currentCard`-Computed vor dem Notiz-Editor-`watch` initialisiert (`ReferenceError: Cannot access 'currentCard' before initialization` behoben).
+
+---
+
 ## v0.6.4 (2026-11-24)
 
 ### Datenintegrität & Kernfunktionen

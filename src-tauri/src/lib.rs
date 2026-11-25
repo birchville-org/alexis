@@ -54,6 +54,18 @@ fn update_corpus_entries(state: State<AppState>, patches: Vec<EntryPatch>) -> Re
 }
 
 #[tauri::command]
+fn save_user_note(state: State<AppState>, entry_id: String, note: Option<String>) -> Result<(), String> {
+    let conn = state.db.lock().map_err(|e| e.to_string())?;
+    db::save_user_note(&conn, &entry_id, note.as_deref()).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn export_study_state(state: State<AppState>) -> Result<serde_json::Map<String, serde_json::Value>, String> {
+    let conn = state.db.lock().map_err(|e| e.to_string())?;
+    db::export_study_state(&conn).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 fn get_study_queue(state: State<AppState>, query: StudyQueueQuery) -> Result<Vec<StudyCardItem>, String> {
     let conn = state.db.lock().map_err(|e| e.to_string())?;
     db::query_study_queue(&conn, &query).map_err(|e| e.to_string())
@@ -319,6 +331,8 @@ pub fn run() {
             transliterate,
             import_corpus_bundle,
             update_corpus_entries,
+            save_user_note,
+            export_study_state,
             get_study_queue,
             record_review,
             get_deck_stats,

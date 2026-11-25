@@ -72,6 +72,7 @@ class VocabRow:
     gender: str | None
     meaning_de: str
     tags: list[str]
+    notes: str = ""
     issues: list[ValidationIssue] = field(default_factory=list)
 
 
@@ -329,6 +330,14 @@ def load_tsv(path: Path) -> list[VocabRow]:
             meaning = sanitize_text(raw.get(meaning_col, ""))
             tags_raw = sanitize_text(raw.get(fields.get("tags", ""), ""))
             tags = [t.strip() for t in tags_raw.split(";") if t.strip()]
+            notes_col = (
+                fields.get("notes")
+                or fields.get("note")
+                or fields.get("notiz")
+                or fields.get("notizen")
+                or ""
+            )
+            notes = sanitize_text(raw.get(notes_col, "")) if notes_col else ""
             rows.append(
                 VocabRow(
                     volume=vol,
@@ -339,6 +348,7 @@ def load_tsv(path: Path) -> list[VocabRow]:
                     gender=gender,
                     meaning_de=meaning,
                     tags=tags,
+                    notes=notes,
                 )
             )
     return rows
@@ -350,6 +360,9 @@ def load_corpus_rows(corpus: dict[str, Any]) -> list[VocabRow]:
     for e in corpus.get("entries", []):
         les_num = lessons_by_id.get(e.get("lesson_id", ""), 1)
         meaning = "; ".join(d.get("meaning", "") for d in e.get("definitions", []))
+        notes = "; ".join(
+            d.get("notes", "") for d in e.get("definitions", []) if d.get("notes")
+        )
         rows.append(
             VocabRow(
                 volume=e.get("volume_id", "hb1"),
@@ -360,6 +373,7 @@ def load_corpus_rows(corpus: dict[str, Any]) -> list[VocabRow]:
                 gender=e.get("gender"),
                 meaning_de=meaning,
                 tags=list(e.get("tags") or []),
+                notes=notes,
             )
         )
     return rows
@@ -440,15 +454,25 @@ def apply_rows_to_corpus(rows: list[VocabRow], corpus_path: Path) -> tuple[int, 
 
         if row.native in existing_entries_by_native:
             entry = existing_entries_by_native[row.native]
-            meanings = {d["meaning"] for d in entry.get("definitions", [])}
-            if row.meaning_de and row.meaning_de not in meanings:
-                entry["definitions"].append({"lang": "de", "meaning": row.meaning_de})
+            defs = entry.setdefault("definitions", [])
+            matching = next((d for d in defs if d.get("meaning") == row.meaning_de), None)
+            if row.meaning_de and matching is None:
+                new_def: dict[str, Any] = {"lang": "de", "meaning": row.meaning_de}
+                if row.notes:
+                    new_def["notes"] = row.notes
+                defs.append(new_def)
+                merged += 1
+            elif matching is not None and row.notes and not matching.get("notes"):
+                matching["notes"] = row.notes
                 merged += 1
             for tag in row.tags:
                 if tag not in entry.setdefault("tags", []):
                     entry["tags"].append(tag)
         else:
             seq = sum(1 for e in corpus["entries"] if e.get("lesson_id") == lesson_id) + 1
+            first_def: dict[str, Any] = {"lang": "de", "meaning": row.meaning_de}
+            if row.notes:
+                first_def["notes"] = row.notes
             new_entry = {
                 "id": f"{lesson_id}_{seq:03d}",
                 "corpus_id": corpus["corpus"]["id"],
@@ -458,7 +482,7 @@ def apply_rows_to_corpus(rows: list[VocabRow], corpus_path: Path) -> tuple[int, 
                 "lemma_translit": row.translit,
                 "pos": row.pos,
                 "gender": row.gender,
-                "definitions": [{"lang": "de", "meaning": row.meaning_de}],
+                "definitions": [first_def],
                 "tags": row.tags,
             }
             corpus["entries"].append(new_entry)

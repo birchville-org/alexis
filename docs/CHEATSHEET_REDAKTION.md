@@ -14,8 +14,8 @@ Kompakter Leitfaden für den Workflow **Buchfoto ➔ TSV ➔ Prüfung ➔ Veröf
 ### Option B: In Gemini Notebook / externem Chat
 Prompt-Vorlage zum Kopieren:
 ```text
-Extrahiere alle Vokabeln aus den Buchfotos als UTF-8 TSV-Codeblock mit exakt diesen 8 Spalten:
-volume	lesson	native	transliteration	pos	gender	meaning_de	tags
+Extrahiere alle Vokabeln aus den Buchfotos als UTF-8 TSV-Codeblock mit diesen 8 Standardspalten (plus optionaler 9. Spalte notes):
+volume	lesson	native	transliteration	pos	gender	meaning_de	tags	notes
 
 Regeln:
 - volume: hb1 (oder hb2 / hb3)
@@ -26,6 +26,7 @@ Regeln:
 - gender: bei noun zwingend m, f, n oder m/f; sonst -
 - meaning_de: deutsche Bedeutungen mit "; " trennen
 - tags: kleingeschrieben, mit ";" trennen (z. B. nomen;a1;lektion4)
+- notes (optional): kurzer einzeiliger Hinweis / Konstruktion / Etymologie ohne Tab/Zeilenumbruch
 ```
 
 TSV-Output als Datei speichern, z. B. `hb1_l04.tsv` im Ordner `/Volumes/SanDisk1TB/proj/Alexis`.

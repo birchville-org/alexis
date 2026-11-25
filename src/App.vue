@@ -322,6 +322,9 @@
                     {{ currentCard.definitions.map(d => d.meaning).join(' · ') }}
                   </span>
                 </div>
+                <div v-if="currentCardCorpusNotes" class="def-notes">
+                  {{ currentCardCorpusNotes }}
+                </div>
               </div>
 
               <!-- Hindi Grammar Details: Noun Declension Table & Verb Paradigm -->
@@ -429,6 +432,52 @@
                 </span>
               </div>
 
+              <!-- Personal Study Note (Variant B) -->
+              <div class="card-user-note-box">
+                <div v-if="editingCardNote" class="user-note-editor">
+                  <textarea
+                    ref="cardNoteInputRef"
+                    v-model="cardNoteDraft"
+                    rows="2"
+                    placeholder="Eigene Eselsbrücke, Beispielsatz oder Hinweis…"
+                    @keydown="onCardNoteKeydown"
+                    class="user-note-textarea"
+                  ></textarea>
+                  <div class="user-note-actions">
+                    <span class="user-note-hint">⌘Enter speichern · Esc abbrechen</span>
+                    <div class="user-note-btns">
+                      <button type="button" class="btn-outline-xs" @click="editingCardNote = false">
+                        Abbrechen
+                      </button>
+                      <button type="button" class="btn-primary-xs" @click="saveCardNote">
+                        Speichern
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div v-else-if="currentCard.user_note" class="user-note-display">
+                  <span class="user-note-text">📝 {{ currentCard.user_note }}</span>
+                  <button
+                    type="button"
+                    class="btn-note-inline"
+                    @click="openCardNoteEditor"
+                    title="Persönliche Notiz bearbeiten (Taste N)"
+                  >
+                    Bearbeiten (N)
+                  </button>
+                </div>
+                <div v-else class="user-note-empty">
+                  <button
+                    type="button"
+                    class="btn-note-inline"
+                    @click="openCardNoteEditor"
+                    title="Persönliche Notiz hinzufügen (Taste N)"
+                  >
+                    + Persönliche Notiz (N)
+                  </button>
+                </div>
+              </div>
+
               <!-- Rating Buttons (Leitner 1..4) -->
               <div class="rating-bar">
                 <button class="rate-btn btn-again" @click="submitRating(1)">
@@ -483,7 +532,8 @@
         :corpus-id="selectedCorpusId"
         :corpus-title="activeCorpusTitle"
         :is-hindi="isHindi"
-        :can-edit-corpora="canImportCorpora"
+        :can-edit-corpora="canEditCorpora"
+        :is-review-mode="isReviewMode"
         :volumes-list="volumesList"
         :lessons-list="lessonsList"
         :selected-volume-ids="selectedVolumeIds"
@@ -491,6 +541,7 @@
         @practice-selection="startSessionWithItems"
         @switch-tab="currentTab = $event as Tab"
         @entries-updated="reloadQueue(dueOnly)"
+        @open-install-info="showInstallModal = true"
       />
 
       <!-- 3. CORPORA & GLIEDERUNG TAB -->
@@ -525,16 +576,15 @@
             <h3>Gliederungen für "{{ activeCorpusTitle }}"</h3>
             <div class="panel-header-actions">
               <span class="runtime-mode-pill">{{ runtimeModeInfo.badge }}</span>
-              <a
+              <button
                 v-if="!canImportCorpora"
-                :href="GITHUB_RELEASES_URL"
-                target="_blank"
-                rel="noopener noreferrer"
+                type="button"
                 class="btn-link"
-                title="Für eigenen TSV-Import Desktop-App herunterladen"
+                @click="showInstallModal = true"
+                title="Für eigene und editierbare Datensätze als PWA installieren oder Desktop-App nutzen"
               >
-                ↗ Desktop-App für TSV-Import
-              </a>
+                🔒 Eigene Datensätze (PWA / Desktop-App)
+              </button>
               <label v-if="canImportCorpora" class="btn-link upload-label">
                 <input
                   ref="tsvFileInput"
@@ -871,10 +921,10 @@
                 Kein Lernender benötigt einen Account, und keine persönlichen Lernstatistiken verlassen jemals Ihr Gerät.
               </div>
               <ul class="help-list">
-                <li><strong>Use Case 1 — Reiner Online-Betrieb im Browser:</strong> Du übst direkt im Browser mit dem vorgegebenen, kuratierten Standard-Wortschatz vom Server (schreibgeschützt). Dein persönlicher Lernfortschritt (Leitner-Boxen 1–5) wird dabei automatisch lokal in deinem Browser (<code>IndexedDB</code>) gespeichert.</li>
-                <li><strong>Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen:</strong> Du installierst Alexis aus dem Browser heraus als App-Fenster und kannst komplett offline lernen. Auch hier ist der Wortschatz schreibgeschützt. Sobald der Computer wieder online ist, werden Programm und offizieller Standard-Wortschatz automatisch vom Server aktualisiert; dein lokaler Lernfortschritt (Boxen 1–5) bleibt erhalten <em>(regelmäßiges <code>.json</code>-Backup empfohlen)</em>.</li>
-                <li><strong>Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für eigene Wortbestände:</strong> Du lädst und installierst die eigenständige <a :href="GITHUB_RELEASES_URL" target="_blank" rel="noopener noreferrer" class="dict-link">Desktop-App</a>. Sie speichert alle Daten in einer lokalen <code>SQLite</code>-Datenbank auf der Festplatte und ist die <strong>einzige Betriebsart, in der eigene Wortlisten (<code>.tsv</code>) importiert, geprüft und dauerhaft lokal gepflegt werden können</strong>.</li>
-                <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf GitHub Pages bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern oder überschreiben. Das Einlesen neuer Wörter ist online blockiert; offizielle Korpora werden ausschließlich über die lokale Redaktions-Pipeline validiert und vom Repository-Inhaber per <code>git push</code> eingespielt.</li>
+                <li><strong>Use Case 1 — Reiner Online-Betrieb im Browser (Server-Ansicht):</strong> Du übst direkt im Browser mit dem vorgegebenen, kuratierten Standard-Wortschatz vom Server (Stammdaten schreibgeschützt; Prüf- und Editierfunktionen am Wortschatz ausgeschaltet). Dein persönlicher Lernfortschritt (Leitner-Boxen 1–5) und deine Notizen werden lokal in deinem Browser (<code>IndexedDB</code>) gespeichert.</li>
+                <li><strong>Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen &amp; individuelle Anpassungen:</strong> Du installierst Alexis aus dem Browser heraus als App-Fenster und kannst komplett offline lernen. Für diesen individuellen Datensatz sind Online-Prüfung, Einzelwort-Editor und TSV-Import lokal in <code>IndexedDB</code> freigeschaltet; offizielle Updates überschreiben deine Änderungen nicht <em>(regelmäßiges <code>.json</code>-Backup empfohlen)</em>.</li>
+                <li><strong>Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für dauerhafte Eigenbestände:</strong> Du lädst und installierst die eigenständige <a :href="GITHUB_RELEASES_URL" target="_blank" rel="noopener noreferrer" class="dict-link">Desktop-App</a>. Sie speichert alle Daten, Korrekturen und eigene Wortlisten (<code>.tsv</code>) dauerhaft in einer lokalen <code>SQLite</code>-Datenbank auf der Festplatte.</li>
+                <li><strong>Der Server als schreibgeschützte Basis (Read-Only):</strong> Die auf <code>docs.birchville.org/alexis/</code> bereitgestellte Web-App liefert den Programmcode und die kuratierten Kern-Wörterbücher (<em>Hindi bolo</em>, <em>Sanskritkurs Alois Payer</em>). Da GitHub Pages ein rein statischer Webserver ohne Schreib-API ist, kann kein externer Nutzer Dateien auf dem Server verändern. In der Server-Ansicht bleibt der Wortschatz schreibgeschützt; offizielle Korpora pflegt der Repository-Inhaber über die lokale Redaktions-Pipeline.</li>
                 <li><strong>100 % lokale Datenhaltung:</strong> Lernstände, Box-Zuordnungen und Fälligkeitsdaten werden ausschließlich lokal im Browser (<code>IndexedDB</code> / <code>localStorage</code>) bzw. in der Desktop-App (<code>SQLite</code>) gespeichert. Es findet keinerlei Upload persönlicher Lerndaten auf einen Server statt.</li>
                 <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und neue Lektionen der Basis-Korpora. Ihre lokalen Lernfortschritte bleiben davon unberührt erhalten.</li>
                 <li><strong>Souveräner Export:</strong> Sie können einzelne Lektionen oder gefilterte Auswahlen jederzeit über <em>„📥 TSV exportieren“</em> als saubere Textdatei für eigene Notizen oder zur Weitergabe sichern.</li>
@@ -1027,6 +1077,10 @@
                     <td><code>u</code> / <code>t</code></td>
                     <td><strong>Umschrift (IAST)</strong> ein-/ausblenden</td>
                   </tr>
+                  <tr>
+                    <td><code>n</code></td>
+                    <td><strong>Persönliche Notiz</strong> zur aufgedeckten Karte hinzufügen oder bearbeiten</td>
+                  </tr>
                 </tbody>
               </table>
             </section>
@@ -1036,7 +1090,7 @@
               <div class="doc-crumb">Kapitel 7 · Datenformate</div>
               <h4>7. Struktur der TSV-Dateien & Redaktions-Pipeline</h4>
               <p class="modal-text">
-                Das Einlesen neuer Wörter ist in der Online-Web-App / PWA deaktiviert, um die Konsistenz der Referenz-Wörterbücher zu sichern. Neue Lektionen werden lokal durch den Redaktor validiert (Free Dictionary API, Lexicala-Cache, IAST-Schwa-Tilgungs-Check) und per Git eingespielt. Der Export pro Lektion oder Auswahl als <code>.tsv</code> steht jederzeit zur Verfügung:
+                In der reinen Server-/Browser-Ansicht sind Einlesen, Prüfung und Editieren am Referenz-Wortschatz ausgeschaltet. In der installierten PWA (<code>IndexedDB</code>) sowie der Desktop-App (<code>SQLite</code>) lassen sich eigene TSV-Dateien importieren und Einträge lokal pflegen. Der Export pro Lektion oder Auswahl als <code>.tsv</code> steht jederzeit zur Verfügung:
               </p>
               <table class="help-table">
                 <thead>
@@ -1096,11 +1150,17 @@
                     <td><code>schule;a1</code></td>
                     <td>Semikolon-getrennte Schlagwörter (<code>tag1;tag2</code>) für Filter und thematische Gruppen.</td>
                   </tr>
+                  <tr>
+                    <td><code>notes</code></td>
+                    <td>Optional</td>
+                    <td><code>&lt; Arab.; mit ko</code></td>
+                    <td>Freitext-Hinweis (9. Spalte: Etymologie, Rektion oder persönliche Lernnotiz; ohne Tabs/Zeilenumbrüche, kompatibel mit Anki und 8-Spalten-TSVs).</td>
+                  </tr>
                 </tbody>
               </table>
               <p class="modal-text">
                 <strong>Musterzeile (Tab-getrennt):</strong><br>
-                <code>hb1&#9;1&#9;किताब&#9;kitāb&#9;noun&#9;f&#9;Buch&#9;schule;a1</code>
+                <code>hb1&#9;1&#9;किताब&#9;kitāb&#9;noun&#9;f&#9;Buch&#9;schule;a1&#9;&lt; Arab.</code>
               </p>
             </section>
 
@@ -1238,9 +1298,9 @@
 
           <h4>1. Welcher Modus passt zu meinem Anwendungsfall? (3 Use Cases)</h4>
           <p class="modal-text">
-            <strong>Use Case 1 — Reiner Online-Betrieb im Browser:</strong> Du übst online mit dem vorgegebenen Standard-Wortschatz (schreibgeschützt); dein Lernfortschritt (Boxen 1–5) wird lokal im Browser (<code>IndexedDB</code>) gespeichert.
-            <br><strong>Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen:</strong> App-Fenster für kompletten Offline-Betrieb (Wortschatz schreibgeschützt). Bei Internetverbindung werden Programm und offizieller Standard-Wortschatz automatisch vom Server aktualisiert; dein lokaler Lernfortschritt bleibt erhalten <em>(regelmäßiges <code>.json</code>-Backup empfohlen)</em>.
-            <br><strong>Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für eigene Wortbestände:</strong> Offline-Betrieb mit lokaler <code>SQLite</code>-Datenbank — <strong>einzige Betriebsart, in der eigene Wortlisten (<code>.tsv</code>) importiert, geprüft und dauerhaft lokal gepflegt werden können</strong>.
+            <strong>Use Case 1 — Reiner Online-Betrieb im Browser (Server-Ansicht):</strong> Du übst online mit dem kuratierten Referenz-Wortschatz (Stammdaten schreibgeschützt; Wortschatz-Prüfung und -Editor ausgeschaltet); dein Lernfortschritt (Boxen 1–5) und persönliche Notizen liegen lokal in <code>IndexedDB</code>.
+            <br><strong>Use Case 2 — Installierte Web-App (PWA) für Offline-Lernen &amp; individuelle Anpassungen:</strong> App-Fenster für kompletten Offline-Betrieb; Online-Wörterbuchprüfung, Einzelwort-Editor und TSV-Import sind lokal in <code>IndexedDB</code> freigeschaltet und bleiben bei App-Updates erhalten <em>(regelmäßiges <code>.json</code>-Backup empfohlen)</em>.
+            <br><strong>Use Case 3 — Desktop-Applikation (macOS, Windows, Linux) für dauerhafte Eigenbestände:</strong> Offline-Betrieb mit lokaler <code>SQLite</code>-Datenbank für dauerhafte Korrekturen, eigene TSV-Importe und unbegrenzte Offline-Wörterbücher.
           </p>
           <div v-if="!isTauri" class="modal-btn-row">
             <a
@@ -1297,6 +1357,7 @@ import {
   onUnmounted,
   ref,
   shallowRef,
+  watch,
 } from "vue";
 import releaseNotesRaw from "../docs/release-notes.md?raw";
 import pkg from "../package.json";
@@ -1336,42 +1397,74 @@ const isLocalHost =
   typeof window !== "undefined" &&
   (window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1");
+const forceReadOnly =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).get("readonly") === "1";
+const isReviewMode =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).get("review") === "1";
 const isStandalonePwa = ref(
   typeof window !== "undefined" &&
     (window.matchMedia?.("(display-mode: standalone)").matches ||
       (window.navigator as { standalone?: boolean }).standalone === true),
 );
-const canImportCorpora = computed(() => isTauri.value || isLocalHost);
+const canImportCorpora = computed(
+  () =>
+    !forceReadOnly &&
+    !isReviewMode &&
+    (isTauri.value || isStandalonePwa.value || isLocalHost),
+);
+const canEditCorpora = computed(
+  () =>
+    !forceReadOnly &&
+    (isReviewMode || isTauri.value || isStandalonePwa.value || isLocalHost),
+);
 const runtimeModeInfo = computed(() => {
   if (isTauri.value) {
     return {
       badge: "Desktop-App · SQLite (Read-Write)",
       title: "100% Offline-fähig als Desktop-App (Tauri)",
       detail:
-        "Vokabeln und Lernstände liegen dauerhaft in einer lokalen SQLite-Datenbank. Eigene TSV-Wortlisten können importiert werden.",
+        "Vokabeln und Lernstände liegen dauerhaft in einer lokalen SQLite-Datenbank. Eigene TSV-Wortlisten und Korrekturen werden dauerhaft lokal gespeichert.",
     };
   }
-  if (isLocalHost) {
+  if (isReviewMode && !forceReadOnly) {
     return {
-      badge: "Lokale Web-Instanz · IndexedDB (Read-Write)",
-      title: "Lokaler Entwicklungs-/Redaktionsmodus",
+      badge: "Gutachter-Modus · Delta-Export (?review=1)",
+      title: "Externer Fachreview-Modus (Lokaler Zwischenspeicher)",
       detail:
-        "Vokabeln und Lernstände liegen lokal in IndexedDB. TSV-Import ist auf localhost freigeschaltet.",
+        "Änderungen werden lokal im Browser vorgemerkt (Server bleibt unverändert) und können als kompaktes Korrektur-Delta (.json) exportiert werden.",
     };
   }
-  if (isStandalonePwa.value) {
+  if (isLocalHost && !forceReadOnly) {
+    if (import.meta.env.DEV) {
+      return {
+        badge: "Lokaler Redaktionsmodus · Git-Sync (Read-Write)",
+        title: "Lokaler Entwicklungs-/Redaktionsmodus",
+        detail:
+          "Änderungen über Einzelwort-Editor, Online-Prüfung und TSV-Import schreiben auf localhost direkt in data/corpora/*.json für das nächste Git-Release.",
+      };
+    }
     return {
-      badge: "PWA · Wortschatz Read-Only",
+      badge: "Lokale Vorschau · IndexedDB (Read-Write)",
+      title: "Lokale Produktionsvorschau",
+      detail:
+        "Produktionsvorschau ohne Vite-Dev-Git-Sync: Änderungen werden lokal in IndexedDB gespeichert.",
+    };
+  }
+  if (isStandalonePwa.value && !forceReadOnly) {
+    return {
+      badge: "PWA · Lokal editierbar (IndexedDB)",
       title: "100% Offline-fähig als installierte PWA",
       detail:
-        "Kuratierter Wortschatz (Read-Only); dein Lernstand (Boxen 1–5) liegt lokal in IndexedDB. Bitte regelmäßig ein JSON-Backup sichern.",
+        "Für deinen individuellen PWA-Datensatz sind Online-Prüfung, Einzelwort-Editor und TSV-Import lokal in IndexedDB freigeschaltet. Bitte regelmäßig ein JSON-Backup sichern.",
     };
   }
   return {
-    badge: "Browser · Wortschatz Read-Only",
-    title: "100% Offline-fähig im Browser (PWA)",
+    badge: "Server-Ansicht · Referenzwortschatz (Read-Only)",
+    title: "Online-Referenzmodus im Browser",
     detail:
-      "Kuratierter Wortschatz (Read-Only); dein Lernstand (Boxen 1–5) liegt lokal in IndexedDB. Bitte regelmäßig ein JSON-Backup sichern.",
+      "Prüf- und Editierfunktionen am Wortschatz sind in der Server-Ansicht ausgeschaltet. Für individuelle, lokal editierbare Datensätze bitte Alexis als PWA installieren oder die Desktop-App nutzen.",
   };
 });
 const currentTheme = ref<"light" | "dark">("light");
@@ -1479,6 +1572,13 @@ const activeCorpusTitle = computed(() => {
   return activeCorpus.value ? activeCorpus.value.title : selectedCorpusId.value;
 });
 
+const currentCard = computed(() => {
+  if (queue.value.length === 0 || currentIndex.value >= queue.value.length) {
+    return null;
+  }
+  return queue.value[currentIndex.value];
+});
+
 const isHindi = computed<boolean>(() => {
   if (currentCard.value) {
     const cId = (currentCard.value.corpus_id || "").toLowerCase();
@@ -1538,6 +1638,58 @@ const hindiVerbParadigm = computed<HindiVerbParadigm | null>(() => {
   );
 });
 
+const currentCardCorpusNotes = computed(() => {
+  const defs = currentCard.value?.definitions ?? [];
+  const parts: string[] = [];
+  for (const d of defs) {
+    const clean = d.notes?.trim();
+    if (clean && !parts.includes(clean)) {
+      parts.push(clean);
+    }
+  }
+  return parts.join(" · ");
+});
+
+const editingCardNote = ref(false);
+const cardNoteDraft = ref("");
+const cardNoteInputRef = ref<HTMLTextAreaElement | null>(null);
+
+watch(
+  () => [currentCard.value?.entry_id, isFlipped.value],
+  ([, flipped]) => {
+    if (!flipped) {
+      editingCardNote.value = false;
+    }
+  },
+);
+
+function openCardNoteEditor() {
+  if (!currentCard.value) return;
+  cardNoteDraft.value = currentCard.value.user_note || "";
+  editingCardNote.value = true;
+  nextTick(() => cardNoteInputRef.value?.focus());
+}
+
+async function saveCardNote() {
+  if (!currentCard.value) return;
+  const saved = await storage.saveUserNote(
+    currentCard.value.entry_id,
+    cardNoteDraft.value,
+  );
+  currentCard.value.user_note = saved;
+  editingCardNote.value = false;
+}
+
+function onCardNoteKeydown(e: KeyboardEvent) {
+  if (e.key === "Escape") {
+    e.preventDefault();
+    editingCardNote.value = false;
+  } else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+    e.preventDefault();
+    void saveCardNote();
+  }
+}
+
 const selectedVolumesSummary = computed(() => {
   if (selectedLessonIds.value.length > 0) {
     const selectedLessons = lessonsList.value.filter((l) =>
@@ -1573,13 +1725,6 @@ const selectedVolumesSummary = computed(() => {
     .filter((v) => selectedVolumeIds.value.includes(v.id))
     .map((v) => v.title);
   return titles.join(" + ");
-});
-
-const currentCard = computed(() => {
-  if (queue.value.length === 0 || currentIndex.value >= queue.value.length) {
-    return null;
-  }
-  return queue.value[currentIndex.value];
 });
 
 // Linguistic format helpers
@@ -1713,6 +1858,9 @@ function onKeydown(e: KeyboardEvent) {
       e.preventDefault();
       toggleGrammarDrawer();
     }
+  } else if ((e.key === "n" || e.key === "N") && isFlipped.value) {
+    e.preventDefault();
+    openCardNoteEditor();
   }
 }
 
@@ -1800,8 +1948,8 @@ function downloadActiveCorpus() {
   }
 }
 
-function downloadStudyBackup() {
-  const backup = storage.exportStudyBackup();
+async function downloadStudyBackup() {
+  const backup = await storage.exportStudyBackup();
   downloadJSON(
     backup,
     `alexis_lernstand_backup_${new Date().toISOString().slice(0, 10)}.json`,
@@ -1838,14 +1986,25 @@ async function exportSelectedLessonsTSV() {
 }
 
 // Lifecycle Init
+let standaloneMediaQuery: MediaQueryList | null = null;
+function onStandaloneMediaChange(e: MediaQueryListEvent) {
+  isStandalonePwa.value = e.matches;
+}
+
 onMounted(async () => {
   window.addEventListener("keydown", onKeydown);
   window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+  standaloneMediaQuery =
+    window.matchMedia?.("(display-mode: standalone)") ?? null;
+  standaloneMediaQuery?.addEventListener?.("change", onStandaloneMediaChange);
 
   // Check embed parameter from URL
   const params = new URLSearchParams(window.location.search);
   if (params.get("embed") === "true" || window.self !== window.top) {
     isEmbedded.value = true;
+  }
+  if (isReviewMode && !params.get("tab")) {
+    currentTab.value = "explorer";
   }
 
   // Load available corpora
@@ -1942,6 +2101,11 @@ onUnmounted(() => {
   isUnmounted = true;
   window.removeEventListener("keydown", onKeydown);
   window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+  standaloneMediaQuery?.removeEventListener?.(
+    "change",
+    onStandaloneMediaChange,
+  );
+  standaloneMediaQuery = null;
   if (desktopUpdateTimer) {
     clearTimeout(desktopUpdateTimer);
     desktopUpdateTimer = null;
@@ -2961,6 +3125,111 @@ async function performDictSearch() {
 .tag-pill {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.card-user-note-box {
+  margin-top: 0.9rem;
+  text-align: left;
+}
+
+.user-note-display {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+}
+
+.user-note-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.user-note-empty {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-note-inline {
+  font-size: 0.78rem;
+  color: var(--accent-gold);
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-note-inline:hover {
+  background-color: var(--bg-surface);
+  text-decoration: underline;
+}
+
+.user-note-editor {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.65rem;
+}
+
+.user-note-textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border-radius: 5px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.user-note-textarea:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.user-note-actions {
+  margin-top: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.user-note-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.user-note-btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn-outline-xs,
+.btn-primary-xs {
+  padding: 0.28rem 0.65rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.btn-outline-xs {
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  background-color: var(--bg-surface-elevated);
+}
+
+.btn-primary-xs {
+  background-color: var(--accent-gold);
+  color: #ffffff;
 }
 
 /* Rating Bar */

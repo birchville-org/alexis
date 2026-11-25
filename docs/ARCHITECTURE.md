@@ -49,6 +49,7 @@ export interface StudyCardState {
   consecutiveSuccesses: number;
   lastReviewed: string | null;     // ISO 8601
   nextDue: string;                 // ISO 8601
+  userNote?: string;               // Personal device-local learning note
   history: {
     timestamp: string;
     rating: 1 | 2 | 3 | 4;         // 1: Again, 2: Hard, 3: Good, 4: Easy
@@ -87,5 +88,7 @@ export interface DictionaryProvider {
 ---
 
 ## 3. Storage & Persistence
-- **Client Database**: IndexedDB (using Dexie or raw IDB) for zero server-side storage overhead.
-- **Import/Export**: JSON format compatible with Anki decks (`.tsv` export) and Payer vocabulary loaders.
+- **Browser / PWA (`IndexedDB`, `alexis_db` v3)**: Stores `study_state` (Leitner progress + `userNote`), `corpus_bundles` (additive custom volumes/lessons/entries without shadowing built-in updates), and `entry_overrides` (device-local or `?review=1` delta overrides).
+- **Desktop App (Tauri `SQLite`)**: Stores corpora, entries, `study_state` (including `user_note`), and durable local edits in `alexis.db`.
+- **Editorial Dev Git-Sync & Review Deltas**: In local Vite dev mode (`localhost`), corpus edits and TSV imports sync via `/__alexis_dev/corpus` directly into `data/corpora/*.json`. External reviewers on `?review=1` export changes as `alexis-review-delta-v1` JSON for selective editorial merge via `📥 Delta prüfen`.
+- **Import/Export**: 9-column UTF-8 TSV (`volume\tlesson\tnative\ttransliteration\tpos\tgender\tmeaning_de\ttags\tnotes`, backward-compatible with 8-column TSVs / Anki) plus JSON study backups.

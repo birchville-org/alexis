@@ -8,8 +8,10 @@ Dieses Dokument beschreibt den verbindlichen Prozess für Redaktoren zum Prüfen
 
 | Rolle | Umgebung | Rechte & Datenfluss |
 | :--- | :--- | :--- |
-| **Lernende (Nutzer)** | Online Web-App / PWA (`birchville-org.github.io/alexis/`) | **Read-Only-Referenz**: Kein Upload/Import neuer Wörterbücher in der Online-App. Persönliche Lernstände (Box 1–5) verbleiben zu 100 % lokal in `IndexedDB` / `localStorage`. Export per TSV (`📥 TSV`) jederzeit möglich. |
-| **Redaktor (Repo-Inhaber)** | Lokale Workstation + Git-Repository (`birchville-org/alexis`) | Erstellt Lektions-TSVs, führt das lokale Validierungs- & Anreicherungsskript aus und publiziert geprüfte Änderungen via `git push`. |
+| **Lernende (Browser)** | Online Web-App (`alexis.birchville.org` / `docs.birchville.org/alexis/`) | **Read-Only-Referenz**: Prüf-, Editier- und Importfunktionen am Wortschatz ausgeschaltet. Lernstände (Box 1–5) und persönliche Notizen bleiben lokal in `IndexedDB`. Export per TSV (`📥 TSV`) jederzeit möglich. |
+| **Externer Gutachter** | Browser mit `?review=1` (`https://alexis.birchville.org/?review=1`) | **Delta-Review ohne Git**: Kann im Vokabel-Explorer Einträge korrigieren (`✏️ Eintrag bearbeiten`) und Kommentare hinterlegen. Änderungen liegen nur lokal (`entry_overrides` in `IndexedDB`) und werden per `📤 Korrektur-Delta herunterladen (.json)` an die Redaktion geschickt. |
+| **Eigenbestand (PWA / Desktop-App)** | Installierte PWA (`IndexedDB`) oder Desktop-App (`SQLite`) | **Lokal editierbar**: Eigene TSV-Listen, Einzelwort-Korrekturen und `Online prüfen` wirken lokal auf dem eigenen Gerät. |
+| **Redaktor (Repo-Inhaber)** | Lokaler Dev-Server (`localhost:5180`) + Git-Repository (`birchville-org/alexis`) | Prüft eingereichte Deltas (`📥 Delta prüfen`), importiert/editiert direkt nach `data/corpora/*.json` (`Git-Sync`) oder nutzt `scripts/validate_and_import_hindi.py`, und veröffentlicht via `/code-review` -> `/release`. |
 
 ---
 
@@ -67,3 +69,16 @@ python3 scripts/validate_and_import_hindi.py --input data/raw/hb1_l04.tsv
 # 3. Geprüfte Lektions-TSV in data/corpora/hindi_bolo.json einspielen
 python3 scripts/validate_and_import_hindi.py --input data/raw/hb1_l04.tsv --apply
 ```
+
+---
+
+## 5. Externer Gutachter-Workflow (`?review=1` & Delta-Dateien)
+
+Externe Fachgutachter benötigen weder Git noch lokale Entwicklungsumgebung:
+
+1. **Gutachter-Link öffnen:** `https://alexis.birchville.org/?review=1` öffnet direkt die **Vokabelliste** im Gutachter-Modus (`entry_overrides` lokal in `IndexedDB`; der Server bleibt unverändert).
+2. **Korrigieren & kommentieren:** Über `✏️ Eintrag bearbeiten` lassen sich Devanāgarī, IAST, Wortart, Genus, Bedeutungen, Spalte `notes`, Tags sowie ein optionaler **Gutachter-Kommentar** anpassen.
+3. **Delta exportieren:** Über **`📤 Korrektur-Delta herunterladen (.json)`** im Banner wird eine schlanke Datei im Schema `alexis-review-delta-v1` (mit `before`/`after`-Diffs und Kommentaren) erzeugt und per E-Mail an den Redaktor gesendet.
+4. **Übernahme ins Git-Repository:** Auf dem lokalen Redaktionsserver (`http://localhost:5180/`) lädt der Redaktor die Datei über **`📥 Delta prüfen`**, prüft jedes Feld (`Vorher -> Nachher` + Kommentar), wählt gezielt per Checkbox aus und klickt **`✓ Freigeben & Korrekturen anwenden`**. `Git-Sync` schreibt die freigegebenen Änderungen direkt Biome-formatiert in `data/corpora/*.json`.
+
+*(Test-Parameter für die Entwicklung: `?readonly=1`, z. B. `http://localhost:5180/?readonly=1`, simuliert lokal die schreibgeschützte Server-Ansicht.)*
