@@ -478,27 +478,62 @@
                 </div>
               </div>
 
+              <!-- Leitner 5-Box Shelf (Ort + Zielvorschau) -->
+              <div class="leitner-shelf" aria-label="Leitner-Kasten (5 Boxen)">
+                <div class="leitner-shelf-head">
+                  <span class="leitner-shelf-title">Leitner-Kasten (5 Boxen)</span>
+                  <span class="leitner-shelf-hint">
+                    <template v-if="activeRatingPreview">
+                      {{ activeRatingPreview.label }}:
+                      <template v-if="activeRatingPreview.targetBox === currentCard.box_number">
+                        bleibt in Box {{ activeRatingPreview.targetBox }} ({{ formatDaysLabel(activeRatingPreview.interval) }})
+                      </template>
+                      <template v-else>
+                        Box {{ currentCard.box_number }} ➔ Box {{ activeRatingPreview.targetBox }} ({{ formatDaysLabel(activeRatingPreview.interval) }})
+                      </template>
+                    </template>
+                    <template v-else>
+                      Aktuell: Box {{ currentCard.box_number }} · Einordnung über Taste 1–4
+                    </template>
+                  </span>
+                </div>
+                <div class="leitner-slots-grid">
+                  <div
+                    v-for="slot in leitnerSlots"
+                    :key="slot.box"
+                    :class="[
+                      'leitner-slot',
+                      { 'is-current': slot.isCurrent, 'is-target': slot.isTarget },
+                      slot.targetTone ? `tone-${slot.targetTone}` : '',
+                    ]"
+                  >
+                    <div class="leitner-slot-head">
+                      <span class="leitner-slot-num">Box {{ slot.box }}</span>
+                      <span v-if="slot.isCurrent && slot.isTarget" class="leitner-slot-state state-stay">bleibt</span>
+                      <span v-else-if="slot.isTarget" class="leitner-slot-state state-target">➔ Ziel</span>
+                      <span v-else-if="slot.isCurrent" class="leitner-slot-state state-current">● aktuell</span>
+                    </div>
+                    <div class="leitner-slot-interval">{{ slot.intervalLabel }}</div>
+                  </div>
+                </div>
+              </div>
+
               <!-- Rating Buttons (Leitner 1..4) -->
               <div class="rating-bar">
-                <button class="rate-btn btn-again" @click="submitRating(1)">
-                  <span class="rate-num">1</span>
-                  <span class="rate-label">Nochmal</span>
-                  <span class="rate-sub">Box 1 (1 Tag)</span>
-                </button>
-                <button class="rate-btn btn-hard" @click="submitRating(2)">
-                  <span class="rate-num">2</span>
-                  <span class="rate-label">Schwer</span>
-                  <span class="rate-sub">Gleiche Box</span>
-                </button>
-                <button class="rate-btn btn-good" @click="submitRating(3)">
-                  <span class="rate-num">3</span>
-                  <span class="rate-label">Gut</span>
-                  <span class="rate-sub">+1 Box</span>
-                </button>
-                <button class="rate-btn btn-easy" @click="submitRating(4)">
-                  <span class="rate-num">4</span>
-                  <span class="rate-label">Einfach</span>
-                  <span class="rate-sub">+1 Box (Bonus)</span>
+                <button
+                  v-for="opt in ratingOptions"
+                  :key="opt.rating"
+                  type="button"
+                  :class="['rate-btn', opt.btnClass]"
+                  @click="submitRating(opt.rating)"
+                  @mouseenter="hoveredRating = opt.rating"
+                  @mouseleave="hoveredRating = null"
+                  @focus="hoveredRating = opt.rating"
+                  @blur="hoveredRating = null"
+                >
+                  <span class="rate-num">{{ opt.rating }}</span>
+                  <span class="rate-label">{{ opt.label }}</span>
+                  <span class="rate-sub">{{ opt.subLabel }}</span>
                 </button>
               </div>
             </div>
@@ -844,28 +879,40 @@
           </p>
         </div>
 
-        <div class="stats-cards-grid" v-if="deckStats">
-          <div class="stat-card">
-            <span class="stat-val">{{ deckStats.total_entries }}</span>
-            <span class="stat-lbl">Gesamte Vokabeln</span>
+        <template v-if="deckStats">
+          <div class="stats-kpi-grid">
+            <div class="stat-card">
+              <span class="stat-val">{{ deckStats.total_entries }}</span>
+              <span class="stat-lbl">Gesamte Vokabeln</span>
+            </div>
+            <div class="stat-card highlight">
+              <span class="stat-val">{{ deckStats.due_today }}</span>
+              <span class="stat-lbl">Heute fällig</span>
+            </div>
           </div>
-          <div class="stat-card highlight">
-            <span class="stat-val">{{ deckStats.due_today }}</span>
-            <span class="stat-lbl">Heute fällig</span>
+
+          <h3 class="stats-subhead">Leitner-Kasten (Box 1–5)</h3>
+          <div class="stats-boxes-grid">
+            <div
+              v-for="b in statsBoxCards"
+              :key="b.title"
+              class="stat-card stat-box-card"
+            >
+              <span class="stat-box-title">{{ b.title }}</span>
+              <span class="stat-val">{{ b.count }}</span>
+              <span class="stat-lbl">{{ b.stage }}</span>
+              <span class="stat-sub">Intervall: {{ b.interval }}</span>
+            </div>
           </div>
-          <div class="stat-card">
-            <span class="stat-val">{{ deckStats.box_1 }}</span>
-            <span class="stat-lbl">Box 1 (Neu / Nochmal)</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-val">{{ deckStats.box_2 + deckStats.box_3 }}</span>
-            <span class="stat-lbl">Box 2–3 (In Bearbeitung)</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-val">{{ deckStats.box_4 + deckStats.box_5 }}</span>
-            <span class="stat-lbl">Box 4–5 (Gefestigt)</span>
-          </div>
-        </div>
+        </template>
+
+        <BackupMeccano
+          :summary="lastBackupSummary"
+          :notice="backupStatusNotice"
+          :error="backupStatusError"
+          @backup="downloadStudyBackup"
+          @restore="handleBackupRestoreUpload"
+        />
       </section>
     </main>
 
@@ -929,6 +976,14 @@
                 <li><strong>Automatische App-Updates ohne Datenverlust:</strong> Bei Internetverbindung aktualisiert die PWA im Hintergrund automatisch den Programmcode und neue Lektionen der Basis-Korpora. Ihre lokalen Lernfortschritte bleiben davon unberührt erhalten.</li>
                 <li><strong>Souveräner Export:</strong> Sie können einzelne Lektionen oder gefilterte Auswahlen jederzeit über <em>„📥 TSV exportieren“</em> als saubere Textdatei für eigene Notizen oder zur Weitergabe sichern.</li>
               </ul>
+
+              <BackupMeccano
+                :summary="lastBackupSummary"
+                :notice="backupStatusNotice"
+                :error="backupStatusError"
+                @backup="downloadStudyBackup"
+                @restore="handleBackupRestoreUpload"
+              />
             </section>
 
             <!-- Kapitel 2 -->
@@ -980,6 +1035,10 @@
                   </tr>
                 </tbody>
               </table>
+
+              <p class="modal-text">
+                Die <strong>5-Fächer-Leiste</strong> über den 4 Bewertungstasten markiert die aktuelle Box und zeigt beim Überfahren einer Taste vorab das Zielfach samt Wartezeit.
+              </p>
 
               <ul class="help-list">
                 <li><strong>Taste 1 (Nochmal):</strong> Die Karte fällt sofort auf <strong>Box 1</strong> zurück (Intervall: 1 Tag).</li>
@@ -1330,19 +1389,26 @@
 
           <h4>3. Lokale Vokabeldaten &amp; Backups</h4>
           <p class="modal-text">
-            Sichere die Vokabeln des aktuellen Korpus oder deinen persönlichen Lernstand als JSON-Datei:
+            Sichere deinen persönlichen Lernstand (inkl. Notizen und lokaler Anpassungen) oder exportiere das aktive Korpus:
           </p>
-          <div class="download-actions-grid">
-            <button class="btn-outline download-btn" @click="downloadActiveCorpus">
-              💾 Vokabeldatei herunterladen ({{ selectedCorpusId }}.json)
-            </button>
-            <button class="btn-outline download-btn" @click="exportSelectedLessonsTSV">
-              📥 Aktuelle Auswahl als TSV exportieren (.tsv)
-            </button>
-            <button class="btn-outline download-btn" @click="downloadStudyBackup">
-              📊 Lernstand & Boxen als Backup sichern (.json)
-            </button>
-          </div>
+          <BackupMeccano
+            title="Backup-Status"
+            :summary="lastBackupSummary"
+            :notice="backupStatusNotice"
+            :error="backupStatusError"
+            actions-grid
+            @backup="downloadStudyBackup"
+            @restore="handleBackupRestoreUpload"
+          >
+            <template #extra-actions>
+              <button class="btn-outline download-btn" @click="downloadActiveCorpus">
+                💾 Vokabeldatei herunterladen ({{ selectedCorpusId }}.json)
+              </button>
+              <button class="btn-outline download-btn" @click="exportSelectedLessonsTSV">
+                📥 Aktuelle Auswahl als TSV exportieren (.tsv)
+              </button>
+            </template>
+          </BackupMeccano>
         </div>
       </div>
     </div>
@@ -1361,6 +1427,7 @@ import {
 } from "vue";
 import releaseNotesRaw from "../docs/release-notes.md?raw";
 import pkg from "../package.json";
+import BackupMeccano from "./components/BackupMeccano.vue";
 import VocabularyExplorer from "./components/VocabularyExplorer.vue";
 import { HindiDictionaryProvider } from "./providers/hindiDictionary";
 import { MonierWilliamsProvider } from "./providers/monierWilliams";
@@ -1371,7 +1438,12 @@ import {
   getHindiVerbParadigm,
 } from "./services/hindiMorphology";
 import { speechService } from "./services/speech";
-import { downloadTSV, isTauriEnvironment, storage } from "./services/storage";
+import {
+  type LastBackupMeta,
+  downloadTSV,
+  isTauriEnvironment,
+  storage,
+} from "./services/storage";
 import {
   containsDevanagari,
   toggleTransliteration,
@@ -1469,6 +1541,42 @@ const runtimeModeInfo = computed(() => {
 });
 const currentTheme = ref<"light" | "dark">("light");
 const isEmbedded = ref(false);
+const lastBackupMeta = ref<LastBackupMeta | null>(storage.getLastBackupMeta());
+const backupStatusNotice = ref("");
+const backupStatusError = ref("");
+let backupStatusTimer: ReturnType<typeof setTimeout> | null = null;
+
+const lastBackupSummary = computed(() => {
+  const meta = lastBackupMeta.value;
+  if (!meta) return null;
+  const dateObj = new Date(meta.timestamp);
+  const dateLabel = Number.isNaN(dateObj.getTime())
+    ? meta.timestamp
+    : dateObj.toLocaleString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+  const daysAgo = Number.isNaN(dateObj.getTime())
+    ? 0
+    : Math.max(0, Math.floor((Date.now() - dateObj.getTime()) / 86_400_000));
+  const parts = [`${meta.studyEntriesCount} Lernstände`];
+  if (meta.overridesCount > 0) {
+    parts.push(`${meta.overridesCount} Anpassungen`);
+  }
+  if (meta.customEntriesCount > 0) {
+    parts.push(`${meta.customEntriesCount} eigene Einträge`);
+  }
+  return {
+    dateLabel,
+    filename: meta.filename,
+    countsLabel: parts.join(", "),
+    daysAgo,
+    isStale: daysAgo >= 14,
+  };
+});
 
 // Navigation Tabs
 type Tab = "trainer" | "explorer" | "corpora" | "dictionary" | "stats";
@@ -1560,8 +1668,15 @@ const dictInputRef = ref<HTMLInputElement | null>(null);
 const dictLoading = ref(false);
 const dictResults = ref<DictionaryResult[]>([]);
 
-// Stats State
+// Stats & Leitner Box Preview State
 const deckStats = ref<DeckStats | null>(null);
+const LEITNER_GOOD_DAYS = [1, 3, 7, 14, 30] as const;
+const LEITNER_EASY_DAYS = [2, 5, 10, 21, 45] as const;
+const hoveredRating = ref<1 | 2 | 3 | 4 | null>(null);
+
+function formatDaysLabel(days: number): string {
+  return days === 1 ? "1 Tag" : `${days} Tage`;
+}
 
 // Computed Helpers
 const activeCorpus = computed(() => {
@@ -1577,6 +1692,130 @@ const currentCard = computed(() => {
     return null;
   }
   return queue.value[currentIndex.value];
+});
+
+watch(
+  () => [currentCard.value?.entry_id, isFlipped.value],
+  () => {
+    hoveredRating.value = null;
+  },
+);
+
+const ratingOptions = computed(() => {
+  const curBox = Math.min(5, Math.max(1, currentCard.value?.box_number ?? 1));
+  const goodBox = Math.min(5, curBox + 1);
+  const easyBox = Math.min(5, curBox + 1);
+  const items: Array<{
+    rating: 1 | 2 | 3 | 4;
+    label: string;
+    btnClass: string;
+    tone: "again" | "hard" | "good" | "easy";
+    targetBox: number;
+    interval: number;
+  }> = [
+    {
+      rating: 1,
+      label: "Nochmal",
+      btnClass: "btn-again",
+      tone: "again",
+      targetBox: 1,
+      interval: 1,
+    },
+    {
+      rating: 2,
+      label: "Schwer",
+      btnClass: "btn-hard",
+      tone: "hard",
+      targetBox: curBox,
+      interval: 1,
+    },
+    {
+      rating: 3,
+      label: "Gut",
+      btnClass: "btn-good",
+      tone: "good",
+      targetBox: goodBox,
+      interval: LEITNER_GOOD_DAYS[goodBox - 1],
+    },
+    {
+      rating: 4,
+      label: "Einfach",
+      btnClass: "btn-easy",
+      tone: "easy",
+      targetBox: easyBox,
+      interval: LEITNER_EASY_DAYS[easyBox - 1],
+    },
+  ];
+  return items.map((item) => ({
+    ...item,
+    subLabel:
+      item.targetBox === curBox
+        ? `bleibt Box ${item.targetBox} · ${formatDaysLabel(item.interval)}`
+        : `➔ Box ${item.targetBox} · ${formatDaysLabel(item.interval)}`,
+  }));
+});
+
+const activeRatingPreview = computed(() => {
+  if (hoveredRating.value === null) return null;
+  return (
+    ratingOptions.value.find((opt) => opt.rating === hoveredRating.value) ??
+    null
+  );
+});
+
+const leitnerSlots = computed(() => {
+  const curBox = Math.min(5, Math.max(1, currentCard.value?.box_number ?? 1));
+  const preview = activeRatingPreview.value;
+  return [1, 2, 3, 4, 5].map((box) => {
+    const isTarget = preview?.targetBox === box;
+    return {
+      box,
+      isCurrent: box === curBox,
+      isTarget,
+      targetTone: isTarget && preview ? preview.tone : null,
+      intervalLabel:
+        isTarget && preview
+          ? formatDaysLabel(preview.interval)
+          : formatDaysLabel(LEITNER_GOOD_DAYS[box - 1]),
+    };
+  });
+});
+
+const statsBoxCards = computed(() => {
+  const s = deckStats.value;
+  if (!s) return [];
+  return [
+    {
+      title: "Box 1",
+      count: s.box_1,
+      stage: "Neu / Nochmal",
+      interval: "1 Tag",
+    },
+    {
+      title: "Box 2",
+      count: s.box_2,
+      stage: "Erster Erfolg",
+      interval: "3 Tage",
+    },
+    {
+      title: "Box 3",
+      count: s.box_3,
+      stage: "Festigung",
+      interval: "7 Tage",
+    },
+    {
+      title: "Box 4",
+      count: s.box_4,
+      stage: "Vertiefung",
+      interval: "14 Tage",
+    },
+    {
+      title: "Box 5",
+      count: s.box_5,
+      stage: "Langzeit",
+      interval: "30 Tage",
+    },
+  ];
 });
 
 const isHindi = computed<boolean>(() => {
@@ -1948,12 +2187,90 @@ function downloadActiveCorpus() {
   }
 }
 
+function showBackupNotice(msg: string) {
+  backupStatusError.value = "";
+  backupStatusNotice.value = msg;
+  if (backupStatusTimer) clearTimeout(backupStatusTimer);
+  backupStatusTimer = setTimeout(() => {
+    backupStatusNotice.value = "";
+  }, 5000);
+}
+
 async function downloadStudyBackup() {
+  backupStatusError.value = "";
   const backup = await storage.exportStudyBackup();
-  downloadJSON(
-    backup,
-    `alexis_lernstand_backup_${new Date().toISOString().slice(0, 10)}.json`,
+  const filename = `alexis_lernstand_backup_${new Date().toISOString().slice(0, 10)}.json`;
+  downloadJSON(backup, filename);
+  const customEntriesCount = (backup.custom_corpora ?? []).reduce(
+    (acc, c) => acc + c.entries.length,
+    0,
   );
+  const meta: LastBackupMeta = {
+    timestamp: backup.created_at,
+    filename,
+    studyEntriesCount: Object.keys(backup.study_state).length,
+    overridesCount: backup.entry_overrides?.length ?? 0,
+    customEntriesCount,
+  };
+  storage.setLastBackupMeta(meta);
+  lastBackupMeta.value = meta;
+  showBackupNotice(`Backup gespeichert: ${filename}`);
+}
+
+async function handleBackupRestoreUpload(e: Event) {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+  backupStatusError.value = "";
+  backupStatusNotice.value = "";
+  try {
+    const parsed = JSON.parse(await file.text());
+    const inspection = await storage.inspectStudyBackup(parsed);
+    const createdLabel = inspection.createdAt
+      ? new Date(inspection.createdAt).toLocaleString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "unbekanntes Datum";
+    const previewParts = [
+      `${inspection.applicableStudyCount} Lernstände${inspection.skippedStudyCount > 0 ? ` (${inspection.skippedStudyCount} unbekannte IDs ignoriert)` : ""}`,
+    ];
+    if (inspection.overridesCount > 0) {
+      previewParts.push(`${inspection.overridesCount} Anpassungen`);
+    }
+    if (inspection.customEntriesCount > 0) {
+      previewParts.push(`${inspection.customEntriesCount} eigene Einträge`);
+    }
+    const confirmed = window.confirm(
+      `Backup einspielen (${inspection.schemaVersion}, Stand: ${createdLabel})?\n\nUmfang: ${previewParts.join(", ")}\n\nVorhandene Box-Stände der enthaltenen Vokabeln werden überschrieben; lokale Lernnotizen ohne Backup-Ersatz bleiben erhalten.`,
+    );
+    if (!confirmed) return;
+
+    const result = await storage.importStudyBackup(parsed);
+    corporaList.value = await storage.listCorpora();
+    volumesList.value = await storage.listVolumes(selectedCorpusId.value);
+    lessonsList.value = await storage.listLessons(selectedCorpusId.value);
+    await reloadQueue(dueOnly.value);
+    await refreshStats();
+    const parts = [`${result.restoredStudyCount} Lernstände`];
+    if (result.restoredOverridesCount > 0) {
+      parts.push(`${result.restoredOverridesCount} Anpassungen`);
+    }
+    if (result.restoredCustomEntriesCount > 0) {
+      parts.push(`${result.restoredCustomEntriesCount} eigene Einträge`);
+    }
+    showBackupNotice(`Backup eingespielt (${parts.join(", ")}).`);
+  } catch (err) {
+    backupStatusError.value =
+      err instanceof Error
+        ? err.message
+        : "Backup konnte nicht gelesen werden.";
+  } finally {
+    target.value = "";
+  }
 }
 
 async function exportSingleLessonTSV(les: LessonData) {
@@ -2110,6 +2427,10 @@ onUnmounted(() => {
     clearTimeout(desktopUpdateTimer);
     desktopUpdateTimer = null;
   }
+  if (backupStatusTimer) {
+    clearTimeout(backupStatusTimer);
+    backupStatusTimer = null;
+  }
   unlistenMenu?.();
   unlistenMenu = null;
 });
@@ -2241,6 +2562,7 @@ async function reloadQueue(onlyDue: boolean) {
 
 async function submitRating(rating: number) {
   if (!currentCard.value) return;
+  hoveredRating.value = null;
 
   await storage.recordReview({
     entry_id: currentCard.value.entry_id,
@@ -3232,13 +3554,152 @@ async function performDictSearch() {
   color: #ffffff;
 }
 
+/* Leitner 5-Box Shelf */
+.leitner-shelf {
+  margin-top: 1.5rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  width: 100%;
+}
+
+.leitner-shelf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+}
+
+.leitner-shelf-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.leitner-shelf-hint {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.leitner-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+}
+
+.leitner-slot {
+  padding: 0.4rem 0.45rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  text-align: left;
+  transition:
+    border-color 0.12s ease,
+    background-color 0.12s ease,
+    transform 0.12s ease;
+}
+
+.leitner-slot.is-current {
+  border-color: var(--accent-gold);
+  box-shadow: inset 0 0 0 1px var(--accent-gold);
+}
+
+.leitner-slot.is-target {
+  transform: translateY(-1px);
+}
+
+.leitner-slot.is-target.tone-again {
+  border-color: var(--btn-again);
+  box-shadow: inset 0 0 0 1px var(--btn-again);
+}
+
+.leitner-slot.is-target.tone-hard {
+  border-color: var(--btn-hard);
+  box-shadow: inset 0 0 0 1px var(--btn-hard);
+}
+
+.leitner-slot.is-target.tone-good {
+  border-color: var(--btn-good);
+  box-shadow: inset 0 0 0 1px var(--btn-good);
+}
+
+.leitner-slot.is-target.tone-easy {
+  border-color: var(--btn-easy);
+  box-shadow: inset 0 0 0 1px var(--btn-easy);
+}
+
+.leitner-slot-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.leitner-slot-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.leitner-slot-state {
+  font-size: 0.66rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.leitner-slot-state.state-current {
+  color: var(--accent-gold);
+}
+
+.leitner-slot.tone-again .leitner-slot-state {
+  color: var(--btn-again);
+}
+
+.leitner-slot.tone-hard .leitner-slot-state {
+  color: var(--btn-hard);
+}
+
+.leitner-slot.tone-good .leitner-slot-state {
+  color: var(--btn-good);
+}
+
+.leitner-slot.tone-easy .leitner-slot-state {
+  color: var(--btn-easy);
+}
+
+.leitner-slot-interval {
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
 /* Rating Bar */
 .rating-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
-  margin-top: 1.75rem;
+  margin-top: 0.65rem;
   width: 100%;
+}
+
+@media (max-width: 640px) {
+  .rating-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .leitner-slot {
+    padding: 0.32rem 0.3rem;
+  }
+  .leitner-slot-num {
+    font-size: 0.7rem;
+  }
+  .leitner-slot-state {
+    font-size: 0.58rem;
+  }
 }
 
 .rate-btn {
@@ -3763,10 +4224,29 @@ async function performDictSearch() {
 }
 
 /* Stats */
-.stats-cards-grid {
+.stats-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.stats-subhead {
+  margin: 1.35rem 0 0.65rem;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.stats-boxes-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .stats-boxes-grid {
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  }
 }
 
 .stat-card {
@@ -3775,6 +4255,22 @@ async function performDictSearch() {
   border-radius: 8px;
   padding: 1.25rem;
   text-align: center;
+}
+
+.stat-box-card {
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.stat-box-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-gold);
 }
 
 .stat-card.highlight {
@@ -3792,6 +4288,11 @@ async function performDictSearch() {
 .stat-lbl {
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+.stat-sub {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
 }
 
 /* Common Buttons */
@@ -4206,7 +4707,12 @@ async function performDictSearch() {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.3;
   font-weight: 500;
   cursor: pointer;
   text-align: center;

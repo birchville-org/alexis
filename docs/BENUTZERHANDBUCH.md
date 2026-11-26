@@ -50,7 +50,7 @@ Der Trainer setzt auf ein didaktisch klares, stressfreies **5-Boxen-Leitner-Syst
 | **Box 5** | Nach 30 Tagen (1 Monat) — *Dauergedächtnis* |
 
 ### Die 4 Bewertungstasten
-Nach dem Aufdecken der Karte stehen 4 Bewertungen zur Verfügung:
+Nach dem Aufdecken der Karte zeigt eine **5-Fächer-Leiste** direkt über den Bewertungstasten die aktuelle Box und beim Überfahren einer Taste vorab das Zielfach samt Wartezeit. Es stehen 4 Bewertungen zur Verfügung:
 1. **Taste 1 (Nochmal):** Die Karte fällt sofort in **Box 1** zurück (Intervall: 1 Tag).
 2. **Taste 2 (Schwer):** Die Karte bleibt in der aktuellen Box (Intervall: 1 Tag zur Wiederholung).
 3. **Taste 3 (Gut / 2x Leertaste):** Die Karte steigt um **+1 Box auf** (z. B. Box 1 ➔ Box 2: 3 Tage).
@@ -120,9 +120,9 @@ Der Reiter **Wörterbuch** bündelt Online-Wörterbücher für beide Korpussprac
 
 ## 6. Offline-Nutzung & Datensicherung
 
-Über die Schaltfläche **💾 Offline / Download** in der Kopfzeile:
+Über die Schaltfläche **💾 Offline / Download** in der Kopfzeile, im **Hilfe-Handbuch (Kapitel 1)** sowie im Reiter **Statistik**:
 - **PWA-Installation:** Installation als eigenständige Desktop- oder Mobile-App (funktioniert ohne Internetverbindung).
-- **Lernstand-Backup (`.json`):** Sichert sämtliche Box-Zuordnungen, Wiederholungszähler und Fälligkeitsdaten in einer portablen JSON-Datei.
+- **Lernstand-Backup (`.json`, Schema `alexis-backup-v2`):** Zeigt das Datum und den Umfang des zuletzt auf diesem Gerät ausgelösten Backups an und sichert per 1-Klick sämtliche Box-Zuordnungen, Fälligkeitsdaten, persönlichen Lernnotizen (`userNote`) sowie lokale Eintrags-Overrides und eigene TSV-Importe (Desktop-App `SQLite` und PWA `IndexedDB` identisch). Über *„📂 Backup einspielen (.json)“* wird der Inhalt vorab geprüft und nach Bestätigung wiederhergestellt (abwärtskompatibel zu älteren v1-Backups); bestehende lokale Lernnotizen bleiben erhalten, falls ein Backup-Eintrag keine Notiz enthält.
 - **Korpus-Download:** Lädt den vollständigen Rohdatenbestand des aktiven Lehrwerks herunter.
 
 ---

@@ -55,6 +55,55 @@ export interface ReviewDeltaDocument {
   changes: ReviewDeltaItem[];
 }
 
+export interface StudyStateBackupEntry {
+  box: number;
+  interval: number;
+  successes: number;
+  nextDue: string;
+  reviewCount?: number;
+  userNote?: string;
+}
+
+export interface CustomCorpusAddition {
+  corpus_id: string;
+  corpus_meta?: CorpusMeta;
+  volumes: VolumeData[];
+  lessons: LessonData[];
+  entries: CorpusBundle["entries"];
+}
+
+export interface FullStudyBackupDocument {
+  schema: "alexis-backup-v2";
+  created_at: string;
+  study_state: Record<string, StudyStateBackupEntry>;
+  entry_overrides?: EntryPatch[];
+  custom_corpora?: CustomCorpusAddition[];
+}
+
+export interface BackupInspection {
+  schemaVersion: "v1" | "v2";
+  createdAt: string | null;
+  totalStudyCount: number;
+  applicableStudyCount: number;
+  skippedStudyCount: number;
+  overridesCount: number;
+  customCorporaCount: number;
+  customEntriesCount: number;
+  studyState: Record<string, StudyStateBackupEntry>;
+  entryOverrides: EntryPatch[];
+  customCorpora: CustomCorpusAddition[];
+}
+
+export interface LastBackupMeta {
+  timestamp: string;
+  filename: string;
+  studyEntriesCount: number;
+  overridesCount: number;
+  customEntriesCount: number;
+}
+
+const LAST_BACKUP_STORAGE_KEY = "alexis_last_backup_meta";
+
 export function toEntrySnapshot(e: {
   lemma_native: string;
   lemma_translit: string;
@@ -105,6 +154,114 @@ function applyPatchToEntry(
   if (patch.tags !== undefined) {
     entry.tags = [...patch.tags];
   }
+}
+
+function isPlainObject(val: unknown): val is Record<string, any> {
+  return typeof val === "object" && val !== null && !Array.isArray(val);
+}
+
+function normalizeToIsoTimestamp(raw: unknown): string {
+  if (typeof raw === "string") {
+    const trimmed = raw.trim();
+    if (trimmed) {
+      const sqliteMatch = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(trimmed);
+      const parsed = new Date(
+        sqliteMatch ? `${trimmed.replace(" ", "T")}Z` : trimmed,
+      );
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.toISOString();
+      }
+    }
+  }
+  return new Date().toISOString();
+}
+
+function extractCorpusDiffs(
+  bundles: CorpusBundle[],
+  overrideSource?: Map<string, EntryPatch>,
+): {
+  entry_overrides: EntryPatch[];
+  custom_corpora: CustomCorpusAddition[];
+} {
+  const entry_overrides: EntryPatch[] = [];
+  const custom_corpora: CustomCorpusAddition[] = [];
+
+  if (overrideSource) {
+    for (const ov of overrideSource.values()) {
+      entry_overrides.push(JSON.parse(JSON.stringify(ov)) as EntryPatch);
+    }
+  } else {
+    const canonicalEntryMap = new Map<
+      string,
+      ReturnType<typeof toEntrySnapshot>
+    >();
+    for (const cb of CANONICAL_BUNDLES) {
+      for (const ce of cb.entries) {
+        canonicalEntryMap.set(ce.id, toEntrySnapshot(ce));
+      }
+    }
+    for (const bundle of bundles) {
+      for (const entry of bundle.entries) {
+        const canonSnap = canonicalEntryMap.get(entry.id);
+        if (canonSnap && !snapshotsEqual(canonSnap, toEntrySnapshot(entry))) {
+          entry_overrides.push({
+            id: entry.id,
+            lemma_native: entry.lemma_native,
+            lemma_translit: entry.lemma_translit,
+            pos: entry.pos || null,
+            gender: entry.gender || null,
+            definitions: entry.definitions.map((d) => ({ ...d })),
+            tags: [...(entry.tags || [])],
+          });
+        }
+      }
+    }
+  }
+
+  for (const bundle of bundles) {
+    const canon = CANONICAL_BUNDLES.find(
+      (c) => c.corpus.id === bundle.corpus.id,
+    );
+    if (!canon) {
+      custom_corpora.push({
+        corpus_id: bundle.corpus.id,
+        corpus_meta: { ...bundle.corpus },
+        volumes: bundle.volumes.map((v) => ({ ...v })),
+        lessons: bundle.lessons.map((l) => ({ ...l })),
+        entries: bundle.entries.map(
+          (e) =>
+            JSON.parse(JSON.stringify(e)) as CorpusBundle["entries"][number],
+        ),
+      });
+      continue;
+    }
+
+    const canonVolIds = new Set(canon.volumes.map((v) => v.id));
+    const canonLessonIds = new Set(canon.lessons.map((l) => l.id));
+    const canonEntryIds = new Set(canon.entries.map((e) => e.id));
+    const extraVolumes = bundle.volumes.filter((v) => !canonVolIds.has(v.id));
+    const extraLessons = bundle.lessons.filter(
+      (l) => !canonLessonIds.has(l.id),
+    );
+    const extraEntries = bundle.entries.filter((e) => !canonEntryIds.has(e.id));
+    if (
+      extraVolumes.length > 0 ||
+      extraLessons.length > 0 ||
+      extraEntries.length > 0
+    ) {
+      custom_corpora.push({
+        corpus_id: bundle.corpus.id,
+        volumes: extraVolumes.map((v) => ({ ...v })),
+        lessons: extraLessons.map((l) => ({ ...l })),
+        entries: extraEntries.map(
+          (e) =>
+            JSON.parse(JSON.stringify(e)) as CorpusBundle["entries"][number],
+        ),
+      });
+    }
+  }
+
+  return { entry_overrides, custom_corpora };
 }
 
 class StorageService {
@@ -1164,17 +1321,435 @@ class StorageService {
     await this.clearEntryOverrides(idsToClear);
   }
 
-  async exportStudyBackup(): Promise<Record<string, any>> {
+  getLastBackupMeta(): LastBackupMeta | null {
+    if (typeof localStorage === "undefined") return null;
+    try {
+      const raw = localStorage.getItem(LAST_BACKUP_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw) as Partial<LastBackupMeta>;
+      if (
+        typeof parsed?.timestamp !== "string" ||
+        typeof parsed?.filename !== "string"
+      ) {
+        return null;
+      }
+      return {
+        timestamp: parsed.timestamp,
+        filename: parsed.filename,
+        studyEntriesCount: Number(parsed.studyEntriesCount) || 0,
+        overridesCount: Number(parsed.overridesCount) || 0,
+        customEntriesCount: Number(parsed.customEntriesCount) || 0,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  setLastBackupMeta(meta: LastBackupMeta): void {
+    if (typeof localStorage === "undefined") return;
+    try {
+      localStorage.setItem(LAST_BACKUP_STORAGE_KEY, JSON.stringify(meta));
+    } catch {
+      // ignore storage quota restrictions
+    }
+  }
+
+  async exportStudyBackup(): Promise<FullStudyBackupDocument> {
+    const study_state: Record<string, StudyStateBackupEntry> = {};
+    let entry_overrides: EntryPatch[] = [];
+    let custom_corpora: CustomCorpusAddition[] = [];
+
     if (isTauriEnvironment()) {
       const { invoke } = await import("@tauri-apps/api/core");
-      return invoke<Record<string, any>>("export_study_state");
+      const rawStates =
+        await invoke<Record<string, StudyStateBackupEntry>>(
+          "export_study_state",
+        );
+      for (const [key, val] of Object.entries(rawStates)) {
+        study_state[key] = {
+          box: val.box,
+          interval: val.interval,
+          successes: val.successes,
+          nextDue: normalizeToIsoTimestamp(val.nextDue),
+          ...(typeof val.reviewCount === "number"
+            ? { reviewCount: val.reviewCount }
+            : {}),
+          ...(val.userNote ? { userNote: val.userNote } : {}),
+        };
+      }
+      const sqliteBundles = await invoke<CorpusBundle[]>(
+        "export_corpus_bundles",
+      );
+      const diffs = extractCorpusDiffs(sqliteBundles);
+      entry_overrides = diffs.entry_overrides;
+      custom_corpora = diffs.custom_corpora;
+    } else {
+      await this.ensureInitialized();
+      for (const [key, val] of this.localStudyState.entries()) {
+        study_state[key] = {
+          box: val.box,
+          interval: val.interval,
+          successes: val.successes,
+          nextDue: normalizeToIsoTimestamp(val.nextDue),
+          ...(val.userNote ? { userNote: val.userNote } : {}),
+        };
+      }
+      const diffs = extractCorpusDiffs(this.memoryBundles, this.entryOverrides);
+      entry_overrides = diffs.entry_overrides;
+      custom_corpora = diffs.custom_corpora;
     }
+
+    return {
+      schema: "alexis-backup-v2",
+      created_at: new Date().toISOString(),
+      study_state,
+      ...(entry_overrides.length > 0 ? { entry_overrides } : {}),
+      ...(custom_corpora.length > 0 ? { custom_corpora } : {}),
+    };
+  }
+
+  async inspectStudyBackup(rawPayload: unknown): Promise<BackupInspection> {
+    if (!isPlainObject(rawPayload)) {
+      throw new Error("Ungültiges Backup-Format (JSON-Objekt erwartet).");
+    }
+
+    const obj = rawPayload;
+    if (obj.schema === "alexis-review-delta-v1") {
+      throw new Error(
+        "Dies ist ein Gutachter-Delta, kein Lernstand-Backup. Bitte „📥 Delta prüfen“ in der Vokabelliste nutzen.",
+      );
+    }
+
+    if ("corpus" in obj && ("volumes" in obj || "entries" in obj)) {
+      throw new Error(
+        "Dies ist eine Korpus-Datei, kein Lernstand-Backup. Bitte über „Korpus hochladen“ oder die Vokabelliste importieren.",
+      );
+    }
+
+    const isV2 = obj.schema === "alexis-backup-v2";
+    if (!isV2 && obj.schema !== undefined) {
+      throw new Error(`Unbekanntes Backup-Schema: ${String(obj.schema)}.`);
+    }
+
+    if (isV2 && !isPlainObject(obj.study_state)) {
+      throw new Error(
+        "Ungültiges v2-Backup: 'study_state' fehlt oder ist ungültig.",
+      );
+    }
+
+    const rawStudyState: Record<string, unknown> = isV2
+      ? (obj.study_state as Record<string, unknown>)
+      : obj;
+
+    const studyEntries = Object.entries(rawStudyState);
+    if (!isV2 && studyEntries.length === 0) {
+      throw new Error("Die Backup-Datei enthält keine Lernstände.");
+    }
+
+    const studyState: Record<string, StudyStateBackupEntry> = {};
+    for (const [entryId, val] of studyEntries) {
+      if (!entryId.trim() || !isPlainObject(val)) {
+        throw new Error(
+          `Ungültiger Lernstand-Eintrag für ID '${entryId || "?"}'.`,
+        );
+      }
+      if (typeof val.box !== "number" || !Number.isFinite(val.box)) {
+        throw new Error(
+          `Ungültiger Leitner-Status für ID '${entryId}': numerisches Feld 'box' fehlt.`,
+        );
+      }
+      const box = Math.min(5, Math.max(1, Math.round(val.box)));
+      const interval =
+        typeof val.interval === "number" && Number.isFinite(val.interval)
+          ? Math.max(1, Math.round(val.interval))
+          : 1;
+      const successes =
+        typeof val.successes === "number" && Number.isFinite(val.successes)
+          ? Math.max(0, Math.round(val.successes))
+          : 0;
+      const reviewCount =
+        typeof val.reviewCount === "number" && Number.isFinite(val.reviewCount)
+          ? Math.max(0, Math.round(val.reviewCount))
+          : undefined;
+      const nextDue = normalizeToIsoTimestamp(val.nextDue);
+      const userNote =
+        typeof val.userNote === "string" && val.userNote.trim()
+          ? val.userNote.trim()
+          : undefined;
+
+      studyState[entryId] = {
+        box,
+        interval,
+        successes,
+        nextDue,
+        ...(reviewCount !== undefined ? { reviewCount } : {}),
+        ...(userNote ? { userNote } : {}),
+      };
+    }
+
+    const entryOverrides: EntryPatch[] = [];
+    if (isV2 && obj.entry_overrides !== undefined) {
+      if (!Array.isArray(obj.entry_overrides)) {
+        throw new Error(
+          "Ungültiges v2-Backup: 'entry_overrides' muss ein Array sein.",
+        );
+      }
+      for (const patch of obj.entry_overrides) {
+        if (
+          !isPlainObject(patch) ||
+          typeof patch.id !== "string" ||
+          !patch.id.trim() ||
+          typeof patch.lemma_native !== "string" ||
+          typeof patch.lemma_translit !== "string"
+        ) {
+          throw new Error(
+            "Ungültiges v2-Backup: 'entry_overrides' enthält ungültige Einträge.",
+          );
+        }
+        entryOverrides.push(patch as EntryPatch);
+      }
+    }
+
+    const customCorpora: CustomCorpusAddition[] = [];
+    if (isV2 && obj.custom_corpora !== undefined) {
+      if (!Array.isArray(obj.custom_corpora)) {
+        throw new Error(
+          "Ungültiges v2-Backup: 'custom_corpora' muss ein Array sein.",
+        );
+      }
+      for (const addition of obj.custom_corpora) {
+        if (
+          !isPlainObject(addition) ||
+          typeof addition.corpus_id !== "string" ||
+          !addition.corpus_id.trim()
+        ) {
+          throw new Error(
+            "Ungültiges v2-Backup: 'custom_corpora' ist beschädigt.",
+          );
+        }
+        const volumes = addition.volumes ?? [];
+        const lessons = addition.lessons ?? [];
+        const entries = addition.entries ?? [];
+        if (
+          !Array.isArray(volumes) ||
+          !Array.isArray(lessons) ||
+          !Array.isArray(entries) ||
+          volumes.some((v) => !isPlainObject(v) || typeof v.id !== "string") ||
+          lessons.some((l) => !isPlainObject(l) || typeof l.id !== "string") ||
+          entries.some(
+            (e) =>
+              !isPlainObject(e) ||
+              typeof e.id !== "string" ||
+              typeof e.lemma_native !== "string",
+          )
+        ) {
+          throw new Error(
+            `Ungültiges v2-Backup: ungültige Struktur in custom_corpora ('${addition.corpus_id}').`,
+          );
+        }
+        if (
+          addition.corpus_meta !== undefined &&
+          (!isPlainObject(addition.corpus_meta) ||
+            typeof addition.corpus_meta.id !== "string" ||
+            typeof addition.corpus_meta.title !== "string")
+        ) {
+          throw new Error(
+            `Ungültiges v2-Backup: ungültige Metadaten für '${addition.corpus_id}'.`,
+          );
+        }
+        customCorpora.push({
+          corpus_id: addition.corpus_id,
+          ...(addition.corpus_meta
+            ? { corpus_meta: addition.corpus_meta as CorpusMeta }
+            : {}),
+          volumes: volumes as VolumeData[],
+          lessons: lessons as LessonData[],
+          entries: entries as CorpusBundle["entries"],
+        });
+      }
+    }
+
     await this.ensureInitialized();
-    const backup: Record<string, any> = {};
-    for (const [key, val] of this.localStudyState.entries()) {
-      backup[key] = val;
+    const knownEntryIds = new Set<string>();
+    if (isTauriEnvironment()) {
+      const { invoke } = await import("@tauri-apps/api/core");
+      const sqliteBundles = await invoke<CorpusBundle[]>(
+        "export_corpus_bundles",
+      );
+      for (const b of sqliteBundles) {
+        for (const e of b.entries) knownEntryIds.add(e.id);
+      }
+    } else {
+      for (const b of this.memoryBundles) {
+        for (const e of b.entries) knownEntryIds.add(e.id);
+      }
     }
-    return backup;
+    let customEntriesCount = 0;
+    for (const c of customCorpora) {
+      for (const e of c.entries) {
+        if (!knownEntryIds.has(e.id)) {
+          knownEntryIds.add(e.id);
+          customEntriesCount++;
+        }
+      }
+    }
+
+    const totalStudyCount = Object.keys(studyState).length;
+    let applicableStudyCount = 0;
+    for (const entryId of Object.keys(studyState)) {
+      if (knownEntryIds.has(entryId)) applicableStudyCount++;
+    }
+
+    return {
+      schemaVersion: isV2 ? "v2" : "v1",
+      createdAt: typeof obj.created_at === "string" ? obj.created_at : null,
+      totalStudyCount,
+      applicableStudyCount,
+      skippedStudyCount: totalStudyCount - applicableStudyCount,
+      overridesCount: entryOverrides.length,
+      customCorporaCount: customCorpora.length,
+      customEntriesCount,
+      studyState,
+      entryOverrides,
+      customCorpora,
+    };
+  }
+
+  async importStudyBackup(rawPayload: unknown): Promise<{
+    restoredStudyCount: number;
+    restoredOverridesCount: number;
+    restoredCustomEntriesCount: number;
+  }> {
+    const inspected = await this.inspectStudyBackup(rawPayload);
+
+    let restoredCustomEntriesCount = 0;
+    let restoredOverridesCount = 0;
+
+    // 1. Restore custom corpora / custom TSV entries (delta-only so canonical overrides stay untouched)
+    for (const addition of inspected.customCorpora) {
+      let bundle = this.memoryBundles.find(
+        (b) => b.corpus.id === addition.corpus_id,
+      );
+      let isNewCorpus = false;
+      if (!bundle && addition.corpus_meta) {
+        bundle = {
+          corpus: addition.corpus_meta,
+          volumes: [],
+          lessons: [],
+          entries: [],
+        };
+        this.memoryBundles.push(bundle);
+        isNewCorpus = true;
+      }
+      if (!bundle) continue;
+
+      const deltaVolumes: VolumeData[] = [];
+      const volIds = new Set(bundle.volumes.map((v) => v.id));
+      for (const v of addition.volumes) {
+        if (!volIds.has(v.id)) {
+          bundle.volumes.push(v);
+          volIds.add(v.id);
+          deltaVolumes.push(v);
+        }
+      }
+
+      const deltaLessons: LessonData[] = [];
+      const lesIds = new Set(bundle.lessons.map((l) => l.id));
+      for (const l of addition.lessons) {
+        if (!lesIds.has(l.id)) {
+          bundle.lessons.push(l);
+          lesIds.add(l.id);
+          deltaLessons.push(l);
+        }
+      }
+
+      const deltaEntries: CorpusBundle["entries"] = [];
+      const entryIds = new Set(bundle.entries.map((e) => e.id));
+      for (const entry of addition.entries) {
+        if (!entryIds.has(entry.id)) {
+          bundle.entries.push(entry);
+          entryIds.add(entry.id);
+          deltaEntries.push(entry);
+          restoredCustomEntriesCount++;
+        }
+      }
+
+      if (
+        isNewCorpus ||
+        deltaVolumes.length > 0 ||
+        deltaLessons.length > 0 ||
+        deltaEntries.length > 0
+      ) {
+        if (isTauriEnvironment()) {
+          const { invoke } = await import("@tauri-apps/api/core");
+          const deltaBundle: CorpusBundle = {
+            corpus: addition.corpus_meta ?? bundle.corpus,
+            volumes: deltaVolumes,
+            lessons: deltaLessons,
+            entries: deltaEntries,
+          };
+          await invoke("import_corpus_bundle", { bundle: deltaBundle });
+        } else {
+          await this.persistCorpusBundle(bundle.corpus.id, bundle);
+        }
+      }
+    }
+
+    // 2. Restore entry overrides
+    if (inspected.entryOverrides.length > 0) {
+      const patchMap = new Map(inspected.entryOverrides.map((p) => [p.id, p]));
+      for (const bundle of this.memoryBundles) {
+        for (const entry of bundle.entries) {
+          const p = patchMap.get(entry.id);
+          if (p) {
+            applyPatchToEntry(entry, p);
+            restoredOverridesCount++;
+          }
+        }
+      }
+      if (isTauriEnvironment()) {
+        const { invoke } = await import("@tauri-apps/api/core");
+        await invoke("update_corpus_entries", {
+          patches: inspected.entryOverrides,
+        });
+      } else {
+        await this.persistEntryOverrides(inspected.entryOverrides);
+      }
+    }
+
+    // 3. Restore Leitner study state & user notes
+    let restoredStudyCount = 0;
+    if (Object.keys(inspected.studyState).length > 0) {
+      if (isTauriEnvironment()) {
+        const { invoke } = await import("@tauri-apps/api/core");
+        restoredStudyCount = await invoke<number>("import_study_state", {
+          states: inspected.studyState,
+        });
+      } else {
+        const validEntryIds = new Set(
+          this.memoryBundles.flatMap((b) => b.entries.map((e) => e.id)),
+        );
+        for (const [entryId, state] of Object.entries(inspected.studyState)) {
+          if (!validEntryIds.has(entryId)) continue;
+          const existing = this.localStudyState.get(entryId);
+          const mergedNote = state.userNote ?? existing?.userNote;
+          await this.persistStudyState(entryId, {
+            box: state.box,
+            interval: state.interval,
+            successes: state.successes,
+            nextDue: normalizeToIsoTimestamp(state.nextDue),
+            ...(mergedNote ? { userNote: mergedNote } : {}),
+          });
+          restoredStudyCount++;
+        }
+      }
+    }
+
+    return {
+      restoredStudyCount,
+      restoredOverridesCount,
+      restoredCustomEntriesCount,
+    };
   }
 }
 

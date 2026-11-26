@@ -1,5 +1,13 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.6 (2026-11-26)
+
+### Datenintegrität & Kernfunktionen
+- **Lernstand-Backup-Meccano (`alexis-backup-v2`) & Desktop/PWA-Parität (`src/components/BackupMeccano.vue`, `src/services/storage.ts`, `src-tauri/src/db.rs`, `src-tauri/src/lib.rs`, `src/App.vue`)**: Einheitliche Backup-Komponente im Modal *Offline / Download*, in *Hilfe Kapitel 1* und im Reiter *Statistik* mit Anzeige des letzten lokalen Backups, Alterspille und 1-Klick-Sicherung/Wiederherstellung. Sichert `study_state` (inkl. `reviewCount`, `userNote`, normalisierten UTC-ISO-`nextDue`), `entry_overrides` und `custom_corpora` identisch in PWA (`IndexedDB`) und Desktop-App (`SQLite` über `export_corpus_bundles` und `import_study_state`). Vor dem Einspielen prüft `inspectStudyBackup` das Schema (abwärtskompatibel zu v1, lehnt Gutachter-Deltas und Korpus-JSONs ab) mit Bestätigungsdialog, spielt Custom-Korpora als reines Delta ein und bewahrt vorhandene lokale Notizen (`COALESCE`-Parität).
+- **5-Fächer-Leitner-Darstellung mit Live-Zielvorschau & aufgeschlüsselter Statistik (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`, `docs/ARCHITECTURE.md`)**: Direkt über den 4 Bewertungstasten auf der Kartenrückseite zeigt eine 5-Fächer-Leiste (`Box 1`–`Box 5`) die aktuelle Box und hebt beim Überfahren/Fokussieren einer Taste das Zielfach samt Wartezeit hervor; die Tasten-Untertitel zeigen dynamisch Ziel-Box und reales Intervall (auch in Box 5 ohne irreführendes `+1 Box`). Im Reiter *Statistik* stehen die 2 Übersichtskennzahlen (*Gesamte Vokabeln*, *Heute fällig*) über einer eigenen 5er-Zeile für `Box 1` bis `Box 5`.
+
+---
+
 ## v0.6.5 (2026-11-25)
 
 ### Datenintegrität & Kernfunktionen

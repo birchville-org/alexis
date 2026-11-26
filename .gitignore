@@ -44,6 +44,21 @@ dist-ssr/
 .env.*
 !.env.example
 
+# Secrets & Credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.token
+*.credentials
+credentials.json
+.credentials.json
+oauth_creds.json
+client_secrets*.json
+id_rsa*
+id_ed25519*
+secrets.json
+
 # Tauri build artifacts
 src-tauri/target/
 src-tauri/gen/

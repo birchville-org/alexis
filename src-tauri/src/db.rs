@@ -359,7 +359,7 @@ pub fn save_user_note(conn: &Connection, entry_id: &str, note: Option<&str>) -> 
 
 pub fn export_study_state(conn: &Connection) -> Result<serde_json::Map<String, serde_json::Value>> {
     let mut stmt = conn.prepare(
-        "SELECT entry_id, box_number, interval_days, consecutive_successes, next_due, user_note
+        "SELECT entry_id, box_number, interval_days, consecutive_successes, next_due, user_note, review_count
          FROM study_state
          WHERE review_count > 0 OR (user_note IS NOT NULL AND trim(user_note) != '')",
     )?;
@@ -370,23 +370,206 @@ pub fn export_study_state(conn: &Connection) -> Result<serde_json::Map<String, s
         let successes: i32 = row.get(3)?;
         let next_due: String = row.get(4)?;
         let user_note: Option<String> = row.get(5)?;
-        Ok((entry_id, box_num, interval, successes, next_due, user_note))
+        let review_count: i32 = row.get(6)?;
+        Ok((
+            entry_id,
+            box_num,
+            interval,
+            successes,
+            next_due,
+            user_note,
+            review_count,
+        ))
     })?;
 
     let mut map = serde_json::Map::new();
     for item in rows {
-        let (entry_id, box_num, interval, successes, next_due, user_note) = item?;
+        let (entry_id, box_num, interval, successes, next_due, user_note, review_count) = item?;
         let mut obj = serde_json::Map::new();
         obj.insert("box".to_string(), serde_json::json!(box_num));
         obj.insert("interval".to_string(), serde_json::json!(interval));
         obj.insert("successes".to_string(), serde_json::json!(successes));
         obj.insert("nextDue".to_string(), serde_json::json!(next_due));
+        obj.insert("reviewCount".to_string(), serde_json::json!(review_count));
         if let Some(n) = user_note.map(|s| s.trim().to_string()).filter(|s| !s.is_empty()) {
             obj.insert("userNote".to_string(), serde_json::json!(n));
         }
         map.insert(entry_id, serde_json::Value::Object(obj));
     }
     Ok(map)
+}
+
+pub fn import_study_state(
+    conn: &mut Connection,
+    states: &serde_json::Map<String, serde_json::Value>,
+) -> Result<usize> {
+    let tx = conn.transaction()?;
+    let mut count = 0;
+
+    for (entry_id, val) in states {
+        let exists: bool = tx.query_row(
+            "SELECT EXISTS(SELECT 1 FROM entries WHERE id = ?1)",
+            params![entry_id],
+            |r| r.get(0),
+        )?;
+        if !exists {
+            continue;
+        }
+
+        let box_num = val
+            .get("box")
+            .and_then(|v| v.as_i64())
+            .unwrap_or(1)
+            .clamp(1, 5) as i32;
+        let interval = val
+            .get("interval")
+            .and_then(|v| v.as_i64())
+            .unwrap_or(1)
+            .max(1) as i32;
+        let successes = val
+            .get("successes")
+            .and_then(|v| v.as_i64())
+            .unwrap_or(0)
+            .max(0) as i32;
+        let incoming_reviews = val
+            .get("reviewCount")
+            .and_then(|v| v.as_i64())
+            .unwrap_or(1)
+            .max(1) as i32;
+        let next_due = val
+            .get("nextDue")
+            .and_then(|v| v.as_str())
+            .filter(|s| !s.is_empty())
+            .unwrap_or("1970-01-01T00:00:00Z");
+        let user_note = val
+            .get("userNote")
+            .and_then(|v| v.as_str())
+            .map(str::trim)
+            .filter(|s| !s.is_empty());
+
+        tx.execute(
+            "INSERT INTO study_state (entry_id, box_number, interval_days, consecutive_successes, next_due, review_count, user_note)
+             VALUES (?1, ?2, ?3, ?4, COALESCE(datetime(?5), datetime('now')), ?6, ?7)
+             ON CONFLICT(entry_id) DO UPDATE SET
+                box_number = excluded.box_number,
+                interval_days = excluded.interval_days,
+                consecutive_successes = excluded.consecutive_successes,
+                next_due = excluded.next_due,
+                review_count = MAX(study_state.review_count, excluded.review_count),
+                user_note = COALESCE(excluded.user_note, study_state.user_note)",
+            params![entry_id, box_num, interval, successes, next_due, incoming_reviews, user_note],
+        )?;
+        count += 1;
+    }
+
+    tx.commit()?;
+    Ok(count)
+}
+
+pub fn export_all_bundles(conn: &Connection) -> Result<Vec<CorpusBundle>> {
+    let mut corpora_stmt = conn.prepare(
+        "SELECT id, title, lang_code, script, target_lang, description
+         FROM corpora
+         ORDER BY rowid",
+    )?;
+    let corpora = corpora_stmt
+        .query_map([], |row| {
+            Ok(CorpusMeta {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                lang_code: row.get(2)?,
+                script: row.get(3)?,
+                target_lang: row.get(4)?,
+                description: row.get(5)?,
+            })
+        })?
+        .collect::<Result<Vec<_>>>()?;
+
+    let mut bundles = Vec::with_capacity(corpora.len());
+    for corpus in corpora {
+        let mut vol_stmt = conn.prepare(
+            "SELECT id, corpus_id, title, sort_order, level
+             FROM volumes
+             WHERE corpus_id = ?1
+             ORDER BY sort_order, rowid",
+        )?;
+        let volumes = vol_stmt
+            .query_map(params![&corpus.id], |row| {
+                Ok(VolumeData {
+                    id: row.get(0)?,
+                    corpus_id: row.get(1)?,
+                    title: row.get(2)?,
+                    sort_order: row.get(3)?,
+                    level: row.get(4)?,
+                    entry_count: None,
+                })
+            })?
+            .collect::<Result<Vec<_>>>()?;
+
+        let mut les_stmt = conn.prepare(
+            "SELECT l.id, l.volume_id, l.lesson_number, l.title, l.sort_order
+             FROM lessons l
+             INNER JOIN volumes v ON v.id = l.volume_id
+             WHERE v.corpus_id = ?1
+             ORDER BY l.sort_order, l.lesson_number, l.rowid",
+        )?;
+        let lessons = les_stmt
+            .query_map(params![&corpus.id], |row| {
+                Ok(LessonData {
+                    id: row.get(0)?,
+                    volume_id: row.get(1)?,
+                    lesson_number: row.get(2)?,
+                    title: row.get(3)?,
+                    sort_order: row.get(4)?,
+                    entry_count: None,
+                })
+            })?
+            .collect::<Result<Vec<_>>>()?;
+
+        let mut entry_stmt = conn.prepare(
+            "SELECT id, corpus_id, volume_id, lesson_id, lemma_native, lemma_translit, pos, gender, grammar_metadata, definitions, tags, context_examples, dictionary_refs
+             FROM entries
+             WHERE corpus_id = ?1
+             ORDER BY rowid",
+        )?;
+        let entries = entry_stmt
+            .query_map(params![&corpus.id], |row| {
+                let grammar_raw: Option<String> = row.get(8)?;
+                let defs_raw: String = row.get(9)?;
+                let tags_raw: Option<String> = row.get(10)?;
+                let examples_raw: Option<String> = row.get(11)?;
+                let dict_refs_raw: Option<String> = row.get(12)?;
+
+                Ok(EntryData {
+                    id: row.get(0)?,
+                    corpus_id: row.get(1)?,
+                    volume_id: row.get(2)?,
+                    lesson_id: row.get(3)?,
+                    lemma_native: row.get(4)?,
+                    lemma_translit: row.get(5)?,
+                    pos: row.get(6)?,
+                    gender: row.get(7)?,
+                    grammar_metadata: grammar_raw
+                        .and_then(|s| serde_json::from_str(&s).ok()),
+                    definitions: serde_json::from_str(&defs_raw).unwrap_or_default(),
+                    tags: tags_raw.and_then(|s| serde_json::from_str(&s).ok()),
+                    context_examples: examples_raw
+                        .and_then(|s| serde_json::from_str(&s).ok()),
+                    dictionary_refs: dict_refs_raw
+                        .and_then(|s| serde_json::from_str(&s).ok()),
+                })
+            })?
+            .collect::<Result<Vec<_>>>()?;
+
+        bundles.push(CorpusBundle {
+            corpus,
+            volumes,
+            lessons,
+            entries,
+        });
+    }
+
+    Ok(bundles)
 }
 
 pub fn query_study_queue(conn: &Connection, query: &StudyQueueQuery) -> Result<Vec<StudyCardItem>> {
@@ -701,6 +884,146 @@ mod tests {
         assert_eq!(queue[0].tags, vec!["zahlen", "a1"]);
         assert_eq!(queue[0].user_note.as_deref(), Some("Grundzahl 10"));
 
+        let exported = export_study_state(&conn).expect("export_study_state");
+        assert!(exported.contains_key("e1"));
+
+        let db_path_2 = temp_db_path("entries_notes_restore");
+        let mut conn2 = init_db(&db_path_2).expect("init_db 2");
+        import_bundle(&mut conn2, &bundle).expect("import_bundle 2");
+        let restored = import_study_state(&mut conn2, &exported).expect("import_study_state");
+        assert_eq!(restored, 1);
+
+        let queue2 = query_study_queue(
+            &conn2,
+            &StudyQueueQuery {
+                corpus_id: "test-corpus".to_string(),
+                volume_ids: None,
+                lesson_ids: None,
+                tags: None,
+                due_only: false,
+                limit: None,
+                shuffle: Some(false),
+            },
+        )
+        .expect("query_study_queue 2");
+        assert_eq!(queue2[0].user_note.as_deref(), Some("Grundzahl 10"));
+
+        // Export bundles parity check
+        let exported_bundles = export_all_bundles(&conn).expect("export_all_bundles");
+        assert_eq!(exported_bundles.len(), 1);
+        assert_eq!(exported_bundles[0].corpus.id, "test-corpus");
+        assert_eq!(exported_bundles[0].entries.len(), 1);
+        assert_eq!(exported_bundles[0].entries[0].definitions[0].meaning, "zehn");
+
         let _ = fs::remove_file(&db_path);
+        let _ = fs::remove_file(&db_path_2);
+    }
+
+    #[test]
+    fn rating_one_and_iso_next_due_roundtrip() {
+        let db_path = temp_db_path("rating_one_iso");
+        let mut conn = init_db(&db_path).expect("init_db");
+
+        let bundle = CorpusBundle {
+            corpus: CorpusMeta {
+                id: "test-corpus".to_string(),
+                title: "Test".to_string(),
+                lang_code: "hi".to_string(),
+                script: "Devanagari".to_string(),
+                target_lang: "de".to_string(),
+                description: None,
+            },
+            volumes: vec![VolumeData {
+                id: "v1".to_string(),
+                corpus_id: "test-corpus".to_string(),
+                title: "Vol 1".to_string(),
+                sort_order: 1,
+                level: None,
+                entry_count: None,
+            }],
+            lessons: vec![LessonData {
+                id: "l1".to_string(),
+                volume_id: "v1".to_string(),
+                lesson_number: 1,
+                title: "Lektion 1".to_string(),
+                sort_order: 1,
+                entry_count: None,
+            }],
+            entries: vec![EntryData {
+                id: "e1".to_string(),
+                corpus_id: "test-corpus".to_string(),
+                volume_id: "v1".to_string(),
+                lesson_id: Some("l1".to_string()),
+                lemma_native: "एक".to_string(),
+                lemma_translit: "ek".to_string(),
+                pos: Some("num".to_string()),
+                gender: None,
+                grammar_metadata: None,
+                definitions: vec![EntryDefinition {
+                    lang: "de".to_string(),
+                    meaning: "eins".to_string(),
+                    notes: None,
+                }],
+                tags: None,
+                context_examples: None,
+                dictionary_refs: None,
+            }],
+        };
+
+        import_bundle(&mut conn, &bundle).expect("import_bundle");
+
+        // Rating 1 keeps card in Box 1 with 0 consecutive successes, increments review_count to 1
+        let (new_box, new_interval, _) = record_review(
+            &conn,
+            &ReviewSubmission {
+                entry_id: "e1".to_string(),
+                rating: 1,
+                duration_ms: Some(1200),
+                direction: "native_to_target".to_string(),
+            },
+        )
+        .expect("record_review");
+        assert_eq!(new_box, 1);
+        assert_eq!(new_interval, 1);
+
+        let exported = export_study_state(&conn).expect("export_study_state");
+        assert!(exported.contains_key("e1"));
+        assert_eq!(
+            exported["e1"].get("reviewCount").and_then(|v| v.as_i64()),
+            Some(1)
+        );
+
+        let db_path_2 = temp_db_path("rating_one_iso_restore");
+        let mut conn2 = init_db(&db_path_2).expect("init_db 2");
+        import_bundle(&mut conn2, &bundle).expect("import_bundle 2");
+
+        let mut states = serde_json::Map::new();
+        states.insert(
+            "e1".to_string(),
+            serde_json::json!({
+                "box": 1,
+                "interval": 1,
+                "successes": 0,
+                "nextDue": "2026-11-26T14:30:00.000Z"
+            }),
+        );
+        let restored = import_study_state(&mut conn2, &states).expect("import_study_state");
+        assert_eq!(restored, 1);
+
+        let (stored_due, stored_reviews): (String, i32) = conn2
+            .query_row(
+                "SELECT next_due, review_count FROM study_state WHERE entry_id = 'e1'",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .expect("query restored study_state");
+        assert_eq!(stored_due, "2026-11-26 14:30:00");
+        assert_eq!(stored_reviews, 1);
+
+        let reexported = export_study_state(&conn2).expect("reexport");
+        assert!(reexported.contains_key("e1"));
+
+        let _ = fs::remove_file(&db_path);
+        let _ = fs::remove_file(&db_path_2);
     }
 }
