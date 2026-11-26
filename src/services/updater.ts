@@ -12,6 +12,16 @@ export interface AppUpdateInfo {
 export const GITHUB_RELEASES_URL =
   "https://github.com/birchville-org/alexis/releases/latest";
 
+export function formatReleaseVersion(version?: string | null): string {
+  const clean = (version || "").trim().replace(/^v/i, "");
+  return clean ? `v${clean}` : "";
+}
+
+export async function relaunchDesktopApp(): Promise<void> {
+  const { invoke } = await import("@tauri-apps/api/core");
+  await invoke("restart_app");
+}
+
 export async function checkForUpdates(): Promise<AppUpdateInfo> {
   try {
     const { check } = await import("@tauri-apps/plugin-updater");
@@ -40,12 +50,16 @@ export async function installAppUpdate(
   onProgress?: (downloaded: number, contentLength?: number) => void,
 ): Promise<void> {
   let downloaded = 0;
-  let contentLength = 0;
+  let contentLength: number | undefined;
 
   await update.downloadAndInstall((event) => {
     switch (event.event) {
       case "Started":
-        contentLength = event.data.contentLength || 0;
+        contentLength =
+          typeof event.data.contentLength === "number" &&
+          event.data.contentLength > 0
+            ? event.data.contentLength
+            : undefined;
         if (onProgress) onProgress(0, contentLength);
         break;
       case "Progress":
@@ -53,7 +67,7 @@ export async function installAppUpdate(
         if (onProgress) onProgress(downloaded, contentLength);
         break;
       case "Finished":
-        if (onProgress) onProgress(contentLength, contentLength);
+        if (onProgress) onProgress(contentLength ?? downloaded, contentLength);
         break;
     }
   });

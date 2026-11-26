@@ -23,6 +23,11 @@ fn map_scheme_name(name: &str) -> Option<Scheme> {
 }
 
 #[tauri::command]
+fn restart_app(app: tauri::AppHandle) {
+    app.restart();
+}
+
+#[tauri::command]
 fn transliterate(text: String, from: String, to: String) -> String {
     let from_scheme = match map_scheme_name(&from) {
         Some(s) => s,
@@ -343,6 +348,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            restart_app,
             transliterate,
             import_corpus_bundle,
             update_corpus_entries,

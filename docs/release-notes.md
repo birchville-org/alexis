@@ -1,5 +1,13 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.7 (2026-11-26)
+
+### Plattform- & Backend-Stabilität
+- **Desktop Auto-Updater mit automatischem App-Neustart & durchgängiger Statusanzeige (`src-tauri/src/lib.rs`, `src/services/updater.ts`, `src/App.vue`)**: Ergänzt den nativen Tauri-Command `restart_app` (`app.restart()`), der nach erfolgreicher `downloadAndInstall()`-Ausführung die aktualisierte Desktop-App nach 400 ms automatisch neu startet und andernfalls einen erreichbaren `🔄 Jetzt neu starten`-Button anbietet. Vereinheitlicht Fortschritt (`%`), Fehleranzeige (`desktopUpdateError`) und Aktionsbuttons über das obere Update-Banner, *Hilfe Kapitel 9* sowie das Modal *Offline / Download*, verhindert doppelte `vv`-Präfixe per `formatReleaseVersion` und schützt `installAppUpdate` bei fehlender `contentLength`.
+- **Semver-konformes `latest.json` im Desktop-Release-Workflow (`.github/workflows/release-desktop.yml`)**: Schreibt das Feld `version` im konsolidierten Updater-Manifest nun ohne führendes `v` (`0.6.7`), während die Download-URLs weiterhin den Release-Tag (`v0.6.7`) adressieren.
+
+---
+
 ## v0.6.6 (2026-11-26)
 
 ### Datenintegrität & Kernfunktionen

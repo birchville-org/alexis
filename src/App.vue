@@ -91,22 +91,39 @@
 
     <!-- Desktop Auto-Update Banner (Tauri) -->
     <div
-      v-if="isTauri && desktopUpdateInfo?.available && !desktopUpdateDismissed"
+      v-if="isTauri && (desktopUpdateInstalled || (desktopUpdateInfo?.available && !desktopUpdateDismissed))"
       class="desktop-update-banner"
     >
       <div class="desktop-update-text">
-        <strong>Neue Desktop-Version v{{ desktopUpdateInfo.version }} verfügbar</strong>
-        <span v-if="desktopUpdateInstalling && desktopUpdateProgress !== null">
-          · Download {{ desktopUpdateProgress }}%
+        <template v-if="desktopUpdateInstalled">
+          <strong>Update {{ desktopUpdateVersionLabel }} installiert</strong>
+          <span> · Bitte App neu starten, um die neue Version zu aktivieren.</span>
+        </template>
+        <template v-else>
+          <strong>Neue Desktop-Version {{ desktopUpdateVersionLabel }} verfügbar</strong>
+          <span v-if="desktopUpdateInstalling && desktopUpdateProgress !== null">
+            · Download {{ desktopUpdateProgress }}%
+          </span>
+        </template>
+        <span v-if="desktopUpdateError" class="desktop-update-error">
+          · ⚠ {{ desktopUpdateError }}
         </span>
       </div>
       <div class="desktop-update-actions">
         <button
+          v-if="desktopUpdateInstalled"
+          class="btn-primary"
+          @click="triggerDesktopRelaunch"
+        >
+          🔄 Jetzt neu starten
+        </button>
+        <button
+          v-else
           class="btn-primary"
           @click="installDesktopUpdate"
           :disabled="desktopUpdateInstalling"
         >
-          {{ desktopUpdateInstalling ? "Installiert..." : "Jetzt aktualisieren" }}
+          {{ desktopUpdateInstalling ? (desktopUpdateProgress !== null ? `Installiert (${desktopUpdateProgress}%)...` : "Installiert...") : "Jetzt aktualisieren" }}
         </button>
         <a
           :href="GITHUB_RELEASES_URL"
@@ -117,6 +134,7 @@
           Release Notes
         </a>
         <button
+          v-if="!desktopUpdateInstalled"
           class="btn-link"
           @click="desktopUpdateDismissed = true"
           :disabled="desktopUpdateInstalling"
@@ -1284,21 +1302,29 @@
               </div>
               <div v-if="isTauri" class="desktop-update-help-box">
                 <p class="modal-text" v-if="desktopUpdateNotice">{{ desktopUpdateNotice }}</p>
+                <p class="modal-text desktop-update-error" v-if="desktopUpdateError">⚠ {{ desktopUpdateError }}</p>
                 <div class="modal-btn-row">
                   <button
                     class="btn-outline"
                     @click="runDesktopUpdateCheck(true)"
-                    :disabled="desktopUpdateChecking"
+                    :disabled="desktopUpdateChecking || desktopUpdateInstalling || desktopUpdateInstalled"
                   >
                     {{ desktopUpdateChecking ? "Prüft..." : "🔄 Nach Updates suchen (Check for Updates...)" }}
                   </button>
                   <button
-                    v-if="desktopUpdateInfo?.available"
+                    v-if="desktopUpdateInstalled"
+                    class="btn-primary"
+                    @click="triggerDesktopRelaunch"
+                  >
+                    🔄 App jetzt neu starten
+                  </button>
+                  <button
+                    v-else-if="desktopUpdateInfo?.available"
                     class="btn-primary"
                     @click="installDesktopUpdate"
                     :disabled="desktopUpdateInstalling"
                   >
-                    {{ desktopUpdateInstalling ? "Installiert..." : `Jetzt auf v${desktopUpdateInfo.version} aktualisieren` }}
+                    {{ desktopUpdateInstalling ? (desktopUpdateProgress !== null ? `Installiert (${desktopUpdateProgress}%)...` : "Installiert...") : `Jetzt auf ${desktopUpdateVersionLabel} aktualisieren` }}
                   </button>
                 </div>
               </div>
@@ -1344,13 +1370,29 @@
           <div v-if="isTauri" class="desktop-update-modal-box">
             <h4>Desktop-App Updates (Tauri)</h4>
             <p class="modal-text" v-if="desktopUpdateNotice">{{ desktopUpdateNotice }}</p>
+            <p class="modal-text desktop-update-error" v-if="desktopUpdateError">⚠ {{ desktopUpdateError }}</p>
             <div class="modal-btn-row">
               <button
                 class="btn-outline"
                 @click="runDesktopUpdateCheck(true)"
-                :disabled="desktopUpdateChecking"
+                :disabled="desktopUpdateChecking || desktopUpdateInstalling || desktopUpdateInstalled"
               >
                 {{ desktopUpdateChecking ? "Prüft..." : "🔄 Nach Updates suchen" }}
+              </button>
+              <button
+                v-if="desktopUpdateInstalled"
+                class="btn-primary"
+                @click="triggerDesktopRelaunch"
+              >
+                🔄 App jetzt neu starten
+              </button>
+              <button
+                v-else-if="desktopUpdateInfo?.available"
+                class="btn-primary"
+                @click="installDesktopUpdate"
+                :disabled="desktopUpdateInstalling"
+              >
+                {{ desktopUpdateInstalling ? (desktopUpdateProgress !== null ? `Installiert (${desktopUpdateProgress}%)...` : "Installiert...") : `Jetzt auf ${desktopUpdateVersionLabel} aktualisieren` }}
               </button>
             </div>
           </div>
@@ -1452,7 +1494,9 @@ import {
   type AppUpdateInfo,
   GITHUB_RELEASES_URL,
   checkForUpdates,
+  formatReleaseVersion,
   installAppUpdate,
+  relaunchDesktopApp,
 } from "./services/updater";
 import type {
   CorpusMeta,
@@ -2442,14 +2486,26 @@ let unlistenMenu: (() => void) | null = null;
 const desktopUpdateInfo = shallowRef<AppUpdateInfo | null>(null);
 const desktopUpdateChecking = ref(false);
 const desktopUpdateInstalling = ref(false);
+const desktopUpdateInstalled = ref(false);
 const desktopUpdateProgress = ref<number | null>(null);
 const desktopUpdateNotice = ref("");
+const desktopUpdateError = ref("");
 const desktopUpdateDismissed = ref(false);
 let desktopUpdateTimer: ReturnType<typeof setTimeout> | null = null;
 
+const desktopUpdateVersionLabel = computed(() =>
+  formatReleaseVersion(desktopUpdateInfo.value?.version),
+);
+
 async function runDesktopUpdateCheck(manual: boolean) {
   if (!isTauri.value || desktopUpdateChecking.value) return;
+  if (desktopUpdateInstalled.value) {
+    desktopUpdateNotice.value =
+      "Update bereits installiert. Bitte App neu starten, um die neue Version zu aktivieren.";
+    return;
+  }
   desktopUpdateChecking.value = true;
+  desktopUpdateError.value = "";
   if (manual) {
     desktopUpdateNotice.value = "";
   }
@@ -2458,22 +2514,38 @@ async function runDesktopUpdateCheck(manual: boolean) {
     desktopUpdateInfo.value = info;
     if (info.available) {
       desktopUpdateDismissed.value = false;
-      desktopUpdateNotice.value = `Version v${info.version} verfügbar.`;
+      const verLabel = formatReleaseVersion(info.version);
+      desktopUpdateNotice.value = verLabel
+        ? `Version ${verLabel} verfügbar.`
+        : "Neue Desktop-Version verfügbar.";
     } else if (manual) {
-      desktopUpdateNotice.value = info.error
-        ? `Update-Prüfung fehlgeschlagen: ${info.error}`
-        : "Du nutzt bereits die neueste Version.";
+      if (info.error) {
+        desktopUpdateError.value = info.error;
+        desktopUpdateNotice.value = "";
+      } else {
+        desktopUpdateNotice.value = "Du nutzt bereits die neueste Version.";
+      }
     }
   } finally {
     desktopUpdateChecking.value = false;
   }
 }
 
+async function triggerDesktopRelaunch() {
+  try {
+    await relaunchDesktopApp();
+  } catch (err: unknown) {
+    desktopUpdateError.value = `Neustart fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`;
+  }
+}
+
 async function installDesktopUpdate() {
   const update = desktopUpdateInfo.value?.update;
-  if (!update || desktopUpdateInstalling.value) return;
+  if (!update || desktopUpdateInstalling.value || desktopUpdateInstalled.value)
+    return;
   desktopUpdateInstalling.value = true;
-  desktopUpdateProgress.value = 0;
+  desktopUpdateProgress.value = null;
+  desktopUpdateError.value = "";
   try {
     await installAppUpdate(update, (downloaded, total) => {
       if (total && total > 0) {
@@ -2483,10 +2555,15 @@ async function installDesktopUpdate() {
         );
       }
     });
-    desktopUpdateNotice.value =
-      "Update installiert. Bitte App neu starten, um die neue Version zu aktivieren.";
+    desktopUpdateInstalled.value = true;
+    desktopUpdateProgress.value = 100;
+    desktopUpdateNotice.value = "Update installiert. App startet in Kürze neu…";
+    setTimeout(() => {
+      triggerDesktopRelaunch();
+    }, 400);
   } catch (err: unknown) {
-    desktopUpdateNotice.value = `Installation fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`;
+    desktopUpdateError.value = `Installation fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`;
+    desktopUpdateNotice.value = "";
   } finally {
     desktopUpdateInstalling.value = false;
   }
@@ -4185,6 +4262,11 @@ async function performDictSearch() {
 .desktop-update-text {
   font-size: 0.9rem;
   color: var(--text-primary);
+}
+
+.desktop-update-error {
+  color: var(--btn-again);
+  font-weight: 500;
 }
 
 .desktop-update-actions {
