@@ -84,13 +84,13 @@ Für jede bewertete Karte wird der nächste Fälligkeitszeitpunkt nach folgender
 next_due = aktuelle_zeit + (intervall_tage x 86400 Sekunden)
 ```
 
-Wird beim Start einer Sitzung der Schalter **„Nur fällige Wiederholungen (Spaced Repetition)“** aktiviert, filtert die Datenbankabfrage ausschließlich Einträge mit:
+Wird beim Start einer Sitzung der Schalter **„Nur fällige Wiederholungen (Spaced Repetition)“** aktiviert (Standard beim Start), filtert die Datenbankabfrage ausschließlich Einträge mit:
 
 ```
 s.next_due <= aktuelle_zeit
 ```
 
-Ist der Schalter deaktiviert, läuft der freie **Lern- & Drillmodus**, in dem alle Vokabeln der gewählten Lektionen geübt werden können, unabhängig vom Fälligkeitsdatum.
+Ist der Schalter deaktiviert (oder wird nach Abschluss einer fälligen Sitzung *„Alle Karten erneut durchgehen“* gewählt), läuft der freie **Lern- & Drillmodus**, in dem alle Vokabeln der gewählten Lektionen geübt werden können, unabhängig vom Fälligkeitsdatum.
 
 ---
 
@@ -134,15 +134,15 @@ Alexis unterstützt zwei Lernrichtungen, die jederzeit per Klick auf den Schalte
 
 ---
 
-## 8. Abfragereihenfolge: Alphabetisch oder Zufällig (Shuffle)
+## 8. Abfragereihenfolge: Zufällig (Standard) oder Alphabetisch
 
-Alexis erlaubt das Umschalten der Abfragereihenfolge:
+Alexis startet standardmäßig im **Zufallsmodus (`Shuffle`)** und erlaubt jederzeit das Umschalten der Abfragereihenfolge:
 
-1. **Alphabetisch / Lehrbuch-Sequenz**:
-   - Vokabeln werden in der didaktischen Reihenfolge der Lektion bzw. des Alphabets vorgelegt.
-2. **Zufall (Shuffle / Random)**:
+1. **Zufall (Shuffle / Random, Standard)**:
    - Die ausgewählte Vokabelmenge wird nach dem Fisher-Yates-Algorithmus (im SQLite-Backend via `ORDER BY RANDOM()`) gemischt.
-   - Umschaltbar über den Schalter **`🔀 Zufall`** im Trainer-Header, die Checkbox in der Gliederungsauswahl oder mit der Taste **`s`**.
+2. **Alphabetisch / Lehrbuch-Sequenz**:
+   - Vokabeln werden in der didaktischen Reihenfolge der Lektion bzw. des Alphabets vorgelegt.
+   - Umschaltbar über den Schalter **`🔀 Zufall`** / **`🔀 A–Z`** im Trainer-Header, die Checkbox in der Gliederungsauswahl oder mit der Taste **`s`** (Auswahl wird in `localStorage` gespeichert).
 
 ---
 

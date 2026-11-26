@@ -747,7 +747,7 @@
               <span>Nur fällige Wiederholungen (Spaced Repetition)</span>
             </label>
             <label class="checkbox-inline">
-              <input type="checkbox" v-model="isShuffle" @change="toggleShuffle" />
+              <input type="checkbox" :checked="isShuffle" @change="toggleShuffle" />
               <span>Zufällige Reihenfolge (Shuffle / Random)</span>
             </label>
           </div>
@@ -1633,7 +1633,7 @@ const volumesList = ref<VolumeData[]>([]);
 const selectedVolumeIds = ref<string[]>(["hb1"]);
 const lessonsList = ref<LessonData[]>([]);
 const selectedLessonIds = ref<string[]>([]);
-const dueOnly = ref(false);
+const dueOnly = ref(true);
 
 const filteredLessons = computed(() => {
   let list = lessonsList.value.filter((l) => (l.entry_count ?? 0) > 0);
@@ -1688,11 +1688,11 @@ function toggleDirection() {
   } catch {}
 }
 
-// Study Ordering: Alphabetical / Sequential vs. Random (Shuffle)
+// Study Ordering: Alphabetical / Sequential vs. Random (Shuffle, default active)
 const isShuffle = ref(
   typeof localStorage !== "undefined"
-    ? localStorage.getItem("alexis_shuffle") === "true"
-    : false,
+    ? localStorage.getItem("alexis_shuffle") !== "false"
+    : true,
 );
 
 function toggleShuffle() {
@@ -2386,7 +2386,7 @@ onMounted(async () => {
   }
 
   // Load queue
-  await reloadQueue(false);
+  await reloadQueue(dueOnly.value);
   await refreshStats();
 
   if (isTauri.value) {
@@ -2598,7 +2598,7 @@ async function handleFileUpload(e: Event) {
   if (selectedVolumeIds.value.length === 0) {
     selectedVolumeIds.value = volumesList.value.map((v) => v.id);
   }
-  await reloadQueue(false);
+  await reloadQueue(dueOnly.value);
   await refreshStats();
   target.value = "";
   setTimeout(() => {

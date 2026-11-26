@@ -58,7 +58,8 @@ Nach dem Aufdecken der Karte zeigt eine **5-Fächer-Leiste** direkt über den Be
 
 ### Dynamische Steuerung
 - **Richtungsumkehr (Taste `r` oder Schalter `⇄`):** Schaltet jederzeit zwischen *Zielsprache ➔ Deutsch* (Verständnis) und *Deutsch ➔ Zielsprache* (aktive Reproduktion inkl. Geschlechts-Abfrage) um, ohne Kartendopplungen zu erzeugen.
-- **Reihenfolge (Taste `s` oder Schalter `🔀`):** Wechselt zwischen curricularem/alphabetischem Ablauf und Zufallsmodus (*Shuffle*).
+- **Reihenfolge (Taste `s` oder Schalter `🔀`):** Startet standardmäßig im Zufallsmodus (*Shuffle*) und wechselt per Klick oder Taste `s` zwischen Zufalls- und alphabetischem/curricularem Ablauf (Einstellung wird lokal gemerkt).
+- **Fälligkeitsfilter (*„Nur fällige Wiederholungen“*):** Beim Start aktiv, sodass ausschließlich nach dem 5-Boxen-Leitner-Zeitplan fällige Karten erscheinen; über das Abwählen in *Korpora & Gliederung* oder *„Alle Karten erneut durchgehen“* lässt sich jederzeit frei üben.
 - **Sprachausgabe (Taste `v` oder Button `🔊`):** Liest die aktuelle Vokabel über die native Sprachengine des Betriebssystems vor.
 - **Grammatik-Schublade (Taste `g`):** Klappt bei flektierbaren Wörtern die Deklinationstabelle oder Verbstämme mit Hinweisen zur Ergativ-Syntax (*ne*) auf.
 - **Umschrift (Taste `u` oder `t`):** Blendet die wissenschaftliche IAST-Transliteration ein oder aus.

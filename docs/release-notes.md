@@ -1,5 +1,12 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.6.8 (2026-11-26)
+
+### Plattform- & Backend-Stabilität
+- **Shuffle-Checkbox-Fix & Leitner-/Zufalls-Startmodus (`src/App.vue`, `docs/METHODIK_LEITNER_SRS.md`, `docs/BENUTZERHANDBUCH.md`)**: Behebt den Double-Toggle-Bug an der Shuffle-Checkbox (`:checked="isShuffle" @change="toggleShuffle"` statt doppelter `v-model`-Bindung). Aktiviert zudem standardmäßig beim App-Start den 5-Boxen-Leitner-Fälligkeitsfilter (`dueOnly = true`, konsistent über `onMounted` und `handleFileUpload`) sowie die zufällige Kartenreihenfolge (`isShuffle = true` mit `localStorage`-Persistenz).
+
+---
+
 ## v0.6.7 (2026-11-26)
 
 ### Plattform- & Backend-Stabilität
