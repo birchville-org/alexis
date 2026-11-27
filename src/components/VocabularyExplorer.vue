@@ -1,5 +1,5 @@
 <template>
-  <section class="vocabulary-explorer">
+  <section class="vocabulary-explorer" :class="{ 'interlinear-active': interlinearMode }">
     <!-- Explorer Header & Summary -->
     <div class="explorer-header">
       <div class="header-titles">
@@ -246,6 +246,20 @@
           <option value="box-desc">Lernstatus (Box 5 zuerst)</option>
         </select>
       </div>
+
+      <!-- Interlinear IAST Toggle -->
+      <div class="filter-group">
+        <label class="filter-label">Lesehilfe:</label>
+        <button
+          type="button"
+          :class="['pill-btn', { active: interlinearMode }]"
+          :aria-pressed="interlinearMode"
+          @click="interlinearMode = !interlinearMode"
+          title="Zeigt IAST-Umschrift interlinear unter Devanāgarī-Formen (Tabelle, Detailansicht & Paradigmen)"
+        >
+          अ + IAST Interlinear
+        </button>
+      </div>
     </div>
 
     <!-- Active Filter Counter & Quick Reset -->
@@ -303,7 +317,13 @@
               <td class="col-num">{{ idx + 1 }}</td>
               <td class="col-native script-deva">
                 <div class="native-lemma-row">
-                  <span class="lemma-highlight">{{ item.lemma_native }}</span>
+                  <span class="lemma-highlight">
+                    <InterlinearText
+                      :text="item.lemma_native"
+                      :lang="iastLangMode"
+                      :enabled="interlinearMode"
+                    />
+                  </span>
                   <button
                     class="btn-table-speak"
                     @click.stop="speakItem(item)"
@@ -385,7 +405,13 @@
       <div class="detail-modal-card" @click.stop>
         <div class="modal-header">
           <div class="modal-lemma-block">
-            <span class="modal-native script-deva">{{ selectedEntry.lemma_native }}</span>
+            <span class="modal-native script-deva">
+              <InterlinearText
+                :text="selectedEntry.lemma_native"
+                :lang="iastLangMode"
+                :enabled="interlinearMode"
+              />
+            </span>
             <span class="modal-translit">{{ selectedEntry.lemma_translit }}</span>
             <button
               class="btn-modal-speak"
@@ -620,12 +646,20 @@
                       <span v-if="row.kasusHelp" class="kasus-sub"> ({{ row.kasusHelp }})</span>
                     </td>
                     <td class="script-deva">
-                      {{ row.sgNative }}
-                      <span class="translit-inline">({{ row.sgTranslit }})</span>
+                      <InterlinearText
+                        :text="row.sgNative"
+                        :lang="iastLangMode"
+                        :enabled="interlinearMode"
+                      />
+                      <span v-if="!interlinearMode" class="translit-inline">({{ row.sgTranslit }})</span>
                     </td>
                     <td class="script-deva">
-                      {{ row.plNative }}
-                      <span class="translit-inline">({{ row.plTranslit }})</span>
+                      <InterlinearText
+                        :text="row.plNative"
+                        :lang="iastLangMode"
+                        :enabled="interlinearMode"
+                      />
+                      <span v-if="!interlinearMode" class="translit-inline">({{ row.plTranslit }})</span>
                     </td>
                   </tr>
                 </tbody>
@@ -642,28 +676,38 @@
             <div class="verb-stems-grid">
               <div class="stem-card">
                 <span class="stem-label">Wurzel / Stamm:</span>
-                <span class="script-deva stem-val">{{ verbParadigm.rootNative }}</span>
-                <span class="translit-inline">({{ verbParadigm.rootTranslit }})</span>
+                <span class="script-deva stem-val">
+                  <InterlinearText :text="verbParadigm.rootNative" :lang="iastLangMode" :enabled="interlinearMode" />
+                </span>
+                <span v-if="!interlinearMode" class="translit-inline">({{ verbParadigm.rootTranslit }})</span>
               </div>
               <div class="stem-card">
                 <span class="stem-label">Habitual (Präsens):</span>
-                <span class="script-deva stem-val">{{ verbParadigm.habitNative }}</span>
-                <span class="translit-inline">({{ verbParadigm.habitTranslit }})</span>
+                <span class="script-deva stem-val">
+                  <InterlinearText :text="verbParadigm.habitNative" :lang="iastLangMode" :enabled="interlinearMode" />
+                </span>
+                <span v-if="!interlinearMode" class="translit-inline">({{ verbParadigm.habitTranslit }})</span>
               </div>
               <div class="stem-card">
                 <span class="stem-label">Perfektpartizip:</span>
-                <span class="script-deva stem-val">{{ verbParadigm.perfNative }}</span>
-                <span class="translit-inline">({{ verbParadigm.perfTranslit }})</span>
+                <span class="script-deva stem-val">
+                  <InterlinearText :text="verbParadigm.perfNative" :lang="iastLangMode" :enabled="interlinearMode" />
+                </span>
+                <span v-if="!interlinearMode" class="translit-inline">({{ verbParadigm.perfTranslit }})</span>
               </div>
               <div class="stem-card">
                 <span class="stem-label">Futur (3. Sg.):</span>
-                <span class="script-deva stem-val">{{ verbParadigm.futNative }}</span>
-                <span class="translit-inline">({{ verbParadigm.futTranslit }})</span>
+                <span class="script-deva stem-val">
+                  <InterlinearText :text="verbParadigm.futNative" :lang="iastLangMode" :enabled="interlinearMode" />
+                </span>
+                <span v-if="!interlinearMode" class="translit-inline">({{ verbParadigm.futTranslit }})</span>
               </div>
               <div class="stem-card">
                 <span class="stem-label">Imperativ (आप):</span>
-                <span class="script-deva stem-val">{{ verbParadigm.impNative }}</span>
-                <span class="translit-inline">({{ verbParadigm.impTranslit }})</span>
+                <span class="script-deva stem-val">
+                  <InterlinearText :text="verbParadigm.impNative" :lang="iastLangMode" :enabled="interlinearMode" />
+                </span>
+                <span v-if="!interlinearMode" class="translit-inline">({{ verbParadigm.impTranslit }})</span>
               </div>
             </div>
             <div class="ergative-notice">
@@ -921,6 +965,7 @@ import {
   toggleTransliteration,
 } from "../services/transliteration";
 import type { LessonData, StudyCardItem, VolumeData } from "../types";
+import InterlinearText from "./InterlinearText.vue";
 
 const props = defineProps<{
   corpusId: string;
@@ -990,6 +1035,24 @@ const sortOrder = ref<
 >("curriculum");
 
 const copyStatus = ref(false);
+
+const INTERLINEAR_STORAGE_KEY = "alexis.explorer.interlinearIast";
+function loadInterlinearPref(): boolean {
+  try {
+    return localStorage.getItem(INTERLINEAR_STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+const interlinearMode = ref(loadInterlinearPref());
+watch(interlinearMode, (val) => {
+  try {
+    localStorage.setItem(INTERLINEAR_STORAGE_KEY, val ? "1" : "0");
+  } catch {
+    // ignore storage quota / privacy mode errors
+  }
+});
+const iastLangMode = computed<"hi" | "sa">(() => (props.isHindi ? "hi" : "sa"));
 
 // Active selection label
 const activeSelectionLabel = computed(() => {
@@ -2780,6 +2843,13 @@ async function copyAsTSV() {
 .stem-val {
   font-size: 1.15rem;
   font-weight: 600;
+}
+
+.interlinear-active .col-native,
+.interlinear-active .modal-native,
+.interlinear-active .paradigm-table td.script-deva,
+.interlinear-active .stem-val {
+  line-height: 2.35;
 }
 
 .ergative-notice {

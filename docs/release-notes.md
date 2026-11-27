@@ -1,5 +1,18 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.7.0 (2026-11-27)
+
+### Datenintegrität & Kernfunktionen
+- **Hybrid-Hindi-Transliteration & NFD/Nukta-Engine (`src/services/iastCore.ts`, `src/services/transliteration.ts`):** Gemeinsamer, abhängigkeitsfreier TypeScript-Kern (gespiegelt mit `birchville-blog`) für Sanskrit 1:1 (`"sa"`) und Hindi Stufe-1-Hybrid (`"hi"`) mit Akṣara-Tokenizer, Ohala-Schwa-Tilgung, Final-Repha-Regel, Morphemgrenzen, `HINDI_LEXICON` sowie NFD-Normalisierung für präkomponierte Nukta-Codepoints (`U+0958`–`U+095F`, `U+0929`/`0931`/`0934`). `IAST_MAP.consonants` um eindeutige Nuktas (`ḵh`, `q`, `ġ`, `z`, `f`) ergänzt ohne vokalisches Sanskrit-`ṛ` zu verdrängen; Hindi-Queries umgehen das Tauri-Rust-Backend zugunsten der Hybrid-Engine.
+- **Interlinear-IAST-Lesehilfe (`src/components/InterlinearText.vue`, `src/components/VocabularyExplorer.vue`):** Neuer `.pill-btn`-Umschalter **„अ + IAST Interlinear“** in der Filter-Leiste des Vokabel-Explorers mit `<ruby>`-Annotation (`ruby-position: under`, `user-select: none` auf `<rt>`, `localStorage`-Persistenz) für Vokabeltabelle, Detailmodal, Substantiv-Deklinationstabelle und Verb-Paradigmen.
+- **Audit, Wörterbuch-Normalisierung & einheitliches Anusvāra (`src/services/corpusAudit.ts`, `src/providers/hindiDictionary.ts`, `src/services/hindiMorphology.ts`):** Lokales `stripHindiFinalSchwa`-Regex durch `devanagariHindiToIastSync` ersetzt (`suggestedTranslit` nun auch bei fehlenden Nuktas/Makrons); alle 51 `ṁ`-Formen in den Hindi-Paradigmen auf striktes IAST `ṃ` vereinheitlicht (Eingabe-Parser akzeptieren weiterhin `ṃ` und `ṁ`).
+
+### Plattform-, Test- & Doku-Stabilität
+- **IAST-Regressionstests & CI-Integration (`scripts/test-iast.mjs`, `.github/workflows/deploy.yml`, `.github/workflows/release-desktop.yml`):** Node-20-kompatible Test-Suite (In-Memory-TypeScript-Transpilierung über `typescript.transpileModule`) für Sanskrit 1:1, Hindi-Schwa/Nukta/Morphologie, `<ruby>`-Segmentierung und `ṃ`-Konsistenz vor `npm run build` in beiden GitHub-Actions-Workflows integriert.
+- **Dokumentation aktualisiert (`README.md`, `docs/ARCHITECTURE.md`, `docs/BENUTZERHANDBUCH.md`):** Transliterations-Architektur, Verzeichnisstruktur, Wörterbuch-Verhalten und `अ + IAST Interlinear`-Filter ergänzt.
+
+---
+
 ## v0.6.8 (2026-11-26)
 
 ### Plattform- & Backend-Stabilität

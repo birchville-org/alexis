@@ -69,6 +69,9 @@ npm install
 
 # Run development server
 npm run dev
+
+# Run IAST & Hindi morphology regression tests
+npm run test:iast
 ```
 
 ---
@@ -89,6 +92,7 @@ alexis/
 ├── src/
 │   ├── adapters/          # Corpus import parsers
 │   ├── providers/         # Dictionary lookup providers
+│   ├── services/          # Storage, IAST transliteration core, morphology, audit
 │   ├── engine/            # Spaced repetition & Leitner logic
 │   ├── components/        # Vue UI components
 │   └── types/             # TypeScript domain models

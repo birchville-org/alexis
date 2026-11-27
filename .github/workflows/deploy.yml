@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run IAST & morphology tests
+        run: npm run test:iast
+
       - name: Build Web App
         run: npm run build
 

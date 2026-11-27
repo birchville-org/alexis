@@ -70,7 +70,7 @@ export function getHindiNounDeclension(
     cleanTranslit.endsWith("oo");
 
   const postpositionNote =
-    "Der Obliquus wird zwingend vor allen Postpositionen verwendet: को (ko), से (se), में (meṁ), पर (par), का/के/की (kā/ke/kī), ने (ne), लिए (lie).";
+    "Der Obliquus wird zwingend vor allen Postpositionen verwendet: को (ko), से (se), में (meṃ), पर (par), का/के/की (kā/ke/kī), ने (ne), लिए (lie).";
 
   // Invariable family terms on -ā that do not decline in Sg. Obl.
   const familyAaExceptions = [
@@ -96,7 +96,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum markiert auf -ā (लड़का-Typ)",
         ruleExplanation:
-          "Endung -ā wechselt im Sg. Obliquus und im Pl. Direktus zu -e (z.B. लड़के). Plural Obliquus endet auf -oṁ (-ओं, z.B. लड़कों).",
+          "Endung -ā wechselt im Sg. Obliquus und im Pl. Direktus zu -e (z.B. लड़के). Plural Obliquus endet auf -oṃ (-ओं, z.B. लड़कों).",
         postpositionNote,
         rows: [
           {
@@ -109,11 +109,11 @@ export function getHindiNounDeclension(
           },
           {
             kasus: "Obliquus",
-            kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+            kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
             sgNative: `${stemN}े`,
             sgTranslit: `${stemT}e`,
             plNative: `${stemN}ों`,
-            plTranslit: `${stemT}oṁ`,
+            plTranslit: `${stemT}oṃ`,
           },
           {
             kasus: "Vokativ",
@@ -134,7 +134,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum Familie/Titel auf -ā (पिता/राजा-Typ)",
         ruleExplanation:
-          "Familienbezeichnungen und Titel auf -ā bleiben im Sg. Obliquus und Pl. Direktus unverändert (z.B. पिता). Plural Obliquus endet auf -āoṁ (-ओं, z.B. पिताओं).",
+          "Familienbezeichnungen und Titel auf -ā bleiben im Sg. Obliquus und Pl. Direktus unverändert (z.B. पिता). Plural Obliquus endet auf -āoṃ (-ओं, z.B. पिताओं).",
         postpositionNote,
         rows: [
           {
@@ -147,11 +147,11 @@ export function getHindiNounDeclension(
           },
           {
             kasus: "Obliquus",
-            kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+            kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
             sgNative: cleanNative,
             sgTranslit: cleanTranslit,
             plNative: `${stemN}ओं`,
-            plTranslit: `${stemT}oṁ`,
+            plTranslit: `${stemT}oṃ`,
           },
           {
             kasus: "Vokativ",
@@ -172,7 +172,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum unmarkiert auf -ī (आदमी-Typ)",
         ruleExplanation:
-          "Bleibt im Sg. Obliquus und Pl. Direktus unverändert (z.B. आदमी). Im Plural Obliquus wird -ī verkürzt zu -iyoṁ (-यों, z.B. आदमियों).",
+          "Bleibt im Sg. Obliquus und Pl. Direktus unverändert (z.B. आदमी). Im Plural Obliquus wird -ī verkürzt zu -iyoṃ (-यों, z.B. आदमियों).",
         postpositionNote,
         rows: [
           {
@@ -185,11 +185,11 @@ export function getHindiNounDeclension(
           },
           {
             kasus: "Obliquus",
-            kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+            kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
             sgNative: cleanNative,
             sgTranslit: cleanTranslit,
             plNative: `${stemN}ियों`,
-            plTranslit: `${stemT}iyoṁ`,
+            plTranslit: `${stemT}iyoṃ`,
           },
           {
             kasus: "Vokativ",
@@ -210,7 +210,7 @@ export function getHindiNounDeclension(
       return {
         declensionType: "Maskulinum unmarkiert auf -ū (चाकू-Typ)",
         ruleExplanation:
-          "Form bleibt im Sg. und Pl. Direktus gleich (z.B. चाकू). Im Plural Obliquus Verkürzung zu -uoṁ (-ओं, z.B. चाकुओं).",
+          "Form bleibt im Sg. und Pl. Direktus gleich (z.B. चाकू). Im Plural Obliquus Verkürzung zu -uoṃ (-ओं, z.B. चाकुओं).",
         postpositionNote,
         rows: [
           {
@@ -223,11 +223,11 @@ export function getHindiNounDeclension(
           },
           {
             kasus: "Obliquus",
-            kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+            kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
             sgNative: cleanNative,
             sgTranslit: cleanTranslit,
             plNative: `${stemN}ुओं`,
-            plTranslit: `${stemT}uoṁ`,
+            plTranslit: `${stemT}uoṃ`,
           },
           {
             kasus: "Vokativ",
@@ -245,7 +245,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Maskulinum unmarkiert konsonantisch (घर/अध्यापक-Typ)",
       ruleExplanation:
-        "Sg. Direktus, Sg. Obliquus und Pl. Direktus sind identisch (z.B. अध्यापक). Plural Obliquus endet auf -oṁ (-ओं, z.B. अध्यापकों, घरों).",
+        "Sg. Direktus, Sg. Obliquus und Pl. Direktus sind identisch (z.B. अध्यापक). Plural Obliquus endet auf -oṃ (-ओं, z.B. अध्यापकों, घरों).",
       postpositionNote,
       rows: [
         {
@@ -258,11 +258,11 @@ export function getHindiNounDeclension(
         },
         {
           kasus: "Obliquus",
-          kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+          kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
           sgNative: cleanNative,
           sgTranslit: cleanTranslit,
           plNative: `${cleanNative}ों`,
-          plTranslit: `${cleanTranslit}oṁ`,
+          plTranslit: `${cleanTranslit}oṃ`,
         },
         {
           kasus: "Vokativ",
@@ -285,7 +285,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Femininum auf -iyā (चिड़िया-Typ)",
       ruleExplanation:
-        "Plural Direktus erhält Vokalnasalierung mit Candrabindu: -iyā̃ (-इयाँ, z.B. चिड़ियाँ). Plural Obliquus endet auf -iyoṁ (-यों, z.B. चिड़ियों).",
+        "Plural Direktus erhält Vokalnasalierung mit Candrabindu: -iyā̃ (-इयाँ, z.B. चिड़ियाँ). Plural Obliquus endet auf -iyoṃ (-यों, z.B. चिड़ियों).",
       postpositionNote,
       rows: [
         {
@@ -298,11 +298,11 @@ export function getHindiNounDeclension(
         },
         {
           kasus: "Obliquus",
-          kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+          kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
           sgNative: cleanNative,
           sgTranslit: cleanTranslit,
           plNative: `${stemN}ों`,
-          plTranslit: `${stemT}oṁ`,
+          plTranslit: `${stemT}oṃ`,
         },
         {
           kasus: "Vokativ",
@@ -323,7 +323,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Femininum auf -ī (लड़की-Typ)",
       ruleExplanation:
-        "Endung -ī verkürzt sich im Plural Direktus zu -iyā̃ (-इयाँ mit Candrabindu, z.B. लड़कियाँ) und im Plural Obliquus zu -iyoṁ (-यों, z.B. लड़कियों).",
+        "Endung -ī verkürzt sich im Plural Direktus zu -iyā̃ (-इयाँ mit Candrabindu, z.B. लड़कियाँ) und im Plural Obliquus zu -iyoṃ (-यों, z.B. लड़कियों).",
       postpositionNote,
       rows: [
         {
@@ -336,11 +336,11 @@ export function getHindiNounDeclension(
         },
         {
           kasus: "Obliquus",
-          kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+          kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
           sgNative: cleanNative,
           sgTranslit: cleanTranslit,
           plNative: `${stemN}ियों`,
-          plTranslit: `${stemT}iyoṁ`,
+          plTranslit: `${stemT}iyoṃ`,
         },
         {
           kasus: "Vokativ",
@@ -364,7 +364,7 @@ export function getHindiNounDeclension(
     return {
       declensionType: "Femininum auf Vokal -ā/-u (भाषा/माता-Typ)",
       ruleExplanation:
-        "Plural Direktus erhält die Nasalendung -ẽ (-एँ mit Candrabindu, z.B. भाषाएँ, माताएँ). Plural Obliquus erhält -oṁ (-ओं, z.B. भाषाओं).",
+        "Plural Direktus erhält die Nasalendung -ẽ (-एँ mit Candrabindu, z.B. भाषाएँ, माताएँ). Plural Obliquus erhält -oṃ (-ओं, z.B. भाषाओं).",
       postpositionNote,
       rows: [
         {
@@ -377,11 +377,11 @@ export function getHindiNounDeclension(
         },
         {
           kasus: "Obliquus",
-          kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+          kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
           sgNative: cleanNative,
           sgTranslit: cleanTranslit,
           plNative: `${cleanNative}ओं`,
-          plTranslit: `${cleanTranslit}oṁ`,
+          plTranslit: `${cleanTranslit}oṃ`,
         },
         {
           kasus: "Vokativ",
@@ -399,7 +399,7 @@ export function getHindiNounDeclension(
   return {
     declensionType: "Femininum konsonantisch (किताब-Typ)",
     ruleExplanation:
-      "Plural Direktus endet auf nasaliertes -ẽ / -eṁ (-एं, z.B. किताबें, रातें). Plural Obliquus endet auf -oṁ (-ओं, z.B. किताबों, रातों).",
+      "Plural Direktus endet auf nasaliertes -ẽ / -eṃ (-एं, z.B. किताबें, रातें). Plural Obliquus endet auf -oṃ (-ओं, z.B. किताबों, रातों).",
     postpositionNote,
     rows: [
       {
@@ -408,15 +408,15 @@ export function getHindiNounDeclension(
         sgNative: cleanNative,
         sgTranslit: cleanTranslit,
         plNative: `${cleanNative}ें`,
-        plTranslit: `${cleanTranslit}eṁ`,
+        plTranslit: `${cleanTranslit}eṃ`,
       },
       {
         kasus: "Obliquus",
-        kasusHelp: "Vor Postpositionen [+ ko, se, meṁ...]",
+        kasusHelp: "Vor Postpositionen [+ ko, se, meṃ...]",
         sgNative: cleanNative,
         sgTranslit: cleanTranslit,
         plNative: `${cleanNative}ों`,
-        plTranslit: `${cleanTranslit}oṁ`,
+        plTranslit: `${cleanTranslit}oṃ`,
       },
       {
         kasus: "Vokativ",
@@ -443,9 +443,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "हो",
     rootTranslit: "ho",
     perfNative: "हुआ / हुई (Pl. हुए / हुईं)",
-    perfTranslit: "huā / huī (Pl. hue / huīṁ)",
+    perfTranslit: "huā / huī (Pl. hue / huīṃ)",
     habitNative: "होता/होती है (Pl. होते/होती हैं)",
-    habitTranslit: "hotā/hotī hai (Pl. hote/hotī haiṁ)",
+    habitTranslit: "hotā/hotī hai (Pl. hote/hotī haiṃ)",
     futNative: "होगा / होगी (Pl. होंगे / होंगी)",
     futTranslit: "hogā / hogī (Pl. hoṅge / hoṅgī)",
     impNative: "तू हो · तुम हो · आप होइए",
@@ -460,9 +460,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "जा",
     rootTranslit: "jā",
     perfNative: "गया / गई (Pl. गए / गईं)",
-    perfTranslit: "gayā / gaī (Pl. gae / gaīṁ)",
+    perfTranslit: "gayā / gaī (Pl. gae / gaīṃ)",
     habitNative: "जाता/जाती है (Pl. जाते/जाती हैं)",
-    habitTranslit: "jātā/jātī hai (Pl. jāte/jātī haiṁ)",
+    habitTranslit: "jātā/jātī hai (Pl. jāte/jātī haiṃ)",
     futNative: "जाएगा / जाएगी (Pl. जाएंगे / जाएंगी)",
     futTranslit: "jāegā / jāegī (Pl. jāeṅge / jāeṅgī)",
     impNative: "तू जा · तुम जाओ · आप जाइए",
@@ -477,9 +477,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "कर",
     rootTranslit: "kar",
     perfNative: "किया / की (Pl. किए / कीं)",
-    perfTranslit: "kiyā / kī (Pl. kie / kīṁ)",
+    perfTranslit: "kiyā / kī (Pl. kie / kīṃ)",
     habitNative: "करता/करती है (Pl. करते/करती हैं)",
-    habitTranslit: "kartā/kartī hai (Pl. karte/kartī haiṁ)",
+    habitTranslit: "kartā/kartī hai (Pl. karte/kartī haiṃ)",
     futNative: "करेगा / करेगी (Pl. करेंगे / करेंगी)",
     futTranslit: "karegā / karegī (Pl. kareṅge / kareṅgī)",
     impNative: "तू कर · तुम करो · आप कीजिए",
@@ -494,9 +494,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "ले",
     rootTranslit: "le",
     perfNative: "लिया / ली (Pl. लिए / लीं)",
-    perfTranslit: "liyā / lī (Pl. lie / līṁ)",
+    perfTranslit: "liyā / lī (Pl. lie / līṃ)",
     habitNative: "लेता/लेती है (Pl. लेते/लेती हैं)",
-    habitTranslit: "letā/letī hai (Pl. lete/letī haiṁ)",
+    habitTranslit: "letā/letī hai (Pl. lete/letī haiṃ)",
     futNative: "लेगा / लेगी (Pl. लेंगे / लेंगी)",
     futTranslit: "legā / legī (Pl. leṅge / leṅgī)",
     impNative: "तू ले · तुम लो · आप लीजिए",
@@ -511,9 +511,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "दे",
     rootTranslit: "de",
     perfNative: "दिया / दी (Pl. दिए / दीं)",
-    perfTranslit: "diyā / dī (Pl. die / dīṁ)",
+    perfTranslit: "diyā / dī (Pl. die / dīṃ)",
     habitNative: "देता/देती है (Pl. देते/देती हैं)",
-    habitTranslit: "detā/detī hai (Pl. dete/detī haiṁ)",
+    habitTranslit: "detā/detī hai (Pl. dete/detī haiṃ)",
     futNative: "देगा / देगी (Pl. देंगे / देंगी)",
     futTranslit: "degā / degī (Pl. deṅge / deṅgī)",
     impNative: "तू दे · तुम दो · आप दीजिए",
@@ -528,9 +528,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "पी",
     rootTranslit: "pī",
     perfNative: "पिया / पी (Pl. पिए / पीं)",
-    perfTranslit: "piyā / pī (Pl. pie / pīṁ)",
+    perfTranslit: "piyā / pī (Pl. pie / pīṃ)",
     habitNative: "पीता/पीती है (Pl. पीते/पीती हैं)",
-    habitTranslit: "pītā/pītī hai (Pl. pīte/pītī haiṁ)",
+    habitTranslit: "pītā/pītī hai (Pl. pīte/pītī haiṃ)",
     futNative: "पिएगा / पिएगी (Pl. पिएंगे / पिएंगी)",
     futTranslit: "piegā / piegī (Pl. pieṅge / pieṅgī)",
     impNative: "तू पी · तुम पियो · आप पीजिए",
@@ -545,9 +545,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "बोल",
     rootTranslit: "bol",
     perfNative: "बोला / बोली (Pl. बोले / बोलीं)",
-    perfTranslit: "bolā / bolī (Pl. bole / bolīṁ)",
+    perfTranslit: "bolā / bolī (Pl. bole / bolīṃ)",
     habitNative: "बोलता/बोलती है (Pl. बोलते/बोलती हैं)",
-    habitTranslit: "boltā/boltī hai (Pl. bolte/boltī haiṁ)",
+    habitTranslit: "boltā/boltī hai (Pl. bolte/boltī haiṃ)",
     futNative: "बोलेगा / बोलेगी (Pl. बोलेंगे / बोलेंगी)",
     futTranslit: "bolegā / bolegī (Pl. boleṅge / boleṅgī)",
     impNative: "तू बोल · तुम बोलो · आप बोलिए",
@@ -562,9 +562,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "ला",
     rootTranslit: "lā",
     perfNative: "लाया / लाई (Pl. लाए / लाईं)",
-    perfTranslit: "lāyā / lāī (Pl. lāe / lāīṁ)",
+    perfTranslit: "lāyā / lāī (Pl. lāe / lāīṃ)",
     habitNative: "लाता/लाती है (Pl. लाते/लाती हैं)",
-    habitTranslit: "lātā/lātī hai (Pl. lāte/lātī haiṁ)",
+    habitTranslit: "lātā/lātī hai (Pl. lāte/lātī haiṃ)",
     futNative: "लाएगा / लाएगी (Pl. लाएंगे / लाएंगी)",
     futTranslit: "lāegā / lāegī (Pl. lāeṅge / lāeṅgī)",
     impNative: "तू ला · तुम लाओ · आप लाइए",
@@ -578,9 +578,9 @@ const IRREGULAR_VERBS: Record<string, Partial<HindiVerbParadigm>> = {
     rootNative: "खा",
     rootTranslit: "khā",
     perfNative: "खाया / खाई (Pl. खाए / खाईं)",
-    perfTranslit: "khāyā / khāī (Pl. khāe / khāīṁ)",
+    perfTranslit: "khāyā / khāī (Pl. khāe / khāīṃ)",
     habitNative: "खाता/खाती है (Pl. खाते/खाती हैं)",
-    habitTranslit: "khātā/khātī hai (Pl. khāte/khātī haiṁ)",
+    habitTranslit: "khātā/khātī hai (Pl. khāte/khātī haiṃ)",
     futNative: "खाएगा / खाएगी (Pl. खाएंगे / खाएगीं)",
     futTranslit: "khāegā / khāegī (Pl. khāeṅge / khāeṅgī)",
     impNative: "तू खा · तुम खाओ · आप खाइए",
@@ -664,7 +664,7 @@ export function getHindiVerbParadigm(
     perfTM = `${rootT}yā`;
     perfTF = `${rootT}ī`;
     perfTMPl = `${rootT}e`;
-    perfTFPl = `${rootT}īṁ`;
+    perfTFPl = `${rootT}īṃ`;
   } else {
     perfM = `${rootN}ा`;
     perfF = `${rootN}ी`;
@@ -673,7 +673,7 @@ export function getHindiVerbParadigm(
     perfTM = `${rootT}ā`;
     perfTF = `${rootT}ī`;
     perfTMPl = `${rootT}e`;
-    perfTFPl = `${rootT}īṁ`;
+    perfTFPl = `${rootT}īṃ`;
   }
 
   const isIntr = INTRANSITIVE_SET.has(cleanNative);
@@ -695,7 +695,7 @@ export function getHindiVerbParadigm(
     perfNative: `${perfM} / ${perfF} (Pl. ${perfMPl} / ${perfFPl})`,
     perfTranslit: `${perfTM} / ${perfTF} (Pl. ${perfTMPl} / ${perfTFPl})`,
     habitNative: `${rootN}ता/${rootN}ती है (Pl. ${rootN}ते/${rootN}ती हैं)`,
-    habitTranslit: `${rootT}tā/${rootT}tī hai (Pl. ${rootT}te/${rootT}tī haiṁ)`,
+    habitTranslit: `${rootT}tā/${rootT}tī hai (Pl. ${rootT}te/${rootT}tī haiṃ)`,
     futNative: vowelEnding
       ? `${rootN}एगा / ${rootN}एगी (Pl. ${rootN}एंगे / ${rootN}ेंगी)`
       : `${rootN}ेगा / ${rootN}एगी (Pl. ${rootN}ेंगे / ${rootN}ेंगी)`,

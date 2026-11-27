@@ -1,6 +1,11 @@
+import {
+  type DevanagariLangMode,
+  transliterateDevanagariText,
+} from "./iastCore";
 import { isTauriEnvironment } from "./storage";
 
 export type TransliterationScheme = "iast" | "hk" | "devanagari";
+export type { DevanagariLangMode };
 
 /**
  * Checks if the string contains Devanagari characters (\u0900-\u097F).
@@ -81,6 +86,7 @@ const IAST_MAP: ScriptMapping = {
     ["u", "ु"],
   ],
   consonants: [
+    ["ḵh", "ख़"],
     ["kh", "ख"],
     ["gh", "घ"],
     ["ch", "छ"],
@@ -91,6 +97,10 @@ const IAST_MAP: ScriptMapping = {
     ["dh", "ध"],
     ["ph", "फ"],
     ["bh", "भ"],
+    ["q", "क़"],
+    ["ġ", "ग़"],
+    ["z", "ज़"],
+    ["f", "फ़"],
     ["k", "क"],
     ["g", "ग"],
     ["ṅ", "ङ"],
@@ -323,7 +333,6 @@ function buildInvertedMapping(mapping: ScriptMapping): InvertedScriptMapping {
   return { devToCons, devToMatra, devToVowel, devToMod };
 }
 
-const IAST_INVERTED = buildInvertedMapping(IAST_MAP);
 const HK_INVERTED = buildInvertedMapping(HK_MAP);
 
 /**
@@ -408,9 +417,17 @@ export function iastToDevanagariSync(text: string): string {
   return romanToDevanagari(text, IAST_MAP);
 }
 
-export function devanagariToIastSync(text: string): string {
+export function devanagariToIastSync(
+  text: string,
+  lang: DevanagariLangMode = "sa",
+): string {
   if (!text) return "";
-  return devanagariToRoman(text, IAST_INVERTED);
+  const out = transliterateDevanagariText(text, lang);
+  return lang === "sa" ? out.replace(/॥/g, "||").replace(/।/g, "|") : out;
+}
+
+export function devanagariHindiToIastSync(text: string): string {
+  return devanagariToIastSync(text, "hi");
 }
 
 /**
@@ -435,9 +452,17 @@ export async function iastToDevanagari(text: string): Promise<string> {
 
 /**
  * Converts Devanagari to IAST.
+ * Note: For Hindi ("hi"), bypasses the Tauri Rust backend because the shared
+ * client-hybrid engine includes Ohala schwa deletion and Hindi Nukta/lexicon rules.
  */
-export async function devanagariToIast(text: string): Promise<string> {
+export async function devanagariToIast(
+  text: string,
+  lang: DevanagariLangMode = "sa",
+): Promise<string> {
   if (!text) return "";
+  if (lang === "hi") {
+    return devanagariToIastSync(text, "hi");
+  }
   if (isTauriEnvironment()) {
     try {
       const { invoke } = await import("@tauri-apps/api/core");
@@ -450,7 +475,7 @@ export async function devanagariToIast(text: string): Promise<string> {
       // fallback to JS
     }
   }
-  return devanagariToRoman(text, IAST_INVERTED);
+  return devanagariToIastSync(text, "sa");
 }
 
 /**
@@ -506,7 +531,7 @@ export function iastToHk(text: string): string {
  */
 export function hkToIast(text: string): string {
   const deva = romanToDevanagari(text, HK_MAP);
-  return devanagariToRoman(deva, IAST_INVERTED);
+  return devanagariToIastSync(deva, "sa");
 }
 
 /**

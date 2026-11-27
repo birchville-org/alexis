@@ -1,6 +1,9 @@
 import { iastToSlp1 } from "../providers/monierWilliams";
 import type { StudyCardItem } from "../types";
-import { devanagariToIastSync } from "./transliteration";
+import {
+  devanagariHindiToIastSync,
+  devanagariToIastSync,
+} from "./transliteration";
 
 export type AuditIssueType =
   | "not_found"
@@ -91,10 +94,6 @@ const HINDI_REQUIRED_MARKERS: Array<[RegExp, RegExp, string]> = [
   [/फ़/, /f/i, "Nukta f (फ़)"],
 ];
 
-function stripHindiFinalSchwa(iast: string): string {
-  return iast.replace(/([bcdfghjklmnpqrstvwxyzṅñṭḍṇśṣġ])a(?=\s|$)/giu, "$1");
-}
-
 async function auditHindiEntry(
   entry: StudyCardItem,
   signal?: AbortSignal,
@@ -107,9 +106,7 @@ async function auditHindiEntry(
 
   const rawTranslit = entry.lemma_translit?.trim() ?? "";
   if (!rawTranslit) {
-    const derivedIast = stripHindiFinalSchwa(
-      devanagariToIastSync(entry.lemma_native.trim()),
-    );
+    const derivedIast = devanagariHindiToIastSync(entry.lemma_native.trim());
     findings.push({
       entryId: entry.entry_id,
       lemmaNative: entry.lemma_native,
@@ -129,6 +126,7 @@ async function auditHindiEntry(
     ).map(([, , label]) => label);
 
     if (missingMarkers.length > 0) {
+      const derivedIast = devanagariHindiToIastSync(entry.lemma_native.trim());
       findings.push({
         entryId: entry.entry_id,
         lemmaNative: entry.lemma_native,
@@ -136,7 +134,8 @@ async function auditHindiEntry(
         currentPos: entry.pos,
         currentGender: entry.gender,
         issueType: "translit_mismatch",
-        message: `Umschrift „${rawTranslit}“ fehlt: ${missingMarkers.join(", ")}.`,
+        message: `Umschrift „${rawTranslit}“ fehlt: ${missingMarkers.join(", ")} (Vorschlag: „${derivedIast}“).`,
+        suggestedTranslit: derivedIast,
         lookupUrl: mcgregorUrl,
         lookupLabel: "↗ McGregor (DSAL)",
       });

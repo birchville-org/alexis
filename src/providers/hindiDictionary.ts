@@ -1,6 +1,6 @@
 import {
   containsDevanagari,
-  devanagariToIast,
+  devanagariHindiToIastSync,
   hkToDevanagari,
   hkToIast,
   iastToDevanagari,
@@ -52,9 +52,7 @@ async function resolveIastQuery(raw: string): Promise<string> {
   const clean = raw.trim();
   if (!clean) return clean;
   if (containsDevanagari(clean)) {
-    const iast = await devanagariToIast(clean);
-    // Hindi schwa-deletion: strip trailing inherent 'a' after a consonant
-    return iast.replace(/([bcdfghjklmnpqrstvwxyzṅñṭḍṇśṣġ])a(?=\s|$)/giu, "$1");
+    return devanagariHindiToIastSync(clean);
   }
   return isHarvardKyotoInput(clean, false)
     ? hkToIast(clean)

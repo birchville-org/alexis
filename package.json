@@ -1,6 +1,6 @@
 {
   "name": "@birchville/alexis",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "private": false,
   "description": "Universal vocabulary trainer, corpus reader, and dictionary hub",
   "type": "module",
@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "test:iast": "node scripts/test-iast.mjs"
   },
   "keywords": [
     "philology",

@@ -92,6 +92,7 @@ Der Reiter **Vokabelliste** bietet eine vollständige tabellarische Übersicht �
   - *Band & Lektion:* Gezielte Eingrenzung auf bestimmte Kapitel.
   - *Box / Status:* Nur Vokabeln einer bestimmten Box (1–5) oder nur heute fällige Karten anzeigen.
   - *Wortart:* Filterung nach Substantiven, Verben, Adjektiven oder anderen Wortarten.
+  - *Lesehilfe (`अ + IAST Interlinear`):* Optionaler Umschalter für interlineare `<ruby>`-Umschrift direkt unter Devanāgarī-Formen in der Vokabeltabelle, im Detailmodal sowie in den Substantiv-Deklinationen und Verb-Paradigmen (wird lokal im Browser via `localStorage` gespeichert).
 - **Aktionen:**
   - **`▶️ Diese Auswahl im Trainer üben`:** Übergibt exakt die gefilterte Liste an den Trainer, um sofort eine maßgeschneiderte Lerneinheit zu starten.
   - **`📥 TSV herunterladen`:** Speichert den gefilterten Datenbestand als `.tsv`-Datei.
@@ -114,7 +115,7 @@ Im Reiter **Korpora & Gliederung** bestimmen Sie, welche Lehrwerke und Lektionen
 ## 5. Wörterbuch-Hub
 
 Der Reiter **Wörterbuch** bündelt Online-Wörterbücher für beide Korpussprachen und wählt standardmäßig die Sprache des aktiven Lehrwerks:
-- **Hindi (Wiktionary & DSAL)**: Inline-Definitionen über die Wiktionary REST API (inkl. automatischer Schwa-Tilgung bei IAST-Eingaben wie `kitāb` -> `किताब`) sowie Direktlinks zu *McGregor (Oxford Hindi-English Dictionary)* und *Platts (Classical Hindi & Urdu)* auf DSAL Chicago.
+- **Hindi (Wiktionary & DSAL)**: Inline-Definitionen über die Wiktionary REST API (inkl. Hybrid-Hindi-Transliteration mit Ohala-Schwa-Tilgung, voller Nukta-Unterstützung und einheitlichem IAST `ṃ`, z. B. `kitāb` -> `किताब`) sowie Direktlinks zu *McGregor (Oxford Hindi-English Dictionary)* und *Platts (Classical Hindi & Urdu)* auf DSAL Chicago.
 - **Sanskrit (MW, PW, DCS & NWS)**: Parallele Inline-Abfrage von *Monier-Williams (EN)* und *Böhtlingk Petersburger Wörterbuch (DE)* über das *Cologne Sanskrit Lexicon* (inkl. IAST-/HK-/Devanāgarī-zu-SLP1-Normalisierung) sowie Direktlinks zum *Digital Corpus of Sanskrit (DCS)* und zum *Nachtragswörterbuch des Sanskrit (NWS Halle)*.
 
 ---
