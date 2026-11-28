@@ -1868,7 +1868,7 @@ const verbParadigm = computed<HindiVerbParadigm | null>(() => {
 // Practice actions
 function speakItem(item: StudyCardItem) {
   const lang = props.corpusId.includes("hindi") ? "hi" : "sa";
-  speechService.speak(item.lemma_native, lang);
+  speechService.speak(item.lemma_native, lang, { entryId: item.entry_id });
 }
 
 function practiceFilteredSelection() {

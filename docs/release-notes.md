@@ -1,5 +1,19 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.8.0 (2026-11-28)
+
+### Datenintegrität & Kernfunktionen
+- **Offline-Sanskrit-Audio für Payer-Korpus (`public/audio/sa/*.m4a`, `src/data/sanskritAudioIds.json`, `src/services/speech.ts`, `src/App.vue`, `src/components/VocabularyExplorer.vue`):** Alle 880 Einträge von *Sanskritkurs — Alois Payer* nutzen vorgefertigte 24-kHz-Mono-`.m4a`-Einzelaufnahmen (AAC-LC, 32 kbps) mit klassischer Sanskrit-Phonetik (erhaltenes Auslaut-`-a`, vokalisches `ऋ`, Aspiraten und Ligaturen). Generiert über `scripts/generate_sanskrit_audio.py` mit `ai4bharat/indic-parler-tts` (Sprecher *Aryan*, Lizenz: Apache-2.0). In Tauri-Desktop-Builds sind alle 880 Clips vollständig offline gebündelt; Web/PWA laden sie bei Online-Verbindung und fallen offline sowie bei eigenen Sanskrit-Importen automatisch auf die lokale W3C Web Speech API zurück.
+- **Korpus-, Queue- & Wörterbuch-Synchronisation (`src/App.vue`):** Sequenzgeschützte Aktualisierung bei Korpus- und Filterwechseln (`corpusSelectSeq`, `reloadQueueSeq`, `corporaSelectionDirty` mit `await nextTick()`-Flush) verhindert veraltete Queue-Stände, bewahrt benutzerdefinierte Übungsauswahlen aus der Vokabelliste (`startSessionWithItems`) und gleicht die Wörterbuch-Sprachvorgabe (`dictLang`) automatisch beim Korpuswechsel an.
+
+### Sicherheit & Sandbox
+- **Minimale Media-CSP (`src-tauri/tauri.conf.json`):** Ergänzt `media-src 'self' asset: tauri: blob: data:;` in der Tauri-CSP für die lokale `.m4a`-Audiowiedergabe ohne Aufweichung der übrigen Richtlinien.
+
+### Plattform- & Backend-Stabilität
+- **Hilfe & Dokumentation aktualisiert (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`, `docs/ARCHITECTURE.md`):** Kapitel 3 der In-App-Hilfe, Abschnitt 2.1 im Benutzerhandbuch sowie Abschnitt 5 der Architektur-Dokumentation erläutern die Sanskrit-Audio-Pipeline, Desktop-Offline- vs. Web/PWA-Online-Verhalten sowie Referenz und Lizenz von `ai4bharat/indic-parler-tts`.
+
+---
+
 ## v0.7.0 (2026-11-27)
 
 ### Datenintegrität & Kernfunktionen

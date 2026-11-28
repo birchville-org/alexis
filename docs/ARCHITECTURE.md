@@ -104,3 +104,9 @@ export interface DictionaryProvider {
   - `src/services/hindiMorphology.ts`: Uses unified strict IAST `ṃ` across declension and conjugation tables (`transliteration.ts` and `monierWilliams.ts` continue accepting both `ṃ` and `ṁ` on input).
   - `src/components/InterlinearText.vue` & `src/components/VocabularyExplorer.vue`: Render XSS-free interlinear `<ruby>` annotations via `segmentDevanagariForRuby()` when the *Lesehilfe (`अ + IAST Interlinear`)* toggle is active.
 - **Verification**: `npm run test:iast` (`scripts/test-iast.mjs`) validates Sanskrit 1:1, Hindi schwa/Nukta/morphology cases, ruby segmentation, and `ṃ` consistency.
+
+---
+
+## 5. Sanskrit Audio & Speech Synthesis (`src/services/speech.ts`)
+- **Curated Sanskrit Audio Pack (`public/audio/sa/*.m4a`, `src/data/sanskritAudioIds.json`)**: All 880 Payer Sanskrit entries are pre-rendered at 24 kHz mono AAC-LC (`32 kbps`) via `scripts/generate_sanskrit_audio.py` using `ai4bharat/indic-parler-tts` (speaker `Aryan`, Apache-2.0) with silence trimming (`silenceremove`) and outlier retry guards.
+- **Runtime Playback & Fallback**: When `SpeechService.speak(text, "sa", { entryId })` matches an ID in `sanskritAudioIds.json`, Alexis plays `${BASE_URL}audio/sa/<entryId>.m4a` (`media-src` permitted in `src-tauri/tauri.conf.json`). In Tauri desktop builds the 880 `.m4a` clips are bundled offline; in Web/PWA deployments they are fetched online from static hosting (`public/sw.js` only caches `status === 200` responses and does not cache `<audio>` `206` range requests offline). Custom Sanskrit imports, offline browser sessions without cached audio, and Hindi entries automatically fall back to the local W3C Web Speech API (`speechSynthesis`) with `rate = 0.88`.

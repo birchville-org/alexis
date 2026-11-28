@@ -1,19 +1,26 @@
 /**
- * Native Speech Synthesis Service for Alexis (Web Speech API)
- * Zero-dependency, offline-first audio pronunciation for Hindi and Sanskrit.
+ * Native Speech Synthesis & Offline Audio Service for Alexis
+ * Plays curated offline Sanskrit audio clips (AI4Bharat Indic Parler-TTS)
+ * when available and falls back to the W3C Web Speech API.
  */
+
+import sanskritAudioIds from "../data/sanskritAudioIds.json";
+
+const SANSKRIT_AUDIO_IDS = new Set<string>(sanskritAudioIds);
 
 export interface SpeechOptions {
   rate?: number;
   pitch?: number;
   volume?: number;
   lang?: string;
+  entryId?: string;
 }
 
 class SpeechService {
   private isSupported: boolean;
   private voices: SpeechSynthesisVoice[] = [];
   private voicesLoaded = false;
+  private currentAudio: HTMLAudioElement | null = null;
 
   constructor() {
     this.isSupported =
@@ -96,20 +103,72 @@ class SpeechService {
   }
 
   /**
-   * Speaks the provided text using the Web Speech API.
-   * Cancels any active utterance before starting.
+   * Speaks the provided text using curated offline audio (if available)
+   * or falls back to the Web Speech API.
+   * Cancels any active audio or utterance before starting.
    */
   public speak(
     text: string,
     langCode = "hi-IN",
     options: SpeechOptions = {},
   ): boolean {
-    if (!this.isSupported || !text.trim()) return false;
+    const cleaned = text.trim();
+    if (!cleaned) return false;
+
+    this.stop();
+
+    const cleanLang = langCode.toLowerCase().trim();
+    if (
+      cleanLang.startsWith("sa") &&
+      options.entryId &&
+      SANSKRIT_AUDIO_IDS.has(options.entryId) &&
+      typeof Audio !== "undefined"
+    ) {
+      const base = import.meta.env.BASE_URL || "/";
+      const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+      const url = `${normalizedBase}audio/sa/${encodeURIComponent(options.entryId)}.m4a`;
+      const audio = new Audio(url);
+      this.currentAudio = audio;
+
+      let fallbackTriggered = false;
+      const triggerFallback = () => {
+        if (fallbackTriggered || this.currentAudio !== audio) return;
+        fallbackTriggered = true;
+        this.currentAudio = null;
+        this.speakWithWebSpeech(cleaned, langCode, options);
+      };
+
+      audio.onended = () => {
+        if (this.currentAudio === audio) {
+          this.currentAudio = null;
+        }
+      };
+      audio.onerror = triggerFallback;
+
+      try {
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(() => triggerFallback());
+        }
+        return true;
+      } catch {
+        triggerFallback();
+        return this.isSupported;
+      }
+    }
+
+    return this.speakWithWebSpeech(cleaned, langCode, options);
+  }
+
+  private speakWithWebSpeech(
+    text: string,
+    langCode = "hi-IN",
+    options: SpeechOptions = {},
+  ): boolean {
+    if (!this.isSupported || !text) return false;
 
     try {
-      window.speechSynthesis.cancel();
-
-      const utterance = new SpeechSynthesisUtterance(text.trim());
+      const utterance = new SpeechSynthesisUtterance(text);
 
       // Select voice if available and align utterance.lang with voice.lang
       // so WebKit/Safari does not discard fallback voices (e.g. hi-IN for sa).
@@ -141,9 +200,18 @@ class SpeechService {
   }
 
   /**
-   * Stops any currently playing speech.
+   * Stops any currently playing audio clip or speech synthesis.
    */
   public stop() {
+    if (this.currentAudio) {
+      try {
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
+      } catch {
+        // ignore media reset errors
+      }
+      this.currentAudio = null;
+    }
     if (this.isSupported) {
       window.speechSynthesis.cancel();
     }

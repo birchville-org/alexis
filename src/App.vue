@@ -1069,16 +1069,21 @@
             <!-- Kapitel 3 -->
             <section v-show="activeHelpSection === 'sec-3'" class="doc-section">
               <div class="doc-crumb">Kapitel 3 · Audio & Phonetik</div>
-              <h4>3. Technische Architektur der Sprachausgabe (W3C Web Speech API)</h4>
+              <h4>3. Technische Architektur der Sprachausgabe (Sanskrit-Audio & Web Speech API)</h4>
               <p class="modal-text">
-                Für die Vertonung der Vokabeln über das Lautsprecher-Symbol oder die Taste <code>v</code> nutzt Alexis den <strong>W3C Web Speech API Standard</strong> (<code>window.speechSynthesis</code> / <code>SpeechSynthesisUtterance</code>):
+                Für die Vertonung der Vokabeln über das Lautsprecher-Symbol oder die Taste <code>v</code> kombiniert Alexis eingebettete Sanskrit-Aufnahmen mit dem <strong>W3C Web Speech API Standard</strong> (<code>window.speechSynthesis</code>):
               </p>
               <ul class="help-list">
-                <li><strong>Kein externer Cloud-Dienst / kein API-Schlüssel:</strong> Es werden keine Wörter an kostenpflichtige Drittanbieter-Server gesendet. Alexis greift direkt auf die im Betriebssystem bzw. Browser lokal installierten Text-to-Speech-Stimmen (TTS) zu und funktioniert damit auch offline.</li>
-                <li><strong>macOS & iOS (Safari, Tauri Desktop, Chrome):</strong> Nutzt Apples Systemstimme <strong>„Lekha“</strong> (<code>hi-IN</code>). Für maximale Klangqualität kann in den Systemeinstellungen unter <em>Bedienungshilfen ➔ Gesprochener Inhalt ➔ Systemstimme ➔ Stimme verwalten ➔ Hindi</em> das Paket <strong>„Lekha (Erweitert / Premium)“</strong> kostenfrei nachgeladen werden.</li>
-                <li><strong>Windows, Chrome & Android:</strong> Nutzt unter Desktop-Chrome <code>Google हिन्दी</code> (<code>hi-IN</code>), unter Windows 10/11 <strong>„Microsoft Swara“</strong> bzw. <strong>„Microsoft Hemant“</strong> und unter Android die <strong>Google Speech Synthesis</strong>.</li>
-                <li><strong>Phonetische Treue & Sanskrit-Fallback:</strong> Da Devanāgarī phonematisch exakt ist, werden Aspiration, Retroflexe und Vokallängen direkt aus der Originalschrift synthetisiert. Das Sprechtempo ist leicht gedrosselt (<code>rate = 0.88</code>). Fehlt eine dedizierte <code>sa-IN</code>-Stimme für Sanskrit, fällt Alexis automatisch auf die installierte <code>hi-IN</code>-Devanāgarī-Stimme zurück.</li>
+                <li><strong>Echtes Sanskrit-Audio (Payer-Korpus, 880 Einträge):</strong> Alle Einträge von <em>Sanskritkurs — Alois Payer</em> nutzen lokal vorgefertigte <code>.m4a</code>-Einzelaufnahmen (<code>public/audio/sa/</code>) mit klassischer Sanskrit-Phonetik (erhaltenes Auslaut-<code>-a</code>, Vokal-<code>ऋ</code>, Aspiraten und Ligaturen).</li>
+                <li><strong>Offline-Verfügbarkeit (Desktop vs. Web/PWA):</strong> In der Tauri-Desktop-App sind alle 880 Audio-Clips direkt gebündelt und funktionieren vollständig offline. Im Browser / als PWA werden die <code>.m4a</code>-Dateien bei bestehender Internetverbindung direkt vom Hosting geladen; ohne Verbindung (offline im Browser) greift automatisch der Web-Speech-Fallback.</li>
+                <li><strong>Kein externer Cloud-TTS-Dienst / kein API-Schlüssel:</strong> Weder beim Sanskrit-Audio noch bei der Web Speech API werden Vokabeln an Drittanbieter-Server gesendet; die Web-Speech-Synthese läuft lokal auf dem Gerät.</li>
+                <li><strong>Hindi & eigene Importe (macOS, Windows, Android):</strong> Hindi (<code>Hindi bolo!</code>) sowie per TSV importierte Ergänzungen ohne Audio-Clip nutzen die lokal installierten Systemstimmen (macOS/iOS <strong>„Lekha“</strong> <code>hi-IN</code>, Desktop-Chrome <code>Google हिन्दी</code>, Windows <strong>„Microsoft Swara“</strong> bzw. <strong>„Microsoft Hemant“</strong>, Android Google Speech Synthesis) mit leicht gedrosseltem Tempo (<code>rate = 0.88</code>) und automatischem Web-Speech-Fallback für fehlende oder offline nicht erreichbare Sanskrit-Clips.</li>
               </ul>
+              <div class="doc-callout">
+                <strong>Referenz & Lizenz (Sanskrit-Sprachsynthese):</strong> Die eingebetteten Sanskrit-Wortaufnahmen wurden lokal mit
+                <a href="https://huggingface.co/ai4bharat/indic-parler-tts" target="_blank" rel="noopener noreferrer" class="dict-link">AI4Bharat / HuggingFace Indic Parler-TTS</a>
+                (Modell <code>ai4bharat/indic-parler-tts</code>, empfohlener Sanskrit-Sprecher <em>Aryan</em>, Lizenz: <strong>Apache-2.0</strong>) generiert.
+              </div>
             </section>
 
             <!-- Kapitel 4 -->
@@ -2065,11 +2070,13 @@ function formatPos(pos?: string | null): string {
   }
 }
 
-// Speech Synthesis helper
+// Speech Synthesis & Offline Audio helper
 function speakCurrentCard() {
   if (!currentCard.value) return;
   const lang = activeCorpus.value?.lang_code || (isHindi.value ? "hi" : "sa");
-  speechService.speak(currentCard.value.lemma_native, lang);
+  speechService.speak(currentCard.value.lemma_native, lang, {
+    entryId: currentCard.value.entry_id,
+  });
 }
 
 // Theme Toggle
@@ -2372,7 +2379,7 @@ onMounted(async () => {
   corporaList.value = await storage.listCorpora();
   if (corporaList.value.length > 0) {
     const initialCorpus = params.get("corpus") || "hindi-bolo";
-    await selectCorpus(initialCorpus);
+    await selectCorpus(initialCorpus, false);
   }
 
   // Handle lesson/volume params
@@ -2569,17 +2576,52 @@ async function installDesktopUpdate() {
   }
 }
 
-// Selection Logic
-async function selectCorpus(corpusId: string) {
+// Selection & Queue Sync Logic
+let corpusSelectSeq = 0;
+let reloadQueueSeq = 0;
+let corporaSelectionDirty = false;
+
+watch(
+  [selectedVolumeIds, selectedLessonIds, dueOnly],
+  () => {
+    if (currentTab.value === "corpora") {
+      corporaSelectionDirty = true;
+    }
+  },
+  { deep: true },
+);
+
+watch(currentTab, (tab) => {
+  if (tab === "trainer" && corporaSelectionDirty) {
+    void reloadQueue(dueOnly.value);
+  }
+});
+
+async function selectCorpus(corpusId: string, syncSession = true) {
+  const seq = ++corpusSelectSeq;
   selectedCorpusId.value = corpusId;
-  volumesList.value = await storage.listVolumes(corpusId);
-  lessonsList.value = await storage.listLessons(corpusId);
+  const [volumes, lessons] = await Promise.all([
+    storage.listVolumes(corpusId),
+    storage.listLessons(corpusId),
+  ]);
+  if (seq !== corpusSelectSeq) return;
+  volumesList.value = volumes;
+  lessonsList.value = lessons;
   selectedLessonIds.value = [];
   // Default: select only first volume (e.g. Hindi bolo 1)
   if (volumesList.value.length > 0) {
     selectedVolumeIds.value = [volumesList.value[0].id];
   } else {
     selectedVolumeIds.value = [];
+  }
+  await nextTick();
+  if (seq !== corpusSelectSeq) return;
+  corporaSelectionDirty = false;
+  if (syncSession) {
+    if (!dictQuery.value.trim()) {
+      dictLang.value = activeCorpus.value?.lang_code === "hi" ? "hi" : "sa";
+    }
+    await Promise.all([reloadQueue(dueOnly.value), refreshStats()]);
   }
 }
 
@@ -2598,6 +2640,7 @@ async function handleFileUpload(e: Event) {
   if (selectedVolumeIds.value.length === 0) {
     selectedVolumeIds.value = volumesList.value.map((v) => v.id);
   }
+  await nextTick();
   await reloadQueue(dueOnly.value);
   await refreshStats();
   target.value = "";
@@ -2617,6 +2660,8 @@ async function startSessionWithSelectedVolumes() {
 }
 
 function startSessionWithItems(items: StudyCardItem[]) {
+  reloadQueueSeq++;
+  corporaSelectionDirty = false;
   queue.value = [...items];
   currentIndex.value = 0;
   isFlipped.value = false;
@@ -2624,9 +2669,11 @@ function startSessionWithItems(items: StudyCardItem[]) {
 }
 
 async function reloadQueue(onlyDue: boolean) {
+  const seq = ++reloadQueueSeq;
+  corporaSelectionDirty = false;
   currentIndex.value = 0;
   isFlipped.value = false;
-  queue.value = await storage.getStudyQueue({
+  const loaded = await storage.getStudyQueue({
     corpus_id: selectedCorpusId.value,
     volume_ids:
       selectedVolumeIds.value.length > 0 ? selectedVolumeIds.value : undefined,
@@ -2635,6 +2682,8 @@ async function reloadQueue(onlyDue: boolean) {
     due_only: onlyDue,
     shuffle: isShuffle.value,
   });
+  if (seq !== reloadQueueSeq) return;
+  queue.value = loaded;
 }
 
 async function submitRating(rating: number) {
