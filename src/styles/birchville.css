@@ -63,6 +63,20 @@
   --gender-n-border: #d97706;
 }
 
+:root {
+  --target-size: 24px;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --target-size: 44px;
+  }
+}
+
+html {
+  scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -76,6 +90,18 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-wrap: break-word;
+}
+
+img,
+video {
+  max-inline-size: 100%;
+  height: auto;
+}
+
+:where(a, code) {
+  overflow-wrap: anywhere;
 }
 
 h1,
@@ -87,6 +113,17 @@ h4 {
   color: var(--text-primary);
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
 .script-deva {
   font-family: var(--font-deva);
 }
@@ -96,9 +133,30 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  touch-action: manipulation;
 }
 
 input,
-select {
+select,
+textarea {
   font-family: inherit;
+}
+
+@media (pointer: coarse) {
+  :where(
+      button,
+      select,
+      textarea,
+      input:not([type="checkbox"], [type="radio"]),
+      [role="button"],
+      label:has(input[type="checkbox"], input[type="radio"])
+    ) {
+    min-block-size: var(--target-size);
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@birchville/alexis",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": false,
   "description": "Universal vocabulary trainer, corpus reader, and dictionary hub",
   "type": "module",

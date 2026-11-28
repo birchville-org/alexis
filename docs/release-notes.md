@@ -1,5 +1,20 @@
 # Release Notes — Alexis (Ἀλέξις / Lexis)
 
+## v0.9.0 (2026-11-28)
+
+### Datenintegrität & Kernfunktionen
+- **Offline-Sanskrit-Audio-Cache für Mobile-PWA (`public/sw.js`, `src/services/speech.ts`, `src/App.vue`):** Im Modal *Offline / Download* lässt sich im Browser / als PWA der komplette Payer-Sanskrit-Audio-Satz (880 `.m4a`-Clips, ~5,7 MB) dauerhaft im Cache `alexis-sanskrit-audio-v1` ablegen (mit Fortschrittsanzeige, Abbrechen-Option, Cache-Löschung und Fehlerbehandlung). `public/sw.js` bewahrt diesen Audio-Cache über App-Updates hinweg und liefert gecachte `.m4a`-Dateien über `serveAudioFromCache` mit synthetisierten HTTP-`206 Partial Content`-Range-Antworten offline an `<audio>` aus.
+
+### Performance & Rendering
+- **Mobile-PWA für iPhone, iPad & Android (`index.html`, `public/manifest.json`, `public/icons/`, `src/styles/birchville.css`, `src/App.vue`, `src/components/VocabularyExplorer.vue`):**
+  - Opake PNG-Icons auf Warm Ivory (`#fcf9f2`) für Apple-Touch (`180×180`) sowie PWA (`192×192`, `512×512` `any` + `maskable`), `viewport-fit=cover` und `apple-mobile-web-app-title`.
+  - Safe-Area-Insets (`env(safe-area-inset-*)`), `100dvh`, umbrechender Mobile-Header unter `768 px`, `44 px`-Touch-Ziele und `font-size: max(16px, 1rem)` unter `@media (pointer: coarse)` (verhindert iOS-Safari-Input-Zoom), Ausblenden reiner Desktop-Tastaturhinweise auf Touch-Geräten sowie horizontal touch- und tastaturscrollbarer Tabellen-Container im Vokabel-Explorer.
+
+### Plattform- & Backend-Stabilität
+- **Dokumentation aktualisiert (`src/App.vue`, `docs/BENUTZERHANDBUCH.md`, `docs/ARCHITECTURE.md`):** Kapitel 3 der In-App-Hilfe, Abschnitt 2.1 im Benutzerhandbuch sowie Abschnitt 5 der Architektur-Dokumentation erläutern die Mobile-PWA-Audio-Speicherung im `CacheStorage` inklusive Range-Handling und Web-Speech-Fallback.
+
+---
+
 ## v0.8.0 (2026-11-28)
 
 ### Datenintegrität & Kernfunktionen

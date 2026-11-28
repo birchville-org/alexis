@@ -1075,7 +1075,7 @@
               </p>
               <ul class="help-list">
                 <li><strong>Echtes Sanskrit-Audio (Payer-Korpus, 880 Einträge):</strong> Alle Einträge von <em>Sanskritkurs — Alois Payer</em> nutzen lokal vorgefertigte <code>.m4a</code>-Einzelaufnahmen (<code>public/audio/sa/</code>) mit klassischer Sanskrit-Phonetik (erhaltenes Auslaut-<code>-a</code>, Vokal-<code>ऋ</code>, Aspiraten und Ligaturen).</li>
-                <li><strong>Offline-Verfügbarkeit (Desktop vs. Web/PWA):</strong> In der Tauri-Desktop-App sind alle 880 Audio-Clips direkt gebündelt und funktionieren vollständig offline. Im Browser / als PWA werden die <code>.m4a</code>-Dateien bei bestehender Internetverbindung direkt vom Hosting geladen; ohne Verbindung (offline im Browser) greift automatisch der Web-Speech-Fallback.</li>
+                <li><strong>Offline-Verfügbarkeit (Desktop &amp; Mobile-PWA):</strong> In der Tauri-Desktop-App sind alle 880 Audio-Clips direkt gebündelt und funktionieren sofort offline. Im Browser / als installierte PWA (iPhone, iPad, Android) werden die <code>.m4a</code>-Dateien online direkt geladen und lassen sich über <em>Offline / Download</em> mit einem Klick dauerhaft für den Offline-Betrieb im Browser-Cache speichern (~5,7 MB); ohne gespeicherten Cache greift offline der Web-Speech-Fallback.</li>
                 <li><strong>Kein externer Cloud-TTS-Dienst / kein API-Schlüssel:</strong> Weder beim Sanskrit-Audio noch bei der Web Speech API werden Vokabeln an Drittanbieter-Server gesendet; die Web-Speech-Synthese läuft lokal auf dem Gerät.</li>
                 <li><strong>Hindi & eigene Importe (macOS, Windows, Android):</strong> Hindi (<code>Hindi bolo!</code>) sowie per TSV importierte Ergänzungen ohne Audio-Clip nutzen die lokal installierten Systemstimmen (macOS/iOS <strong>„Lekha“</strong> <code>hi-IN</code>, Desktop-Chrome <code>Google हिन्दी</code>, Windows <strong>„Microsoft Swara“</strong> bzw. <strong>„Microsoft Hemant“</strong>, Android Google Speech Synthesis) mit leicht gedrosseltem Tempo (<code>rate = 0.88</code>) und automatischem Web-Speech-Fallback für fehlende oder offline nicht erreichbare Sanskrit-Clips.</li>
               </ul>
@@ -1434,6 +1434,37 @@
             </button>
           </div>
 
+          <div v-if="!isTauri && audioCacheStatus.supported" class="pwa-audio-cache-box">
+            <h4>Sanskrit-Audio offline speichern (PWA)</h4>
+            <p class="modal-text">
+              Status: <strong>{{ audioCacheStatus.cached }} / {{ audioCacheStatus.total }}</strong> Sanskrit-Wortaufnahmen (<code>~5,7 MB</code>) offline zwischengespeichert.
+            </p>
+            <p class="modal-text pwa-audio-notice" v-if="audioCacheNotice">{{ audioCacheNotice }}</p>
+            <div class="modal-btn-row pwa-audio-actions">
+              <button
+                v-if="!audioCaching"
+                class="btn-outline"
+                @click="downloadAllSanskritAudio"
+              >
+                {{ audioCacheStatus.cached >= audioCacheStatus.total ? "🔄 Audio-Cache prüfen" : "📥 Sanskrit-Audio offline speichern (~5,7 MB)" }}
+              </button>
+              <button
+                v-else
+                class="btn-outline"
+                @click="cancelSanskritAudioDownload"
+              >
+                ⏹️ Lädt… ({{ audioCacheStatus.cached }} / {{ audioCacheStatus.total }}) — Abbrechen
+              </button>
+              <button
+                v-if="audioCacheStatus.cached > 0 && !audioCaching"
+                class="btn-outline"
+                @click="removeSanskritAudioCache"
+              >
+                🗑️ Cache leeren
+              </button>
+            </div>
+          </div>
+
           <h4>3. Lokale Vokabeldaten &amp; Backups</h4>
           <p class="modal-text">
             Sichere deinen persönlichen Lernstand (inkl. Notizen und lokaler Anpassungen) oder exportiere das aktive Korpus:
@@ -1484,7 +1515,14 @@ import {
   getHindiNounDeclension,
   getHindiVerbParadigm,
 } from "./services/hindiMorphology";
-import { speechService } from "./services/speech";
+import {
+  SANSKRIT_AUDIO_TOTAL,
+  type SanskritAudioCacheStatus,
+  cacheAllSanskritAudio,
+  clearSanskritAudioCache,
+  getSanskritAudioCacheStatus,
+  speechService,
+} from "./services/speech";
 import {
   type LastBackupMeta,
   downloadTSV,
@@ -2197,6 +2235,69 @@ function selectHelpSection(id: string) {
 }
 const showInstallModal = ref(false);
 const deferredInstallPrompt = ref<any>(null);
+const audioCacheStatus = ref<SanskritAudioCacheStatus>({
+  cached: 0,
+  total: SANSKRIT_AUDIO_TOTAL,
+  supported: false,
+});
+const audioCaching = ref(false);
+const audioCacheNotice = ref("");
+let audioCacheAbort: AbortController | null = null;
+
+async function refreshAudioCacheStatus() {
+  audioCacheStatus.value = await getSanskritAudioCacheStatus();
+}
+
+watch(showInstallModal, (open) => {
+  if (open && !isTauri.value) {
+    void refreshAudioCacheStatus();
+  }
+});
+
+async function downloadAllSanskritAudio() {
+  if (audioCaching.value) return;
+  audioCaching.value = true;
+  audioCacheNotice.value = "";
+  audioCacheAbort = new AbortController();
+  try {
+    const res = await cacheAllSanskritAudio((done, total) => {
+      audioCacheStatus.value = {
+        cached: done,
+        total,
+        supported: true,
+      };
+    }, audioCacheAbort.signal);
+    if (audioCacheAbort.signal.aborted) {
+      audioCacheNotice.value = `Download pausiert (${res.cached} / ${res.total} gespeichert).`;
+    } else if (res.failed > 0) {
+      audioCacheNotice.value = `${res.cached} / ${res.total} Clips gespeichert (${res.failed} fehlgeschlagen).`;
+    } else {
+      audioCacheNotice.value = `Alle ${res.cached} Sanskrit-Clips sind jetzt offline verfügbar.`;
+    }
+  } catch (err: unknown) {
+    audioCacheNotice.value = `Audio-Caching fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`;
+  } finally {
+    audioCaching.value = false;
+    audioCacheAbort = null;
+    await refreshAudioCacheStatus();
+  }
+}
+
+function cancelSanskritAudioDownload() {
+  audioCacheAbort?.abort();
+}
+
+async function removeSanskritAudioCache() {
+  if (audioCaching.value) return;
+  try {
+    await clearSanskritAudioCache();
+    audioCacheNotice.value = "Lokaler Sanskrit-Audio-Cache geleert.";
+  } catch (err: unknown) {
+    audioCacheNotice.value = `Audio-Cache konnte nicht geleert werden: ${err instanceof Error ? err.message : String(err)}`;
+  } finally {
+    await refreshAudioCacheStatus();
+  }
+}
 
 function onBeforeInstallPrompt(e: Event) {
   e.preventDefault();
@@ -2484,6 +2585,8 @@ onUnmounted(() => {
   }
   unlistenMenu?.();
   unlistenMenu = null;
+  audioCacheAbort?.abort();
+  audioCacheAbort = null;
 });
 
 // Desktop Auto-Updater & Native Menu Refs (Tauri)
@@ -2817,6 +2920,7 @@ async function performDictSearch() {
 <style scoped>
 .alexis-app {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-base);
@@ -2828,7 +2932,12 @@ async function performDictSearch() {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   padding: 0.75rem 1.5rem;
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+  padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
   background-color: var(--header-bg);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-subtle);
@@ -2947,6 +3056,9 @@ async function performDictSearch() {
   width: 100%;
   margin: 0 auto;
   padding: 1.5rem 1rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
 }
 
 /* Trainer View */
@@ -4852,5 +4964,90 @@ async function performDictSearch() {
 
 .download-btn:hover {
   border-color: var(--accent-gold);
+}
+
+.pwa-audio-cache-box {
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+}
+
+.pwa-audio-cache-box h4 {
+  margin-top: 0;
+}
+
+.pwa-audio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.pwa-audio-notice {
+  margin-top: 0.35rem;
+  color: var(--accent-gold);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0.65rem 0.9rem;
+    padding-top: max(0.65rem, env(safe-area-inset-top, 0px));
+    padding-left: max(0.9rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.9rem, env(safe-area-inset-right, 0px));
+  }
+  .header-nav {
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .nav-btn {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  .header-right {
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .trainer-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .trainer-controls {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .study-card {
+    padding: 1.35rem 1rem;
+    min-height: 18rem;
+  }
+  .card-top {
+    flex-wrap: wrap;
+  }
+  .modal-backdrop {
+    padding: 0.5rem;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+  .modal-box {
+    max-height: 92dvh;
+  }
+  .modal-box.help-modal-doc {
+    width: 100%;
+    height: 92dvh;
+    max-height: 92dvh;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .translit-kbd,
+  .rate-num {
+    display: none;
+  }
 }
 </style>

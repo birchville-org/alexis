@@ -292,7 +292,13 @@
         <button class="btn-outline-sm" @click="resetFilters">Filter leeren</button>
       </div>
 
-      <div v-else class="table-responsive">
+      <div
+        v-else
+        class="table-responsive"
+        tabindex="0"
+        role="region"
+        aria-label="Vokabeltabelle"
+      >
         <table class="scholarly-table">
           <thead>
             <tr>
@@ -2216,6 +2222,7 @@ async function copyAsTSV() {
 
 .table-responsive {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .scholarly-table {
@@ -2500,6 +2507,7 @@ async function copyAsTSV() {
   width: 100%;
   max-width: 680px;
   max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);

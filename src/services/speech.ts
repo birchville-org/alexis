@@ -7,6 +7,110 @@
 import sanskritAudioIds from "../data/sanskritAudioIds.json";
 
 const SANSKRIT_AUDIO_IDS = new Set<string>(sanskritAudioIds);
+export const SANSKRIT_AUDIO_CACHE_NAME = "alexis-sanskrit-audio-v1";
+export const SANSKRIT_AUDIO_TOTAL = SANSKRIT_AUDIO_IDS.size;
+
+export interface SanskritAudioCacheStatus {
+  cached: number;
+  total: number;
+  supported: boolean;
+}
+
+function getSanskritAudioUrl(entryId: string): string {
+  const base = import.meta.env.BASE_URL || "/";
+  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+  const relative = `${normalizedBase}audio/sa/${encodeURIComponent(entryId)}.m4a`;
+  if (typeof window !== "undefined") {
+    return new URL(relative, window.location.href).href;
+  }
+  return relative;
+}
+
+export async function getSanskritAudioCacheStatus(): Promise<SanskritAudioCacheStatus> {
+  if (typeof window === "undefined" || typeof caches === "undefined") {
+    return { cached: 0, total: SANSKRIT_AUDIO_TOTAL, supported: false };
+  }
+  try {
+    const cache = await caches.open(SANSKRIT_AUDIO_CACHE_NAME);
+    const keys = await cache.keys();
+    const cachedPaths = new Set(keys.map((req) => new URL(req.url).pathname));
+    let cached = 0;
+    for (const id of sanskritAudioIds) {
+      const path = new URL(getSanskritAudioUrl(id)).pathname;
+      if (cachedPaths.has(path)) {
+        cached += 1;
+      }
+    }
+    return { cached, total: SANSKRIT_AUDIO_TOTAL, supported: true };
+  } catch {
+    return { cached: 0, total: SANSKRIT_AUDIO_TOTAL, supported: false };
+  }
+}
+
+export async function cacheAllSanskritAudio(
+  onProgress?: (done: number, total: number) => void,
+  signal?: AbortSignal,
+): Promise<{ cached: number; total: number; failed: number }> {
+  if (typeof window === "undefined" || typeof caches === "undefined") {
+    return {
+      cached: 0,
+      total: SANSKRIT_AUDIO_TOTAL,
+      failed: SANSKRIT_AUDIO_TOTAL,
+    };
+  }
+
+  const cache = await caches.open(SANSKRIT_AUDIO_CACHE_NAME);
+  const existingKeys = await cache.keys();
+  const existingPaths = new Set(
+    existingKeys.map((req) => new URL(req.url).pathname),
+  );
+
+  const pendingUrls: string[] = [];
+  let cachedCount = 0;
+  for (const id of sanskritAudioIds) {
+    const url = getSanskritAudioUrl(id);
+    if (existingPaths.has(new URL(url).pathname)) {
+      cachedCount += 1;
+    } else {
+      pendingUrls.push(url);
+    }
+  }
+
+  onProgress?.(cachedCount, SANSKRIT_AUDIO_TOTAL);
+
+  let failed = 0;
+  const BATCH_SIZE = 8;
+  for (let i = 0; i < pendingUrls.length; i += BATCH_SIZE) {
+    if (signal?.aborted) break;
+    const batch = pendingUrls.slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      batch.map(async (url) => {
+        if (signal?.aborted) return;
+        try {
+          const res = await fetch(url, { signal, cache: "no-cache" });
+          if (res.ok && res.status === 200) {
+            await cache.put(url, res);
+            cachedCount += 1;
+          } else {
+            failed += 1;
+          }
+        } catch {
+          if (!signal?.aborted) {
+            failed += 1;
+          }
+        }
+      }),
+    );
+    onProgress?.(cachedCount, SANSKRIT_AUDIO_TOTAL);
+  }
+
+  return { cached: cachedCount, total: SANSKRIT_AUDIO_TOTAL, failed };
+}
+
+export async function clearSanskritAudioCache(): Promise<void> {
+  if (typeof caches === "undefined") return;
+  await caches.delete(SANSKRIT_AUDIO_CACHE_NAME);
+}
 
 export interface SpeechOptions {
   rate?: number;
@@ -124,9 +228,7 @@ class SpeechService {
       SANSKRIT_AUDIO_IDS.has(options.entryId) &&
       typeof Audio !== "undefined"
     ) {
-      const base = import.meta.env.BASE_URL || "/";
-      const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-      const url = `${normalizedBase}audio/sa/${encodeURIComponent(options.entryId)}.m4a`;
+      const url = getSanskritAudioUrl(options.entryId);
       const audio = new Audio(url);
       this.currentAudio = audio;
 
